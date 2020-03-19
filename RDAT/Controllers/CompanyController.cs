@@ -1,24 +1,82 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using RDAT.Data;
+using RDAT.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace RDAT.Controllers
 {
     public class CompanyController : Controller
     {
         // GET: Company
-        public ActionResult Index()
+        public ActionResult Index(string[] args)
         {
+            //Task.Run(() => { // or ThreadPool.QueueUserWorkItem(async _ => {
+
+            //    var host = CreateHostBuilder(args).Build(); 
+            //    var scope = host.Services.CreateScope();
+            //    var services = scope.ServiceProvider;
+
+            //    var context = services.GetRequiredService<RDATContext>();
+            //    context.Database.EnsureCreated();
+
+            //    using (context)//RDATContext context1 = new RDATContext())
+            //    {
+            //        var Companies = context.Companys.OrderBy(c => c.Name);
+
+            //        foreach (Company c in Companies)
+            //        {
+            //            Console.WriteLine(c.Name);
+            //        }
+
+            //        return View(Companies);
+            //    }
+            //});
+
+            using RDATContext context = new RDATContext();
+
+            var companys = context.Companys;
+
+            var count = companys.Count();
+
             return View();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
 
         // GET: Company/Details/5
         public ActionResult Details(int id)
         {
             return View();
+        }
+
+        // GET: Company/List
+        public ActionResult List(int id)
+        {
+            using RDATContext context = new RDATContext();
+
+            var companys = context.Companys;
+
+            var count = companys.Count();
+
+            var tempList = new List<Company>();
+            var co1 = new Company();
+            co1.Name = "Chris";
+            tempList.Add(co1);
+
+            return View(tempList);
         }
 
         // GET: Company/Create
@@ -34,7 +92,21 @@ namespace RDAT.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
+                //// TODO: Add insert logic here
+                string Name = collection["Name"];
+                string Email = collection["Email"];
+
+                using RDATContext context = new RDATContext();
+
+                Company newCo = new Company()
+                {
+                    Name = Name,
+                    Email = Email,
+                };
+
+                context.Companys.Add(newCo);
+
+                context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
             }

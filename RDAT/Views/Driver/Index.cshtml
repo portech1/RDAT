@@ -1,5 +1,7 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<RDAT.Models.Driver>
+
+@{
+    ViewData["Title"] = "Blank";
 }
 
 <!-- Content Wrapper. Contains page content -->
@@ -9,12 +11,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Driver Page</h1>
+
+                    <h1><i class="nav-icon fas fa-th mr-2"></i>View Drivers</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Driver</li>
+                        <li class="breadcrumb-item active">Blank Page</li>
                     </ol>
                 </div>
             </div>
@@ -27,8 +30,6 @@
         <!-- Default box -->
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Add a Driver</h3>
-
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                         <i class="fas fa-minus"></i>
@@ -39,17 +40,47 @@
                 </div>
             </div>
             <div class="card-body">
-                Start creating your amazing application!
+                @foreach (var item in Model)
+                {
+                    <div>
+                        @item.DriverName
+                        <hr />
+                    </div>
+                }
             </div>
-            <!-- /.card-body -->
-            <div class="card-footer">
-                <div class="btn btn-success">Add Driver</div>
-            </div>
-            <!-- /.card-footer-->
         </div>
-        <!-- /.card -->
-
+        <!-- /.card-body -->
+        <div class="card-footer">
+            Footer
+        </div>
+        <!-- /.card-footer-->
+</div>
+<!-- /.card -->
     </section>
-    <!-- /.content -->
+<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<!-- jQuery -->
+<script src="~/theme/plugins/jquery/jquery.min.js"></script>
+
+<!-- page script -->
+<script>
+    $(function () {
+        $("#jsGrid1").jsGrid({
+            height: "100%",
+            width: "100%",
+
+            sorting: true,
+            paging: true,
+
+            data: [{ "Name": "Chris", "Age": 38, "Address": "123 Main Street", "Country": "US", "Married": true }, { "Name": "Chris", "Age": 40, "Address": "123 Main Street", "Country": "US", "Married": true }, { "Name": "Chris", "Age": 25, "Address": "123 Main Street", "Country": "US", "Married": true }],
+
+            fields: [
+                { name: "Name", type: "text", width: 150 },
+                { name: "Age", type: "number", width: 50 },
+                { name: "Address", type: "text", width: 200 },
+                { name: "Country", type: "select", items: db.countries, valueField: "Id", textField: "Name" },
+                { name: "Married", type: "checkbox", title: "Is Married" }
+            ]
+        });
+    });</script>
