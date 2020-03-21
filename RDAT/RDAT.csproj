@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AndreyKurdiumov.AspNetCore.Helpers" Version="0.4.0" />
+    <PackageReference Include="jQuery.jqGrid" Version="4.4.4" />
+    <PackageReference Include="KendoUICore" Version="2020.1.219" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.1" />

@@ -53,11 +53,33 @@ namespace RDAT.Controllers
 
         public ActionResult Grid()
         {
-            return View();
+            using RDATContext context = new RDATContext();
+
+            var companys = context.Companys;
+            
+            return View(companys.ToList());
         }
 
-        [HttpPost]
-        public string GetCompanies()
+        //public ActionResult Grid(int page = 1)
+        //{
+        //    const int pageSize = 5;
+
+        //    int totalRecords;
+        //    IEnumerable<Product> products = productService.GetProducts(
+        //      out totalRecords, pageSize: pageSize, pageIndex: page - 1);
+
+        //    PagedProductsModel model = new PagedProductsModel
+        //    {
+        //        PageSize = pageSize,
+        //        PageNumber = page,
+        //        Products = products,
+        //        TotalRows = totalRecords
+        //    };
+        //    return View(model);
+        //}
+
+
+        public JsonResult GetCompanies()
         {
             using RDATContext context = new RDATContext();
 
@@ -70,7 +92,8 @@ namespace RDAT.Controllers
 
             string data = JsonConvert.SerializeObject(w);
 
-            return data;
+            // return data;
+            return Json(json);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

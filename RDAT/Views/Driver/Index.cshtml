@@ -2,36 +2,40 @@
 
 @{
     ViewData["Title"] = "Blank";
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model,
+         defaultSort: "Name",
+         rowsPerPage: 30);
 }
 
-    <style type="text/css">
-        body {
-            font-family: Arial;
-            font-size: 10pt;
-        }
-
-        .Grid {
-            border: 1px solid #ccc;
+    <style>
+        table {
+            font-family: verdana,arial,sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #999999;
             border-collapse: collapse;
         }
 
-            .Grid th {
-                background-color: #F7F7F7;
-                font-weight: bold;
+            table th {
+                background: #e3e3e3;
+                border-width: 1px;
+                padding: 18px;
+                border-style: solid;
+                border-color: #999999;
             }
 
-            .Grid th, .Grid td {
-                padding: 5px;
-                border: 1px solid #ccc;
+            table td {
+                background: #fff;
+                border-width: 1px;
+                padding: 18px;
+                border-style: solid;
+                border-color: #999999;
             }
 
-            .Grid, .Grid table td {
-                border: 0px solid #ccc;
-            }
-
-                .Grid th a, .Grid th a:visited {
-                    color: #333;
-                }
+        .foot {
+            text-align: center;
+        }
     </style>
 
 <!-- Content Wrapper. Contains page content -->
@@ -59,24 +63,13 @@
 
         <!-- Default box -->
         <div class="card">
-            <div class="card-header">
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
+            
             <div class="card-body">
-                @foreach (var item in Model)
-                {
-                    <div>
-                        @item.DriverName
-                        <hr />
-                    </div>
-                }
+                @grid.GetHtml(columns: grid.Columns(
+ grid.Column("DriverName"),grid.Column("City"),
+ grid.Column("Email", header: "Email Address")
+ )
+)
             </div>
             
         </div>

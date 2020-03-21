@@ -3,38 +3,41 @@
 @{
     ViewData["Title"] = "Grid";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var gridData = Model;
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model,
+         defaultSort: "Name",
+         rowsPerPage: 30);
 }
 
-<style type="text/css">
-    body {
-        font-family: Arial;
-        font-size: 10pt;
-    }
-
-    .Grid {
-        border: 1px solid #ccc;
-        border-collapse: collapse;
-    }
-
-        .Grid th {
-            background-color: #F7F7F7;
-            font-weight: bold;
+    <style>
+        table {
+            font-family: verdana,arial,sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #999999;
+            border-collapse: collapse;
         }
 
-        .Grid th, .Grid td {
-            padding: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .Grid, .Grid table td {
-            border: 0px solid #ccc;
-        }
-
-            .Grid th a, .Grid th a:visited {
-                color: #333;
+            table th {
+                background: #e3e3e3;
+                border-width: 1px;
+                padding: 18px;
+                border-style: solid;
+                border-color: #999999;
             }
-</style>
+
+            table td {
+                background: #fff;
+                border-width: 1px;
+                padding: 18px;
+                border-style: solid;
+                border-color: #999999;
+            }
+
+        .foot {
+            text-align: center;
+        }
+    </style>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -72,106 +75,22 @@
                 </div>
             </div>
             <div class="card-body">
-                <div id="jsGrid"></div>
-                
-            </div>
+                @grid.GetHtml(columns: grid.Columns(
+ grid.Column("Name"),
+ grid.Column("Email", header: "Email Address")
+ )
+)
+</div>
 
-        </div>
-        <!-- /.card-body -->
-        <div class="card-footer">
-            Footer
-        </div>
-        <!-- /.card-footer-->
+</div>
+<!-- /.card-body -->
+<div class="card-footer">
+    Footer
+</div>
+<!-- /.card-footer-->
 </div>
 <!-- /.card -->
     </section>
 <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
-
-
-
-<script>
-    var clients = [
-        { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
-        { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
-        { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
-        { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true },
-        { "Name": "Ramona Benton", "Age": 32, "Country": 3, "Address": "Ap #614-689 Vehicula Street", "Married": false }
-    ];
-
-    var myData = [{ "Id": 1, "Name": "TestCompany", "AddressLine1": null, "AddressLine2": null, "City": null, "State": null, "Phone": null, "Fax": null, "Dot": null, "RepresentativeName": null, "Email": "portech1@gmail.com", "Created": "0001-01-01T00:00:00", "Modified": "0001-01-01T00:00:00", "isDelete": false, "Status": null, "OldID": 0 }];
-
-
-    var countries = [
-        { Name: "", Id: 0 },
-        { Name: "United States", Id: 1 },
-        { Name: "Canada", Id: 2 },
-        { Name: "United Kingdom", Id: 3 }
-    ];
-
-    $('#jsGrid').jsGrid({
-        height: "auto",
-        width: "100%",
-        filtering: false,
-        sorting: true,
-        paging: true,
-        pageLoading: true,
-        autoload: true,
-        //controller: {
-        //    loadData: function () {
-        //        var d = $.Deferred();
-        //        $.ajax({
-        //            url: "GetCompanies",
-        //            type: "POST",
-        //            contentType: "application/json; charset=utf-8",
-        //            datatype: "json",
-        //            success: function (data) {
-        //                    d.resolve(data);
-        //                console.log('success ', data);
-
-        //                },
-        //                error: function (e) {
-        //                    alert("error: " + e.responseText);
-        //                }
-        //        });
-                
-        //        return d.promise();
-        //    }
-        //},
-        controller: {
-            loadData: function() {
-                var d = $.Deferred();
- 
-                $.ajax({
-                    url: "GetCompanies",
-                    type: "POST",
-                    dataType: "json"
-                }).done(function (response) {
-                    console.log("data returned", response.data);
-                    d.resolve(response);
-                });
- 
-                return d.promise();
-            }
-        },
-        // data: myData,
-        noDataContent: "No Record Found",
-        loadIndication: true,
-        // loadIndicationDelay: 500,
-        loadMessage: "Please, wait...",
-        loadShading: true,
-        fields: [
-                { name: "Name", type: "text", width: 50 },
-                { name: "Email", type: "text", width: 150 },
-                //{ name: "LastName", type: "text", width: 150 },
-                //{ name: "LicenseNumber", type: "number", width: 50, filtering: false },
-                //{ name: "RFIDNumber", type: "number", width: 50, filtering: false },
-                //{ name: "DateCreated", type: "date", width: 50, filtering: false },
-                //{ name: "LastUpdated", type: "date", width: 50, filtering: false },
-                //{ name: "CompanyId", type: "number", width: 50 }
-                //    { type: "control" }
-            ]
-    });
-</script>
