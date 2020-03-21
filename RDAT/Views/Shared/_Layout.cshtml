@@ -13,9 +13,12 @@
     <link rel="stylesheet" href="~/theme/plugins/jsgrid/jsgrid.min.css">
     <link rel="stylesheet" href="~/theme/plugins/jsgrid/jsgrid-theme.min.css">
     <link href="~/theme/dist/css/adminlte.min.css" rel="stylesheet" />
-    <link href="~/css/mvc-grid/mvc-grid.css" rel="stylesheet">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -78,7 +81,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="../Company/list" class="nav-link">
+                                    <a href="../Company/grid" class="nav-link">
                                         <i class="fa fa-list-ul nav-icon"></i>
                                         <p>View Companies</p>
                                     </a>
@@ -184,7 +187,8 @@
         </aside>
     </div>
     <!-- jQuery -->
-    <script src="~/theme/plugins/jquery/jquery.min.js"></script>
+    <!-- <script src="~/theme/plugins/jquery/jquery.min.js"></script> -->
+    
     <!-- Bootstrap 4 -->
     <script src="~/theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE App -->
@@ -192,16 +196,19 @@
     <!-- AdminLTE for demo purposes -->
     <script src="~/theme/dist/js/demo.js"></script>
     <!-- jsGrid -->
-    <script src="~/theme/plugins/jsgrid/demos/db.js"></script>
-    <script src="~/theme/plugins/jsgrid/jsgrid.min.js"></script>
-
-    <script src="~/js/mvc-grid/mvc-grid.js"></script>
-    <script>
+    <!--
+            <script src="~/theme/plugins/jsgrid/demos/db.js"></script>
+            <script src="~/theme/plugins/jsgrid/jsgrid.min.js"></script>
+            <script src="~/js/mvc-grid/mvc-grid.js"></script>
+        <script>
         document.querySelectorAll(".mvc-grid").forEach(element => new MvcGrid(element));
     </script>
+    -->
+    
+
 
     @RenderSection("Scripts", required: false)
 
 
 </body>
-</html>
+    </html>

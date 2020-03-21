@@ -16,6 +16,12 @@ namespace RDAT.Models
         [Required]
         public string Name { get; set; }
 
+        [DisplayName("Address")]
+        public string AddressLine1 { get; set; }
+
+        [DisplayName("Address Line 2")]
+        public string AddressLine2 { get; set; }
+
         public string City { get; set; }
 
         public string State { get; set; }
@@ -34,6 +40,20 @@ namespace RDAT.Models
 
         [DisplayName("Email Id")]
         public string Email { get; set; }
+
+        [DisplayName("Created")]
+        public DateTime Created { get; set; }
+
+        [DisplayName("Modified")]
+        public DateTime Modified { get; set; }
+
+        public Boolean isDelete { get; set; }
+
+        [DisplayName("Status")]
+        public string Status { get; set; }
+
+        // ID From previous application
+        public int OldID { get; set; }
 
 
     }

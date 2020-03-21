@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using RDAT.Data;
 using RDAT.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace RDAT.Controllers
@@ -47,6 +49,28 @@ namespace RDAT.Controllers
             var count = companys.Count();
 
             return View();
+        }
+
+        public ActionResult Grid()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public string GetCompanies()
+        {
+            using RDATContext context = new RDATContext();
+
+            var companys = context.Companys;
+            string json = JsonConvert.SerializeObject(companys);
+
+            var count = companys.Count();
+
+            var w = new GridData() { data = json, itemsCount = count };
+
+            string data = JsonConvert.SerializeObject(w);
+
+            return data;
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
