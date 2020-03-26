@@ -8,36 +8,7 @@
          rowsPerPage: 30);
 }
 
-    <style>
-        table {
-            font-family: verdana,arial,sans-serif;
-            font-size: 11px;
-            color: #333333;
-            border-width: 1px;
-            border-color: #999999;
-            border-collapse: collapse;
-        }
-
-            table th {
-                background: #e3e3e3;
-                border-width: 1px;
-                padding: 18px;
-                border-style: solid;
-                border-color: #999999;
-            }
-
-            table td {
-                background: #fff;
-                border-width: 1px;
-                padding: 18px;
-                border-style: solid;
-                border-color: #999999;
-            }
-
-        .foot {
-            text-align: center;
-        }
-    </style>
+    
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -75,12 +46,26 @@
                 </div>
             </div>
             <div class="card-body">
-                @grid.GetHtml(columns: grid.Columns(
+                @if (grid.HasSelection)
+                {
+                    var item = (RDAT.Models.Company)grid.Rows[grid.SelectedIndex].Value;
+                    <b>Name</b> @item.Name<br />
+                }
+                @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
+ grid.Column("id"),
  grid.Column("Name"),
- grid.Column("Email", header: "Email Address")
+ grid.Column("Email", header: "Email Address"),
+ grid.Column("Edit", format: (item) => item.GetSelectLink("Edit")),
+ grid.Column(
+       "",
+        header: "Actions",
+        format: @<text>
+                @Html.ActionLink("Edit", "Edit", new { id = item.id })
+            </text>
+     )
+  )
  )
-)
-</div>
+            </div>
 
 </div>
 <!-- /.card-body -->

@@ -26,6 +26,8 @@ namespace RDAT.Models
 
         public string State { get; set; }
 
+        public string Zip { get; set; }
+
         [DisplayName("Phone No")]
         public string Phone { get; set; }
 

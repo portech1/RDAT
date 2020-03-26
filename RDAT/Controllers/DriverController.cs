@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RDAT.Data;
 using RDAT.Models;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,13 +18,6 @@ namespace RDAT.Controllers
             using RDATContext context = new RDATContext();
 
             var drivers = context.Drivers;
-            //var _driverList = [];
-
-            //foreach(driver d in drivers)
-            //{
-            //    _driverList.Add(d)
-            //}
-
             var count = drivers.Count();
 
             return View(drivers.ToList());
@@ -59,9 +54,58 @@ namespace RDAT.Controllers
             return View(driver);
         }
 
-        public IActionResult Edit()
+        public IActionResult Edit(int id)
         {
-            return View();
+            using RDATContext context = new RDATContext();
+
+            Driver _driver = context.Drivers.Where(d => d.Id == id).FirstOrDefault();
+            ViewBag.CompanyName = _driver.DriverName;
+
+            // return data;
+            return View(_driver);
+        }
+
+        // POST: Company/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, IFormCollection collection)
+        {
+            try
+            {
+                using RDATContext context = new RDATContext();
+
+                Driver _driver = context.Drivers.Where(d => d.Id == id).FirstOrDefault();
+
+                _driver.DriverName = collection["DriverName"];
+                _driver.Phone = collection["Phone"];
+                _driver.Fax = collection["Fax"];
+                _driver.AddressLine1 = collection["AddressLine1"];
+                _driver.AddressLine2 = collection["AddressLine2"];
+                _driver.City = collection["City"];
+                _driver.State = collection["State"];
+                _driver.Zipcode = collection["Zipcode"];
+                _driver.Email = collection["Email"];
+                _driver.CDL = collection["CDL"];
+                _driver.Cell = collection["Cell"];
+                
+                if(Int32.TryParse(collection["Company_id"], out int result)) {
+                    _driver.Company_id = Int32.Parse(collection["Company_id"]);
+                };
+                
+                _driver.EnrollmentDate = DateTime.Parse(collection["EnrollmentDate"]);
+                _driver.TerminationDate = DateTime.Parse(collection["TerminationDate"]);
+
+                context.Update(_driver);
+                context.SaveChanges();
+
+                // return data;
+                return RedirectToAction(nameof(Index));
+
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }

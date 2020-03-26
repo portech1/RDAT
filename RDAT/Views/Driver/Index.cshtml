@@ -1,42 +1,14 @@
 ﻿@model IEnumerable<RDAT.Models.Driver>
 
 @{
-    ViewData["Title"] = "Blank";
+    ViewData["Title"] = "Grid";
+    Layout = "~/Views/Shared/_Layout.cshtml";
     WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model,
-         defaultSort: "Name",
+         defaultSort: "DriverName",
          rowsPerPage: 30);
 }
 
-    <style>
-        table {
-            font-family: verdana,arial,sans-serif;
-            font-size: 11px;
-            color: #333333;
-            border-width: 1px;
-            border-color: #999999;
-            border-collapse: collapse;
-        }
 
-            table th {
-                background: #e3e3e3;
-                border-width: 1px;
-                padding: 18px;
-                border-style: solid;
-                border-color: #999999;
-            }
-
-            table td {
-                background: #fff;
-                border-width: 1px;
-                padding: 18px;
-                border-style: solid;
-                border-color: #999999;
-            }
-
-        .foot {
-            text-align: center;
-        }
-    </style>
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -63,15 +35,45 @@
 
         <!-- Default box -->
         <div class="card">
-            
+            <div class="card-header">
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
             <div class="card-body">
-                @grid.GetHtml(columns: grid.Columns(
- grid.Column("DriverName"),grid.Column("City"),
- grid.Column("Email", header: "Email Address")
- )
+                @if (grid.HasSelection)
+                {
+                    var item = (RDAT.Models.Driver)grid.Rows[grid.SelectedIndex].Value;
+                    <b>Name</b> @item.DriverName<br />
+                }
+                @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
+ grid.Column("Id"),
+ grid.Column("DriverName"),
+ grid.Column("City"),
+ grid.Column("State"),
+ grid.Column("SSN"),
+ grid.Column("Phone"),
+ grid.Column("Email", header: "Email Address"),
+ grid.Column("EnrollmentDate","Enrollment",
+    format: (item) => string.Format("{0:dd-MMM-yyyy}", item.EnrollmentDate)),
+ grid.Column("TerminationDate","Termination",
+    format: (item) => string.Format("{0:dd-MMM-yyyy}", item.TerminationDate)),
+ grid.Column(
+       "",
+        header: "Actions",
+        format: @<text>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+        </text>
+)
+)
 )
             </div>
-            
+
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
@@ -84,27 +86,3 @@
 <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<!-- jQuery -->
-<script src="~/theme/plugins/jquery/jquery.min.js"></script>
-
-<!-- page script -->
-<script>
-    $(function () {
-        $("#jsGrid1").jsGrid({
-            height: "100%",
-            width: "100%",
-
-            sorting: true,
-            paging: true,
-
-            data: [{ "Name": "Chris", "Age": 38, "Address": "123 Main Street", "Country": "US", "Married": true }, { "Name": "Chris", "Age": 40, "Address": "123 Main Street", "Country": "US", "Married": true }, { "Name": "Chris", "Age": 25, "Address": "123 Main Street", "Country": "US", "Married": true }],
-
-            fields: [
-                { name: "Name", type: "text", width: 150 },
-                { name: "Age", type: "number", width: 50 },
-                { name: "Address", type: "text", width: 200 },
-                { name: "Country", type: "select", items: db.countries, valueField: "Id", textField: "Name" },
-                { name: "Married", type: "checkbox", title: "Is Married" }
-            ]
-        });
-    });</script>

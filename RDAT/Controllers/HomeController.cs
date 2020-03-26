@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RDAT.Data;
 using RDAT.Models;
 
 namespace RDAT.Controllers
@@ -36,7 +37,16 @@ namespace RDAT.Controllers
         
         public IActionResult Dashboard()
         {
-            return View();
+            DashboardViewModel _model = new DashboardViewModel();
+
+            using RDATContext context = new RDATContext();
+
+            _model.BadgeTotalNumberDrivers = context.Companys.Count();
+            _model.BadgeTotalDriversForTest = 77; // context.Companys.Where(d => ??).Count();
+            _model.BadgeClosedDrugTest = 99;
+            _model.BadgeClosedAlcoholTest = 88;
+
+            return View(_model);
         }
         public IActionResult Tables()
         {

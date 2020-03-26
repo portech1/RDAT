@@ -20,64 +20,12 @@ namespace RDAT.Controllers
         // GET: Company
         public ActionResult Index(string[] args)
         {
-            //Task.Run(() => { // or ThreadPool.QueueUserWorkItem(async _ => {
-
-            //    var host = CreateHostBuilder(args).Build(); 
-            //    var scope = host.Services.CreateScope();
-            //    var services = scope.ServiceProvider;
-
-            //    var context = services.GetRequiredService<RDATContext>();
-            //    context.Database.EnsureCreated();
-
-            //    using (context)//RDATContext context1 = new RDATContext())
-            //    {
-            //        var Companies = context.Companys.OrderBy(c => c.Name);
-
-            //        foreach (Company c in Companies)
-            //        {
-            //            Console.WriteLine(c.Name);
-            //        }
-
-            //        return View(Companies);
-            //    }
-            //});
-
             using RDATContext context = new RDATContext();
 
             var companys = context.Companys;
 
-            var count = companys.Count();
-
-            return View();
-        }
-
-        public ActionResult Grid()
-        {
-            using RDATContext context = new RDATContext();
-
-            var companys = context.Companys;
-            
             return View(companys.ToList());
         }
-
-        //public ActionResult Grid(int page = 1)
-        //{
-        //    const int pageSize = 5;
-
-        //    int totalRecords;
-        //    IEnumerable<Product> products = productService.GetProducts(
-        //      out totalRecords, pageSize: pageSize, pageIndex: page - 1);
-
-        //    PagedProductsModel model = new PagedProductsModel
-        //    {
-        //        PageSize = pageSize,
-        //        PageNumber = page,
-        //        Products = products,
-        //        TotalRows = totalRecords
-        //    };
-        //    return View(model);
-        //}
-
 
         public JsonResult GetCompanies()
         {
@@ -139,20 +87,22 @@ namespace RDAT.Controllers
         {
             try
             {
-                //// TODO: Add insert logic here
-                string Name = collection["Name"];
-                string Email = collection["Email"];
+                Company _company = new Company();
+
+                // Add Company
+                _company.Name = collection["Name"];
+                _company.Phone = collection["Phone"];
+                _company.Fax = collection["Fax"];
+                _company.AddressLine1 = collection["AddressLine1"];
+                _company.AddressLine2 = collection["AddressLine2"];
+                _company.City = collection["City"];
+                _company.State = collection["Zip"];
+                _company.Zip = collection["AddressLine1"];
+                _company.Email = collection["Email"];
 
                 using RDATContext context = new RDATContext();
 
-                Company newCo = new Company()
-                {
-                    Name = Name,
-                    Email = Email,
-                };
-
-                context.Companys.Add(newCo);
-
+                context.Companys.Add(_company);
                 context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
@@ -166,7 +116,13 @@ namespace RDAT.Controllers
         // GET: Company/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            using RDATContext context = new RDATContext();
+
+            Company _company = context.Companys.Where(c => c.Id == id).FirstOrDefault();
+            ViewBag.CompanyName = _company.Name;
+
+            // return data;
+            return View(_company);
         }
 
         // POST: Company/Edit/5
@@ -176,9 +132,26 @@ namespace RDAT.Controllers
         {
             try
             {
-                // TODO: Add update logic here
+                using RDATContext context = new RDATContext();
 
+                Company _company = context.Companys.Where(c => c.Id == id).FirstOrDefault();
+
+                _company.Name = collection["Name"];
+                _company.Phone = collection["Phone"];
+                _company.Fax = collection["Fax"];
+                _company.AddressLine1 = collection["AddressLine1"];
+                _company.AddressLine2 = collection["AddressLine2"];
+                _company.City = collection["City"];
+                _company.State = collection["State"];
+                _company.Zip = collection["Zip"];
+                _company.Email = collection["Email"];
+                                
+                context.Update(_company);
+                context.SaveChanges();
+
+                // return data;
                 return RedirectToAction(nameof(Index));
+
             }
             catch
             {
