@@ -49,19 +49,28 @@
                 @if (grid.HasSelection)
                 {
                     var item = (RDAT.Models.Company)grid.Rows[grid.SelectedIndex].Value;
-                    <b>Name</b> @item.Name<br />
+                <b>Name</b>  @item.Name<br />
                 }
                 @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
- grid.Column("id"),
- grid.Column("Name"),
- grid.Column("Email", header: "Email Address"),
- grid.Column("Edit", format: (item) => item.GetSelectLink("Edit")),
- grid.Column(
-       "",
-        header: "Actions",
-        format: @<text>
-                @Html.ActionLink("Edit", "Edit", new { id = item.id })
-        </text>
+grid.Column("",header: " ",
+(item) =>
+        (bool)item.IsFavorite
+            ? Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star'></i></a>")
+            : Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star-outline'></i></a>")
+),
+grid.Column("id","#"),
+grid.Column("Name"),
+grid.Column("City"),
+grid.Column("State"),
+grid.Column("Phone"),
+grid.Column("Fax"),
+grid.Column("DOT"),
+grid.Column("RepresentativeName","Representative Name"),
+grid.Column("Email", header: "Email Address"),
+grid.Column(
+"",
+header: "Actions",
+format: @<text>@Html.ActionLink("Star", "Favorite", new { id = item.id }, new {@class = "btn btn-success"})@Html.ActionLink("Edit", "Edit", new { id = item.id }, new {@class = "btn btn-info mt-2"})</text>
 )
 )
 )
@@ -79,3 +88,23 @@
 <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+
+<script type="text/javascript">
+    function GetSelectedRow(this) {
+        alert("CLICK");
+        return "ONE";
+    }
+
+    function  reloadGrid() {
+ 
+     $.ajax(
+         { type: "GET" ,
+             url: '/Home/ReloadGrid/' ,
+             data: "{}" ,
+             cache: false ,
+             dataType: "html" ,
+             success: function  (data)
+             { $( ).html(data); } 
+         })
+ }
+</script>

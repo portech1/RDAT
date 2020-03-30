@@ -49,9 +49,15 @@
                 @if (grid.HasSelection)
                 {
                     var item = (RDAT.Models.Driver)grid.Rows[grid.SelectedIndex].Value;
-                    <b>Name</b> @item.DriverName<br />
+                <b>Name</b>  @item.DriverName<br />
                 }
                 @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
+                grid.Column("",header: " ",
+(item) =>
+        (bool)item.IsFavorite
+            ? Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star'></i></a>")
+            : Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star-outline'></i></a>")
+),
  grid.Column("Id"),
  grid.Column("DriverName"),
  grid.Column("City"),
@@ -66,9 +72,7 @@
  grid.Column(
        "",
         header: "Actions",
-        format: @<text>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-        </text>
+        format: @<text>@Html.ActionLink("Star", "Favorite", new { id = item.id }, new {@class = "btn btn-success"})@Html.ActionLink("Edit", "Edit", new { id = item.id }, new {@class = "btn btn-info mt-2"})</text>
 )
 )
 )

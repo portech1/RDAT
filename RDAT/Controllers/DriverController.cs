@@ -65,6 +65,22 @@ namespace RDAT.Controllers
             return View(_driver);
         }
 
+        public ActionResult Favorite(int id)
+        {
+            var thisID = id;
+
+            using RDATContext context = new RDATContext();
+
+            Driver _driver = context.Drivers.Where(c => c.Id == id).FirstOrDefault();
+
+            _driver.isFavorite = !_driver.isFavorite;
+
+            context.Update(_driver);
+            context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
         // POST: Company/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]

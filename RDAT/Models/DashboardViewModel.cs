@@ -22,6 +22,10 @@ namespace RDAT.Models
 
         public List<Company> LatestCompanies { get; set; }
 
+        public List<Company> FavoriteCompanies { get; set; }
+        
+        public List<Driver> FavoriteDrivers { get; set; }
+
 
     }
 }

@@ -26,7 +26,20 @@ namespace RDAT.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            DashboardViewModel _model = new DashboardViewModel();
+
+            using RDATContext context = new RDATContext();
+
+            _model.BadgeTotalNumberDrivers = context.Drivers.Count();
+            _model.BadgeTotalDriversForTest = 77; // context.Companys.Where(d => ??).Count();
+            _model.BadgeClosedDrugTest = 99;
+            _model.BadgeClosedAlcoholTest = 88;
+
+            _model.FavoriteCompanies = context.Companys.Where(c => c.isFavorite).OrderByDescending(p => p.Id).ToList();
+            
+            _model.FavoriteDrivers = context.Drivers.Where(d => d.isFavorite).OrderByDescending(p => p.Id).ToList();
+
+            return View(_model);
         }
 
         public IActionResult Blank()
@@ -45,6 +58,8 @@ namespace RDAT.Controllers
             _model.BadgeTotalDriversForTest = 77; // context.Companys.Where(d => ??).Count();
             _model.BadgeClosedDrugTest = 99;
             _model.BadgeClosedAlcoholTest = 88;
+
+            var companys = context.Companys.OrderByDescending(p => p.Id).Take(5);
 
             return View(_model);
         }

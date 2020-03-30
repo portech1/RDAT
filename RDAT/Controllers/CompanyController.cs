@@ -27,6 +27,15 @@ namespace RDAT.Controllers
             return View(companys.ToList());
         }
 
+        public ActionResult DashboardCompanies()
+        {
+            using RDATContext context = new RDATContext();
+
+            var companys = context.Companys.OrderByDescending(p => p.Id).Take(5);
+
+            return View(companys.ToList());
+        }
+
         public JsonResult GetCompanies()
         {
             using RDATContext context = new RDATContext();
@@ -55,6 +64,22 @@ namespace RDAT.Controllers
         public ActionResult Details(int id)
         {
             return View();
+        }
+
+        public ActionResult Favorite(int id)
+        {
+            var thisID = id;
+
+            using RDATContext context = new RDATContext();
+
+            Company _company = context.Companys.Where(c => c.Id == id).FirstOrDefault();
+
+            _company.isFavorite = !_company.isFavorite;
+
+            context.Update(_company);
+            context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Company/List

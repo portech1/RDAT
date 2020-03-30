@@ -57,6 +57,9 @@ namespace RDAT.Models
         // ID From previous application
         public int OldID { get; set; }
 
+        // User has selected this company as a favorite
+        public Boolean isFavorite { get; set; }
+
 
     }
 }
