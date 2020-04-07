@@ -18,7 +18,7 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
 
-                    <h1><i class="nav-icon fas fa-th mr-2"></i>View Drivers</h1>
+                    <h1><i class="nav-icon fas fa-th mr-2"></i>@ViewBag.ListName</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -72,7 +72,7 @@
  grid.Column(
        "",
         header: "Actions",
-        format: @<text>@Html.ActionLink("Star", "Favorite", new { id = item.id }, new {@class = "btn btn-success"})@Html.ActionLink("Edit", "Edit", new { id = item.id }, new {@class = "btn btn-info mt-2"})</text>
+        format: @<text>@Html.ActionLink("Star", "Favorite", new { id = item.id }, new {@class = "btn btn-success m-1"})@Html.ActionLink("Edit", "Edit", new { id = item.id }, new {@class = "btn btn-info m-1"})</text>
 )
 )
 )
@@ -81,7 +81,7 @@
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
-            Footer
+
         </div>
         <!-- /.card-footer-->
 </div>

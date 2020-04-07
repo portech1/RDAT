@@ -1,10 +1,10 @@
-﻿@model IEnumerable<RDAT.Models.Company>
+﻿@model IEnumerable<RDAT.Models.TestingLog>
 
 @{
     ViewData["Title"] = "Grid";
     Layout = "~/Views/Shared/_Layout.cshtml";
     WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model,
-         defaultSort: "Name",
+         defaultSort: "DriverName",
          rowsPerPage: 30);
 }
 
@@ -18,12 +18,12 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
 
-                    <h1><i class="nav-icon fas fa-th mr-2"></i>View Companies</h1>
+                    <h1><i class="nav-icon fas fa-th mr-2"></i>@ViewBag.ListName</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Blank Page</li>
+                        <li class="breadcrumb-item active">Testing Logs</li>
                     </ol>
                 </div>
             </div>
@@ -46,31 +46,24 @@
                 </div>
             </div>
             <div class="card-body">
-                @if (grid.HasSelection)
-                {
-                    var item = (RDAT.Models.Company)grid.Rows[grid.SelectedIndex].Value;
-                <b>Name</b>  @item.Name<br />
-                }
+                
                 @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
-grid.Column("",header: " ",
-(item) =>
-        (bool)item.IsFavorite
-            ? Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star'></i></a>")
-            : Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star-outline'></i></a>")
-),
-grid.Column("id","#"),
-grid.Column("Name"),
-grid.Column("City"),
-grid.Column("State"),
-grid.Column("Phone"),
-grid.Column("Fax"),
-grid.Column("DOT"),
-grid.Column("RepresentativeName","Representative Name"),
-grid.Column("Email", header: "Email Address"),
-grid.Column(
-"",
-header: "Actions",
-format: @<text>@Html.ActionLink("Star", "Favorite", new { id = item.id }, new {@class = "btn btn-success m-1"})@Html.ActionLink("Edit", "Edit", new { id = item.id }, new {@class = "btn btn-info m-1"})</text>
+                
+ grid.Column("Id"),
+                grid.Column("Batch_Id"),
+ grid.Column("Selectiondatedrug", "Selection date drug",
+    format: (item) => string.Format("{0:dd-MMM-yyyy}", item.Selectiondatedrug)),
+ grid.Column("Selectiondatealcohol"),
+ grid.Column("Reported_Results"),
+ grid.Column("SSN"),
+ grid.Column("Specimen_Id"),
+ grid.Column("ClosedDate", "Enrollment",
+    format: (item) => string.Format("{0:dd-MMM-yyyy}", item.ClosedDate)),
+ grid.Column("Test_Process_Id"),
+ grid.Column(
+       "",
+        header: "Actions",
+        format: @<text>@Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-info m-1" })</text>
 )
 )
 )
@@ -79,7 +72,7 @@ format: @<text>@Html.ActionLink("Star", "Favorite", new { id = item.id }, new {@
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
-            
+
         </div>
         <!-- /.card-footer-->
 </div>
@@ -88,23 +81,3 @@ format: @<text>@Html.ActionLink("Star", "Favorite", new { id = item.id }, new {@
 <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
-<script type="text/javascript">
-    function GetSelectedRow(this) {
-        alert("CLICK");
-        return "ONE";
-    }
-
-    function  reloadGrid() {
- 
-     $.ajax(
-         { type: "GET" ,
-             url: '/Home/ReloadGrid/' ,
-             data: "{}" ,
-             cache: false ,
-             dataType: "html" ,
-             success: function  (data)
-             { $( ).html(data); } 
-         })
- }
-</script>

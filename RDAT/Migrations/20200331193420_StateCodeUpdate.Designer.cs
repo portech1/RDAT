@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RDAT.Data;
 
 namespace RDAT.Migrations
 {
     [DbContext(typeof(RDATContext))]
-    partial class RDATContextModelSnapshot : ModelSnapshot
+    [Migration("20200331193420_StateCodeUpdate")]
+    partial class StateCodeUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -467,53 +469,29 @@ namespace RDAT.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("Alcohol_Percentage")
-                        .HasColumnType("float");
-
-                    b.Property<int>("Batch_Id")
+                    b.Property<int>("Company_Id")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ClosedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Driver_Id")
                         .HasColumnType("int");
 
-                    b.Property<double>("Drug_Percentage")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Reported_Results")
+                    b.Property<string>("Driver_Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ResultsDate")
+                    b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SSN")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("Selectiondatealcohol")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Selectiondatedrug")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Specimen_Id")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Test_Process_Id")
+                    b.Property<int>("Test_Type")
                         .HasColumnType("int");
-
-                    b.Property<string>("Test_Type")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isDelete")
                         .HasColumnType("bit");

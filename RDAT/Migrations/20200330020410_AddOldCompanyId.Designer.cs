@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RDAT.Data;
 
 namespace RDAT.Migrations
 {
     [DbContext(typeof(RDATContext))]
-    partial class RDATContextModelSnapshot : ModelSnapshot
+    [Migration("20200330020410_AddOldCompanyId")]
+    partial class AddOldCompanyId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,54 +223,6 @@ namespace RDAT.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("RDAT.Models.Batch", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Alcohol_Percentage")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Alcohol_Tests")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Drug_Percentage")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Drug_Tests")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Eligible_Drivers")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Replaced_By")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("RunDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("User_Id")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isDelete")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Batches");
-                });
-
             modelBuilder.Entity("RDAT.Models.Company", b =>
                 {
                     b.Property<int>("Id")
@@ -401,126 +355,6 @@ namespace RDAT.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Drivers");
-                });
-
-            modelBuilder.Entity("RDAT.Models.Result", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isDelete")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Results");
-                });
-
-            modelBuilder.Entity("RDAT.Models.State", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("StateName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("State_Code")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isDelete")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("States");
-                });
-
-            modelBuilder.Entity("RDAT.Models.TestingLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("Alcohol_Percentage")
-                        .HasColumnType("float");
-
-                    b.Property<int>("Batch_Id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ClosedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Driver_Id")
-                        .HasColumnType("int");
-
-                    b.Property<double>("Drug_Percentage")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Reported_Results")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ResultsDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SSN")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Selectiondatealcohol")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("Selectiondatedrug")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Specimen_Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Test_Process_Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Test_Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isDelete")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TestingLogs");
                 });
 
             modelBuilder.Entity("RDAT.Models.ApplicationUser", b =>

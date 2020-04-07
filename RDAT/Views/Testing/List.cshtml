@@ -1,0 +1,133 @@
+﻿@model IEnumerable<RDAT.Models.TestingLog>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Batch_Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Selectiondatedrug)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Selectiondatealcohol)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reported_Results)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResultsDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SSN)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Specimen_Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClosedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Test_Process_Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Driver_Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Test_Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Drug_Percentage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Alcohol_Percentage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Modified)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.isDelete)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Batch_Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Selectiondatedrug)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Selectiondatealcohol)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reported_Results)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ResultsDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SSN)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Specimen_Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClosedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Test_Process_Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Driver_Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Test_Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Drug_Percentage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Alcohol_Percentage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Modified)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.isDelete)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

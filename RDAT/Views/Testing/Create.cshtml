@@ -1,0 +1,111 @@
+﻿@model RDAT.Models.TestingLog
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>TestingLog</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Batch_Id" class="control-label"></label>
+                <input asp-for="Batch_Id" class="form-control" />
+                <span asp-validation-for="Batch_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Selectiondatedrug" class="control-label"></label>
+                <input asp-for="Selectiondatedrug" class="form-control" />
+                <span asp-validation-for="Selectiondatedrug" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Selectiondatealcohol" class="control-label"></label>
+                <input asp-for="Selectiondatealcohol" class="form-control" />
+                <span asp-validation-for="Selectiondatealcohol" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Reported_Results" class="control-label"></label>
+                <input asp-for="Reported_Results" class="form-control" />
+                <span asp-validation-for="Reported_Results" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ResultsDate" class="control-label"></label>
+                <input asp-for="ResultsDate" class="form-control" />
+                <span asp-validation-for="ResultsDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SSN" class="control-label"></label>
+                <input asp-for="SSN" class="form-control" />
+                <span asp-validation-for="SSN" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Specimen_Id" class="control-label"></label>
+                <input asp-for="Specimen_Id" class="form-control" />
+                <span asp-validation-for="Specimen_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClosedDate" class="control-label"></label>
+                <input asp-for="ClosedDate" class="form-control" />
+                <span asp-validation-for="ClosedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Test_Process_Id" class="control-label"></label>
+                <input asp-for="Test_Process_Id" class="form-control" />
+                <span asp-validation-for="Test_Process_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Driver_Id" class="control-label"></label>
+                <input asp-for="Driver_Id" class="form-control" />
+                <span asp-validation-for="Driver_Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Test_Type" class="control-label"></label>
+                <input asp-for="Test_Type" class="form-control" />
+                <span asp-validation-for="Test_Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Drug_Percentage" class="control-label"></label>
+                <input asp-for="Drug_Percentage" class="form-control" />
+                <span asp-validation-for="Drug_Percentage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Alcohol_Percentage" class="control-label"></label>
+                <input asp-for="Alcohol_Percentage" class="form-control" />
+                <span asp-validation-for="Alcohol_Percentage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Created" class="control-label"></label>
+                <input asp-for="Created" class="form-control" />
+                <span asp-validation-for="Created" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Modified" class="control-label"></label>
+                <input asp-for="Modified" class="form-control" />
+                <span asp-validation-for="Modified" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="isDelete" /> @Html.DisplayNameFor(model => model.isDelete)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

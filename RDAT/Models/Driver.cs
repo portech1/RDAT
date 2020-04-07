@@ -63,6 +63,8 @@ namespace RDAT.Models
 
         public int Company_id { get; set; }
 
+        public int OldCompanyId { get; set; }
+
         // User has selected this driver as a favorite
         public Boolean isFavorite { get; set; }
 

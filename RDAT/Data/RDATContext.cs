@@ -16,6 +16,15 @@ namespace RDAT.Data
         public DbSet<Company> Companys { get; set; }
         public DbSet<Driver> Drivers { get; set; }
 
+        public DbSet<Batch> Batches { get; set; }
+
+        public DbSet<Result> Results { get; set; }
+
+        public DbSet<State> States { get; set; }
+
+        public DbSet<TestingLog> TestingLogs { get; set; }
+
+
         //public RDATContext(DbContextOptions<RDATContext> options)
         //: base(options)
         //{ }

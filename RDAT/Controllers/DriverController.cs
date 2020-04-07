@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using RDAT.Data;
 using RDAT.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,14 +14,28 @@ namespace RDAT.Controllers
     [Authorize]
     public class DriverController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(int id = 0)
         {
             using RDATContext context = new RDATContext();
 
-            var drivers = context.Drivers;
-            var count = drivers.Count();
+            var drivers = new List<Driver>();
+            var listName = "All Drivers";
+            
 
-            return View(drivers.ToList());
+            if(id != 0)
+            {
+                drivers = context.Drivers.Where(c => c.Company_id == id).ToList();
+                listName = context.Companys.Where(c => c.Id == id).FirstOrDefault().Name + " Drivers";
+            }
+            else
+            {
+drivers = context.Drivers.ToList();
+            }
+
+            var count = drivers.Count();
+            ViewBag.ListName = listName;
+
+            return View(drivers);
         }
 
         public IActionResult Create()
