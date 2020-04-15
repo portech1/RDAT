@@ -56,9 +56,21 @@ namespace RDAT.Controllers
             return View(model);
         }
 
-        public IActionResult MyViewComponent(string searchTerm)
+        public IActionResult SearchCompanies(DashboardViewModel model)
+        {
+            var _searchTerm = model.SearchCompanies;
+
+            return View(model);
+        }
+
+        public IActionResult GetFeaturedDrivers(string searchTerm)
         {
             return ViewComponent("FeaturedDrivers", new { searchTerm = searchTerm });
+        }
+
+        public IActionResult GetFeaturedCompanies(string searchTerm)
+        {
+            return ViewComponent("FeaturedCompanies", new { searchTerm = searchTerm });
         }
 
 

@@ -98,23 +98,27 @@
                 <section class="col-lg-7 connectedSortable">
                     <!-- Custom tabs (Charts with tabs)-->
                     <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-chart-pie mr-1"></i>
-                                Companies (coming soon)
-                            </h3>
-                            <div class="card-tools">
-                                <ul class="nav nav-pills ml-auto">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#sales-chart" data-toggle="tab">View Entire List</a>
-                                    </li>
-                                </ul>
+                        <div class="card-header border-0">
+                            <div class="row">
+                                <div class="col">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-map-marker-alt mr-1"></i>
+                                        Companies
+                                    </h3>
+                                </div>
+                                <div class="col">
+                                    <input id="searchCompanies" class="form-control" />
+                                </div>
+                                <div class="col">
+                                    <input onclick="refreshCompaniesComponent();" value="Search" class="btn btn-primary" />
+                                </div>
+
                             </div>
                         </div><!-- /.card-header -->
                         <div class="card-body">
-                            <div class="tab-content p-0">
+                            <div class="tab-content p-0"  id="companyContainer">
                                 <!-- Favorite Companies -->
-                                <partial name="_FavoriteCompanies" model="Model.FavoriteCompanies" />
+                                @await Component.InvokeAsync("FeaturedCompanies")
                             </div>
                         </div><!-- /.card-body -->
                     </div>
@@ -140,11 +144,11 @@
                                         <input id="searchDrivers" class="form-control" />
                                     </div>
                                     <div class="col">
-                                        <input onclick="refreshComponent();" value="Search" class="btn btn-primary" />
+                                        <input onclick="refreshDriverComponent();" value="Search" class="btn btn-primary" />
                                     </div>
                                 
-                            </div>
-                            <div class="card-body">
+                            </div></div>
+                            <div class="card-body" id="driverContainer">
                                 <!-- Favorite Companies -->
                                 @await Component.InvokeAsync("FeaturedDrivers") 
                             </div>
@@ -182,11 +186,16 @@
 <!-- /.content-wrapper -->
 
 <script>
-    var container = $("#myComponentContainer");
-    var refreshComponent = function () {
+    var container = $("#driverContainer");
+    var companyContainer = $("#companyContainer");
+    var refreshDriverComponent = function () {
         var _search = $("#searchDrivers").val();
-        alert(_search);
-        $.get("/Home/MyViewComponent?searchTerm=" + _search, function (data) { container.html(data); });
+        $.get("/Home/GetFeaturedDrivers?searchTerm=" + _search, function (data) { container.html(data); });
+    };
+
+    var refreshCompaniesComponent = function () {
+        var _search = $("#searchCompanies").val();
+        $.get("/Home/GetFeaturedCompanies?searchTerm=" + _search, function (data) { companyContainer.html(data); });
     };
 
     $(function () {

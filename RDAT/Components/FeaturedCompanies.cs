@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace RDAT.Components
 {
-    public class FeaturedDrivers: ViewComponent
+    public class FeaturedCompanies: ViewComponent
     {
         public IViewComponentResult Invoke(string searchTerm)
         {
-            FeaturedDriversViewModel _model = new FeaturedDriversViewModel();
+            FeaturedCompaniesViewModel _model = new FeaturedCompaniesViewModel();
             using RDATContext context = new RDATContext();
 
             var my = searchTerm;
             if(searchTerm != null)
             {
-                _model.Drivers = context.Drivers.Where(d => d.DriverName.Contains(searchTerm)).OrderByDescending(p => p.Id).ToList();
+                _model.Companies = context.Companys.Where(c => c.Name.Contains(searchTerm)).OrderByDescending(p => p.Id).ToList();
             }
             else
             {
-                _model.Drivers = context.Drivers.Where(d => d.isFavorite).OrderByDescending(p => p.Id).ToList();
+                _model.Companies = context.Companys.Where(c => c.isFavorite).OrderByDescending(p => p.Id).ToList();
             }
            
             return View(_model);
