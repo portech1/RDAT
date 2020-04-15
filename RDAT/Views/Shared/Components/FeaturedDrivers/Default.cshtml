@@ -1,0 +1,29 @@
+﻿@model RDAT.ViewModels.FeaturedDriversViewModel
+
+@{
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.Drivers,
+         defaultSort: "Name",
+         rowsPerPage: 5);
+}
+
+
+<div class="bg-white">
+    @if (grid.HasSelection)
+    {
+        var item = (RDAT.Models.Driver)grid.Rows[grid.SelectedIndex].Value;
+        <b>Name</b> @item.DriverName
+        <br />
+    }
+    @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
+    grid.Column("id", "#"),
+    grid.Column("DriverName"),
+    grid.Column(
+    "",
+    header: "Actions",
+    format: @<text>
+            @Html.ActionLink("Edit", "Edit", "Driver", new { id = item.id }, new { @class = "btn btn-info" })
+    </text>
+)
+)
+)
+</div>

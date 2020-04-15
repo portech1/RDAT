@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RDAT.Data;
 using RDAT.Models;
+using RDAT.ViewModels;
 
 namespace RDAT.Controllers
 {
@@ -30,8 +31,10 @@ namespace RDAT.Controllers
             return View();
         }
 
-        public IActionResult Driver(int limit = 100)
+        public IActionResult CreateBatch(int limit = 100)
         {
+            CreateBatchViewModel _model = new CreateBatchViewModel();
+            
             var drivers = new List<Driver>();
             double _percentage = 0;
             ViewBag.limit = limit;
@@ -49,7 +52,39 @@ namespace RDAT.Controllers
                 var count = drivers.Count();
             };
 
-            return View(drivers);
+            _model.drivers = drivers;
+            _model.batchRequest = new CreateBatch();
+
+            // Old model on page was --> IEnumerable<RDAT.Models.Driver>
+
+            return View(_model);
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //// public async Task<IActionResult> CreateBatch([Bind("id,ActivePool,DrugPercentage,DrugTestDate,AlcoholPercentage,AlcoholTestDate")] CreateBatch createBatch)
+        //public async Task<IActionResult> UpdateBatch(CreateBatchViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        //_context.Add(createBatch);
+        //        //await _context.SaveChangesAsync();
+        //        //return RedirectToAction(nameof(Index));
+        //    }
+        //    var me = model.batchRequest.ActivePool;
+        //    return View(model);
+        //}
+
+        public IActionResult UpdateBatch(CreateBatchViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                //_context.Add(createBatch);
+                //await _context.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+            }
+            var me = model.batchRequest.ActivePool;
+            return View(model);
         }
 
         public IActionResult Company()

@@ -1,0 +1,60 @@
+﻿@model IEnumerable<RDAT.Models.CreateBatch>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ActivePool)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DrugPercentage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DrugTestDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AlcoholPercentage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AlcoholTestDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActivePool)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DrugPercentage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DrugTestDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AlcoholPercentage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AlcoholTestDate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

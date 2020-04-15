@@ -1,14 +1,9 @@
-﻿@model IEnumerable<RDAT.Models.Driver>
-
-@{
-    ViewData["Title"] = "Grid";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model,
-         defaultSort: "DriverName",
-         rowsPerPage: 30);
+﻿@model RDAT.ViewModels.CreateBatchViewModel 
+                                             
+@{ 
+    ViewData["Title"] = "Grid"; Layout = "~/Views/Shared/_Layout.cshtml"; 
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.drivers, defaultSort: "DriverName", rowsPerPage: 30); 
 }
-
-
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -89,10 +84,47 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
                 <!-- /.row -->
-                
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <form asp-action="UpdateBatch" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="@Model.batchRequest.ActivePool" class="control-label"></label>
+                                <input asp-for="@Model.batchRequest.ActivePool" class="form-control" />
+                                <span asp-validation-for="@Model.batchRequest.ActivePool" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="@Model.batchRequest.DrugPercentage" class="control-label"></label>
+                                <input asp-for="@Model.batchRequest.DrugPercentage" class="form-control" />
+                                <span asp-validation-for="@Model.batchRequest.DrugPercentage" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="@Model.batchRequest.DrugTestDate" class="control-label"></label>
+                                <input asp-for="@Model.batchRequest.DrugTestDate" class="form-control" />
+                                <span asp-validation-for="@Model.batchRequest.DrugTestDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="@Model.batchRequest.AlcoholPercentage" class="control-label"></label>
+                                <input asp-for="@Model.batchRequest.AlcoholPercentage" class="form-control" />
+                                <span asp-validation-for="@Model.batchRequest.AlcoholPercentage" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="@Model.batchRequest.AlcoholTestDate" class="control-label"></label>
+                                <input asp-for="@Model.batchRequest.AlcoholTestDate" class="form-control" />
+                                <span asp-validation-for="@Model.batchRequest.AlcoholTestDate" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <input type="submit" value="Create" class="btn btn-primary" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <div class="row">
                     @if (grid.HasSelection)
                     {
@@ -134,9 +166,9 @@
                     <button type="button" class="btn btn-success" >
                         Create Batch
                     </button>
-                    
+
                 </div>
-            
+
         </div>
         <!-- /.card-footer-->
 </div>

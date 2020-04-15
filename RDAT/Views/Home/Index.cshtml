@@ -1,4 +1,6 @@
-﻿@{
+﻿@model RDAT.Models.DashboardViewModel
+
+@{
     ViewData["Title"] = "Dashboard";
     Layout = "_Layout";
 }
@@ -32,9 +34,9 @@
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>@Model.BadgeTotalNumberDrivers</h3>
+                            <h3>@Model.BadgeTotalActiveDrivers</h3>
 
-                            <p>Total Number of Drivers</p>
+                            <p>Total Active Drivers</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-users"></i>
@@ -47,9 +49,9 @@
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>53<sup style="font-size: 20px">%</sup></h3>
+                            <h3>@Model.BadgeTotalActiveCompanies</h3>
 
-                            <p>Total Drivers for Test</p>
+                            <p>Total Active Companies</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-user-tag"></i>
@@ -62,9 +64,9 @@
                     <!-- small box -->
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>44</h3>
+                            <h3>@Model.BadgeOutstandingDrugTest</h3>
 
-                            <p>Closed Drug Test</p>
+                            <p>Outstanding Drug Test</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-prescription-bottle-alt"></i>
@@ -77,9 +79,9 @@
                     <!-- small box -->
                     <div class="small-box bg-danger">
                         <div class="inner">
-                            <h3>65</h3>
+                            <h3>@Model.BadgeOutstandingAlcoholTest</h3>
 
-                            <p>Closed Alcohol Test</p>
+                            <p>Outstanding Alcohol Test</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-beer"></i>
@@ -117,8 +119,8 @@
                         </div><!-- /.card-body -->
                     </div>
                     <!-- /.card -->
-                    
-                    
+
+
                 </section>
                 <!-- /.Left col -->
                 <!-- right col (We are only adding the ID to make the widgets sortable)-->
@@ -127,55 +129,48 @@
                     <!-- Map card -->
                     <div class="card bg-gradient-primary">
                         <div class="card-header border-0">
-                            <h3 class="card-title">
-                                <i class="fas fa-map-marker-alt mr-1"></i>
-                                Drivers
-                            </h3>
-                            <!-- card tools -->
-                            <div class="card-tools">
-                                <button type="button"
-                                        class="btn btn-primary btn-sm daterange"
-                                        data-toggle="tooltip"
-                                        title="Date range">
-                                    <i class="far fa-calendar-alt"></i>
-                                </button>
-                                <button type="button"
-                                        class="btn btn-primary btn-sm"
-                                        data-card-widget="collapse"
-                                        data-toggle="tooltip"
-                                        title="Collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                            <!-- /.card-tools -->
-                        </div>
-                        <div class="card-body">
-                            <!-- Favorite Companies -->
-                            <partial name="_FavoriteDrivers" model="Model.FavoriteDrivers" />
-                        </div>
-                        <!-- /.card-body-->
-                        <div class="card-footer bg-transparent">
                             <div class="row">
-                                <div class="col-4 text-center">
-                                    <div id="sparkline-1"></div>
-                                    <div class="text-white">Driver List</div>
+                                <div class="col">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-map-marker-alt mr-1"></i>
+                                        Drivers
+                                    </h3>
                                 </div>
-                                <!-- ./col -->
-                                <div class="col-4 text-center">
-                                    <div id="sparkline-2"></div>
-                                    <div class="text-white">Add +</div>
-                                </div>
-                                <!-- ./col -->
-                                <div class="col-4 text-center">
-                                    <div id="sparkline-3"></div>
-                                    <div class="text-white">Export ></div>
-                                </div>
-                                <!-- ./col -->
+                                    <div class="col">
+                                        <input id="searchDrivers" class="form-control" />
+                                    </div>
+                                    <div class="col">
+                                        <input onclick="refreshComponent();" value="Search" class="btn btn-primary" />
+                                    </div>
+                                
                             </div>
-                            <!-- /.row -->
+                            <div class="card-body">
+                                <!-- Favorite Companies -->
+                                @await Component.InvokeAsync("FeaturedDrivers") 
+                            </div>
+                            <!-- /.card-body-->
+                            <div class="card-footer bg-transparent">
+                                <div class="row">
+                                    <div class="col-4 text-center">
+                                        <div id="sparkline-1"></div>
+                                        <div class="text-white">Driver List</div>
+                                    </div>
+                                    <!-- ./col -->
+                                    <div class="col-4 text-center">
+                                        <div id="sparkline-2"></div>
+                                        <div class="text-white">Add +</div>
+                                    </div>
+                                    <!-- ./col -->
+                                    <div class="col-4 text-center">
+                                        <div id="sparkline-3"></div>
+                                        <div class="text-white">Export ></div>
+                                    </div>
+                                    <!-- ./col -->
+                                </div>
+                                <!-- /.row -->
+                            </div>
                         </div>
-                    </div>
-                    
+
                 </section>
                 <!-- right col -->
             </div>
@@ -185,3 +180,16 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+
+<script>
+    var container = $("#myComponentContainer");
+    var refreshComponent = function () {
+        var _search = $("#searchDrivers").val();
+        alert(_search);
+        $.get("/Home/MyViewComponent?searchTerm=" + _search, function (data) { container.html(data); });
+    };
+
+    $(function () {
+        // window.setInterval(refreshComponent, 1000);
+    });
+</script>

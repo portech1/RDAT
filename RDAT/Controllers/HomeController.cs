@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RDAT.Data;
 using RDAT.Models;
+using RDAT.ViewModels;
 
 namespace RDAT.Controllers
 {
@@ -30,10 +31,10 @@ namespace RDAT.Controllers
 
             using RDATContext context = new RDATContext();
 
-            _model.BadgeTotalNumberDrivers = context.Drivers.Count();
-            _model.BadgeTotalDriversForTest = 77; // context.Companys.Where(d => ??).Count();
-            _model.BadgeClosedDrugTest = 99;
-            _model.BadgeClosedAlcoholTest = 88;
+            _model.BadgeTotalActiveDrivers = context.Drivers.Count();
+            _model.BadgeTotalActiveCompanies = 77; // context.Companys.Where(d => ??).Count();
+            _model.BadgeOutstandingDrugTest = 99;
+            _model.BadgeOutstandingAlcoholTest = 88;
 
             _model.FavoriteCompanies = context.Companys.Where(c => c.isFavorite).OrderByDescending(p => p.Id).ToList();
             
@@ -47,17 +48,30 @@ namespace RDAT.Controllers
             return View();
         }
 
-        
+        public IActionResult Search(DashboardViewModel model)
+        {
+            var _searchTerm = model.SearchDrivers;
+
+
+            return View(model);
+        }
+
+        public IActionResult MyViewComponent(string searchTerm)
+        {
+            return ViewComponent("FeaturedDrivers", new { searchTerm = searchTerm });
+        }
+
+
         public IActionResult Dashboard()
         {
             DashboardViewModel _model = new DashboardViewModel();
 
             using RDATContext context = new RDATContext();
 
-            _model.BadgeTotalNumberDrivers = context.Companys.Count();
-            _model.BadgeTotalDriversForTest = 77; // context.Companys.Where(d => ??).Count();
-            _model.BadgeClosedDrugTest = 99;
-            _model.BadgeClosedAlcoholTest = 88;
+            _model.BadgeTotalActiveDrivers = context.Drivers.Count();
+            _model.BadgeTotalActiveCompanies = 77; // context.Companys.Where(d => ??).Count();
+            _model.BadgeOutstandingDrugTest = 99;
+            _model.BadgeOutstandingAlcoholTest = 88;
 
             var companys = context.Companys.OrderByDescending(p => p.Id).Take(5);
 

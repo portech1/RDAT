@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RDAT.Models;
+using RDAT.ViewModels;
 
 namespace RDAT.Controllers
 {

@@ -42,6 +42,8 @@ namespace RDAT.Data
             optionsBuilder.UseSqlServer("Server=tcp:nfssql01.database.windows.net,1433;Initial Catalog=NFS_SQL_01;Persist Security Info=False;User ID=nfsadmin;Password=IFTAtaxes2017;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
         }
 
+        public DbSet<RDAT.Models.CreateBatch> CreateBatch { get; set; }
+
         
     }
 }
