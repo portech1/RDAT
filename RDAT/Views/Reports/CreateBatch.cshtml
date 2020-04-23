@@ -2,7 +2,7 @@
                                              
 @{ 
     ViewData["Title"] = "Grid"; Layout = "~/Views/Shared/_Layout.cshtml"; 
-    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.drivers, defaultSort: "DriverName", rowsPerPage: 30); 
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.tempTestingLogs, defaultSort: "Driver_Id", rowsPerPage: 10000); 
 }
 
 <!-- Content Wrapper. Contains page content -->
@@ -30,20 +30,10 @@
 
         <!-- Default box -->
         <div class="card">
-            <div class="card-header">
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
             <div class="card-body">
                 <!-- Small boxes (Stat box) -->
                 <div class="row">
-                    <div class="col-lg-4 col-6">
+                    <div class="col-lg-3 col-6">
                         <!-- small box -->
                         <div class="small-box bg-info">
                             <div class="inner">
@@ -57,11 +47,11 @@
                         </div>
                     </div>
                     <!-- ./col -->
-                    <div class="col-lg-4 col-6">
+                    <div class="col-lg-3 col-6">
                         <!-- small box -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <h3>@ViewBag.limit</h3>
+                                <h3>@ViewBag.totalDrivers</h3>
 
                                 <p>Total Drivers for Test</p>
                             </div>
@@ -71,60 +61,78 @@
                         </div>
                     </div>
                     <!-- ./col -->
-                    <div class="col-lg-4 col-6">
+                    <div class="col-lg-3 col-6">
                         <!-- small box -->
                         <div class="small-box bg-warning">
                             <div class="inner">
-                                <h3>@ViewBag.percentage<sup style="font-size: 20px">%</sup></h3>
+                                <h3>@ViewBag.percentDrug<sup style="font-size: 20px">%</sup></h3>
 
-                                <p>Percentage Included</p>
+                                <p>Percentage Drug</p>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-pie-graph"></i>
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-secondary">
+                            <div class="inner">
+                                <h3>@ViewBag.percentAlcohol<sup style="font-size: 20px">%</sup></h3>
 
+                                <p>Percentage Alcohol</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-pie-graph"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.row -->
-
-                <div class="row">
-                    <div class="col-md-4">
-                        <form asp-action="UpdateBatch" method="post">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group">
-                                <label asp-for="@Model.batchRequest.ActivePool" class="control-label"></label>
-                                <input asp-for="@Model.batchRequest.ActivePool" class="form-control" />
-                                <span asp-validation-for="@Model.batchRequest.ActivePool" class="text-danger"></span>
-                            </div>
+                <div class="alert alert-light border-dark" role="alert">
+                <form asp-action="CreateBatch" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="@Model.batchRequest.DrugPercentage" class="control-label"></label>
                                 <input asp-for="@Model.batchRequest.DrugPercentage" class="form-control" />
                                 <span asp-validation-for="@Model.batchRequest.DrugPercentage" class="text-danger"></span>
                             </div>
+
+                            <div class="form-group">
+    <label asp-for="@Model.batchRequest.AlcoholPercentage" class="control-label"></label>
+    <input asp-for="@Model.batchRequest.AlcoholPercentage" class="form-control" />
+    <span asp-validation-for="@Model.batchRequest.AlcoholPercentage" class="text-danger"></span>
+</div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label asp-for="@Model.batchRequest.DrugTestDate" class="control-label"></label>
                                 <input asp-for="@Model.batchRequest.DrugTestDate" class="form-control" />
                                 <span asp-validation-for="@Model.batchRequest.DrugTestDate" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="@Model.batchRequest.AlcoholPercentage" class="control-label"></label>
-                                <input asp-for="@Model.batchRequest.AlcoholPercentage" class="form-control" />
-                                <span asp-validation-for="@Model.batchRequest.AlcoholPercentage" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
                                 <label asp-for="@Model.batchRequest.AlcoholTestDate" class="control-label"></label>
                                 <input asp-for="@Model.batchRequest.AlcoholTestDate" class="form-control" />
                                 <span asp-validation-for="@Model.batchRequest.AlcoholTestDate" class="text-danger"></span>
                             </div>
-                            
-                            <div class="form-group">
-                                <input type="submit" value="Create" class="btn btn-primary" />
-                            </div>
-                        </form>
-                    </div>
-                </div>
 
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <input type="submit" value="Generate New List of Drivers" class="btn btn-primary" />
+                                <button type="button" class="btn btn-success ml-2">
+                                    Create Batch from This List
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form> </div>
                 <div class="row">
                     @if (grid.HasSelection)
                     {
@@ -132,30 +140,16 @@
                         <b>Name</b> @item.DriverName<br />
                     }
                     @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
-                    grid.Column("", header: " ",
-    (item) =>
-            (bool)item.IsFavorite
-                ? Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star'></i></a>")
-                : Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star-outline'></i></a>")
-    ),
-     grid.Column("Id"),
-     grid.Column("DriverName"),
-     grid.Column("City"),
-     grid.Column("State"),
-     grid.Column("SSN"),
-     grid.Column("Phone"),
-     grid.Column("Email", header: "Email Address"),
-     grid.Column("EnrollmentDate", "Enrollment",
-        format: (item) => string.Format("{0:dd-MMM-yyyy}", item.EnrollmentDate)),
-     grid.Column("TerminationDate", "Termination",
-        format: (item) => string.Format("{0:dd-MMM-yyyy}", item.TerminationDate)),
-     grid.Column(
-           "",
-            header: "Actions",
-            format: @<text>@Html.ActionLink("Remove", "Remove", new { id = item.id }, new { @class = "btn btn-info m-1" })</text>
-)
-)
-)
+
+                     grid.Column("Driver_Id"),
+                     grid.Column("Driver_Name"),
+                     grid.Column("Test_Type"),
+                     grid.Column("CreatedDate", "Created Date",
+                        format: (item) => (item.CreatedDate == null) ? "" : string.Format("{0:dd-MMM-yyyy}", item.CreatedDate)),
+                     grid.Column("Status")
+                    )
+                    )
+
                 </div>
             </div>
 
@@ -163,9 +157,7 @@
         <!-- /.card-body -->
         <div class="card-footer">
             <div class="card-tools">
-                    <button type="button" class="btn btn-success" >
-                        Create Batch
-                    </button>
+                    
 
                 </div>
 

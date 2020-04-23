@@ -1,0 +1,47 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DriverListTemp</title>
+</head>
+<body>
+   
+    @*@if (grid.HasSelection)
+    {
+        var item = (RDAT.Models.Driver)grid.Rows[grid.SelectedIndex].Value;
+        <b>Name</b> @item.DriverName<br />
+    }
+    @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
+    grid.Column("", header: " ",
+(item) =>
+(bool)item.IsFavorite
+? Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star'></i></a>")
+: Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star-outline'></i></a>")
+),
+grid.Column("Id"),
+grid.Column("DriverName"),
+grid.Column("City"),
+grid.Column("State"),
+grid.Column("SSN"),
+grid.Column("Phone"),
+grid.Column("Email", header: "Email Address"),
+grid.Column("EnrollmentDate", "Enrollment",
+format: (item) => string.Format("{0:dd-MMM-yyyy}", item.EnrollmentDate)),
+grid.Column("TerminationDate", "Termination",
+format: (item) => string.Format("{0:dd-MMM-yyyy}", item.TerminationDate)),
+grid.Column(
+"",
+header: "Actions",
+format: @<text>@Html.ActionLink("Remove", "Remove", new { id = item.id }, new { @class = "btn btn-info m-1" })</text>
+)
+)
+)*@
+        
+</body>
+</html>

@@ -11,5 +11,7 @@ namespace RDAT.ViewModels
         public CreateBatch batchRequest { get; set; }
 
         public List<Driver> drivers { get; set; }
+
+        public List<TempTestingLog> tempTestingLogs { get; set; }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RDAT.Data;
 
 namespace RDAT.Migrations
 {
     [DbContext(typeof(RDATContext))]
-    partial class RDATContextModelSnapshot : ModelSnapshot
+    [Migration("20200423132828_TempTestingLogs")]
+    partial class TempTestingLogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -494,32 +496,26 @@ namespace RDAT.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Company_Id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<double>("Alcohol_Percentage")
+                        .HasColumnType("float");
 
                     b.Property<int>("Driver_Id")
                         .HasColumnType("int");
 
-                    b.Property<string>("Driver_Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<double>("Drug_Percentage")
+                        .HasColumnType("float");
 
                     b.Property<string>("SSN")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("Selectiondatealcohol")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Selectiondatedrug")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Test_Type")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("is_delete")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

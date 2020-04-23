@@ -23,6 +23,8 @@ namespace RDAT.Data
         public DbSet<State> States { get; set; }
 
         public DbSet<TestingLog> TestingLogs { get; set; }
+                
+        public DbSet<TempTestingLog> TempTestingLogs { get; set; }
 
 
         //public RDATContext(DbContextOptions<RDATContext> options)

@@ -31,28 +31,97 @@ namespace RDAT.Controllers
             return View();
         }
 
-        public IActionResult CreateBatch(int limit = 100)
+        public IActionResult CreateBatch(CreateBatch batchRequest)
         {
             CreateBatchViewModel _model = new CreateBatchViewModel();
-            
-            var drivers = new List<Driver>();
-            double _percentage = 0;
-            ViewBag.limit = limit;
-            
-            var activeDrivers = 0;
+            var driversDrug = new List<Driver>();
+            var driversAlcohol = new List<Driver>();
+            var _tempTestingLog = new List<TempTestingLog>();
 
-            using (RDATContext context = new RDATContext())
+            // Determine whether
+            if (batchRequest == null || batchRequest.AlcoholPercentage == 0 && batchRequest.DrugPercentage == 0)
             {
-                activeDrivers = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).Count();
-                _percentage = (double)limit / activeDrivers;
-                _percentage = _percentage * 100;
-                ViewBag.percentage = _percentage.ToString("##.##");
-                ViewBag.activeDrivers = activeDrivers;
-                drivers = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).OrderBy(d => Guid.NewGuid()).Take(limit).ToList();
-                var count = drivers.Count();
-            };
+                // Load existing temp log entries
+                using (RDATContext context = new RDATContext())
+                {
+                    // get list of existing test logs
+                    _tempTestingLog = context.TempTestingLogs.ToList();
+                    // get active drivers
+                    var activeDrivers = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).Count();
+                    int numDrug = context.TempTestingLogs.Where(t => t.Test_Type == "Drug").Count();
+                    int numAlcohol = context.TempTestingLogs.Where(t => t.Test_Type == "Alcohol").Count();
+                    float _percentDrug = ((float)numDrug / activeDrivers) * 100;
+                    float _percentAlcohol = ((float)numAlcohol / activeDrivers) * 100;
+                    ViewBag.percentDrug = _percentDrug.ToString("##");
+                    ViewBag.percentAlcohol = _percentAlcohol.ToString("##");
+                    ViewBag.totalDrivers = numDrug + numAlcohol;
+                    ViewBag.activeDrivers = activeDrivers;
+                }
+            }
+            else
+            {
+                // generate new entries
+                float _percentDrug = (float)batchRequest.DrugPercentage / 100;
+                float _percentAlcohol = (float)batchRequest.AlcoholPercentage / 100;
+                double _percentage = 0;
+                ViewBag.percentDrug = batchRequest.DrugPercentage;
+                ViewBag.percentAlcohol = batchRequest.AlcoholPercentage;
 
-            _model.drivers = drivers;
+                var activeDrivers = 0;
+
+                using (RDATContext context = new RDATContext())
+                {
+                    // First get rid of old entries
+                    List<TempTestingLog> existingEntries = context.TempTestingLogs.ToList();
+                    context.TempTestingLogs.RemoveRange(existingEntries);
+                    
+                    activeDrivers = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).Count();
+                    int numDrug = (int)(_percentDrug * activeDrivers);
+                    int numAlcohol = (int)(_percentAlcohol * activeDrivers);
+                    // _percentage = (double)numDrug / activeDrivers;
+                    // _percentage = _percentage * 100;
+                    ViewBag.percentage = _percentage.ToString("##.##");
+                    ViewBag.activeDrivers = activeDrivers;
+                    driversDrug = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).OrderBy(d => Guid.NewGuid()).Take(numDrug).ToList();
+                    driversAlcohol = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).OrderBy(d => Guid.NewGuid()).Take(numAlcohol).ToList();
+
+                    foreach (Driver d in driversDrug)
+                    {
+                        TempTestingLog _tempLog = new TempTestingLog();
+                        _tempLog.Test_Type = "Drug";
+                        _tempLog.Driver_Id = d.Id;
+                        _tempLog.CreatedDate = DateTime.Now;
+                        _tempLog.ModifiedDate = DateTime.Now;
+                        context.TempTestingLogs.Add(_tempLog);
+                        _tempTestingLog.Add(_tempLog);
+                    }
+
+                    foreach (Driver d in driversAlcohol)
+                    {
+                        TempTestingLog _tempLog = new TempTestingLog();
+                        _tempLog.Test_Type = "Alcohol";
+                        _tempLog.Driver_Id = d.Id;
+                        _tempLog.CreatedDate = DateTime.Now;
+                        _tempLog.ModifiedDate = DateTime.Now;
+                        context.TempTestingLogs.Add(_tempLog);
+                        _tempTestingLog.Add(_tempLog);
+                    }
+
+                    // Add new records to database
+
+
+                    var count = _tempTestingLog.Count();
+                    ViewBag.totalDrivers = count;
+
+                    context.SaveChanges();
+
+                };
+
+
+            }
+            
+
+            _model.tempTestingLogs = _tempTestingLog;
             _model.batchRequest = new CreateBatch();
 
             // Old model on page was --> IEnumerable<RDAT.Models.Driver>

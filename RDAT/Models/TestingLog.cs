@@ -58,7 +58,7 @@ namespace RDAT.Models
 
         [DisplayName("Status")]
         public string Status { get; set; }
-        
+
         public Boolean isDelete { get; set; }
 
     }
