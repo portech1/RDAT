@@ -1,0 +1,75 @@
+﻿
+@model RDAT.ViewModels.ViewBatchViewModel
+
+@{
+    ViewData["Title"] = "Grid"; Layout = "~/Views/Shared/_Layout.cshtml";
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.Batches, defaultSort: "Id", rowsPerPage: 10000);
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+
+                    <h1><i class="nav-icon fas fa-th mr-2"></i>@ViewBag.ListName</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">View Batches</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-body">
+
+                <div class="row">
+                    @if (grid.HasSelection)
+                    {
+                        var item = (RDAT.Models.Driver)grid.Rows[grid.SelectedIndex].Value;
+                        <b>Name</b> @item.Id<br />
+                    }
+                    @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
+
+                     grid.Column("Id"),
+                     grid.Column("Created", "Created Date",
+                        format: (item) => (item.Created == null) ? "" : string.Format("{0:dd-MMM-yyyy}", item.Created)),
+                     grid.Column("RunDate", "Run Date",
+                        format: (item) => (item.Created == null) ? "" : string.Format("{0:dd-MMM-yyyy}", item.RunDate)),
+                     grid.Column("Eligible_Drivers", "Eligible Drivers"),
+                     grid.Column("Drug_Tests", "Drug Tests"),
+                     grid.Column("Alcohol_Tests", "Alcohol Tests"),
+                     grid.Column("Drug_Percentage", "Drug Percentage"),
+                     grid.Column("Alcohol_Percentage", "Alcohol Percentage"),
+                     grid.Column("Status", "Status")
+                    )
+                    )
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+            <div class="card-tools">
+
+
+            </div>
+
+        </div>
+        <!-- /.card-footer-->
+        <!-- /.card -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

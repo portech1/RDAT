@@ -8,7 +8,7 @@
          rowsPerPage: 30);
 }
 
-    
+
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -52,27 +52,26 @@
                     <b>Name</b> @item.Name<br />
                 }
                 @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
- grid.Column("id"),
- grid.Column("Name"),
- grid.Column("Email", header: "Email Address"),
- grid.Column("Edit", format: (item) => item.GetSelectLink("Edit")),
- grid.Column(
-       "",
-        header: "Actions",
-        format: @<text>
-                @Html.ActionLink("Edit", "Edit", new { id = item.id })
-            </text>
-     )
-  )
- )
+                 grid.Column("id"),
+                 grid.Column("Name"),
+                 grid.Column("Email", header: "Email Address"),
+                 grid.Column("Edit", format: (item) => item.GetSelectLink("Edit")),
+                 grid.Column("",
+                header: "Actions",
+                format: @<text>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.id })
+                </text>
+)
+)
+)
             </div>
 
-</div>
-<!-- /.card-body -->
-<div class="card-footer">
-    Footer
-</div>
-<!-- /.card-footer-->
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+            Footer
+        </div>
+        <!-- /.card-footer-->
 </div>
 <!-- /.card -->
     </section>

@@ -125,9 +125,11 @@
                         <div class="col">
                             <div class="form-group">
                                 <input type="submit" value="Generate New List of Drivers" class="btn btn-primary" />
-                                <button type="button" class="btn btn-success ml-2">
-                                    Create Batch from This List
-                                </button>
+                                
+                                <button type="button" class="btn btn-success ml-2" onclick="window.location = '@Url.Action("UpdateBatch", "Reports")';" />
+                                        Create Batch from This List
+                                    </button>
+                                
                             </div>
                         </div>
                     </div>
