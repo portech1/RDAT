@@ -37,7 +37,7 @@
                     @if (grid.HasSelection)
                     {
                         var item = (RDAT.Models.Driver)grid.Rows[grid.SelectedIndex].Value;
-                        <b>Name</b> @item.Id<br />
+                    <b>Name</b>  @item.Id<br />
                     }
                     @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
 
@@ -51,9 +51,15 @@
                      grid.Column("Alcohol_Tests", "Alcohol Tests"),
                      grid.Column("Drug_Percentage", "Drug Percentage"),
                      grid.Column("Alcohol_Percentage", "Alcohol Percentage"),
-                     grid.Column("Status", "Status")
-                    )
-                    )
+                     grid.Column(
+        "",
+        header: "Actions",
+        format: @<text>
+                        @Html.ActionLink("View Logs", "SingleBatch", "Reports", new { BatchId = item.Id }, new { @class = "btn btn-info" })
+                </text>
+)
+            )
+            )
 
                 </div>
             </div>

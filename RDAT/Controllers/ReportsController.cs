@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RDAT.Data;
 using RDAT.Models;
 using RDAT.ViewModels;
@@ -68,11 +71,11 @@ namespace RDAT.Controllers
                 ViewBag.percentAlcohol = batchRequest.AlcoholPercentage;
 
                 var activeDrivers = 0;
-
+                
                 using (RDATContext context = new RDATContext())
                 {
-                    // First get rid of old entries
                     List<TempTestingLog> existingEntries = context.TempTestingLogs.ToList();
+                    // First get rid of old entries
                     context.TempTestingLogs.RemoveRange(existingEntries);
 
                     activeDrivers = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).Count();
@@ -93,7 +96,7 @@ namespace RDAT.Controllers
                         _tempLog.Driver_Name = d.DriverName;
                         _tempLog.CreatedDate = DateTime.Now;
                         _tempLog.ModifiedDate = DateTime.Now;
-                        context.TempTestingLogs.Add(_tempLog);
+                        // context.TempTestingLogs.Add(_tempLog);
                         _tempTestingLog.Add(_tempLog);
                     }
 
@@ -105,7 +108,7 @@ namespace RDAT.Controllers
                         _tempLog.Driver_Name = d.DriverName;
                         _tempLog.CreatedDate = DateTime.Now;
                         _tempLog.ModifiedDate = DateTime.Now;
-                        context.TempTestingLogs.Add(_tempLog);
+                        // context.TempTestingLogs.Add(_tempLog);
                         _tempTestingLog.Add(_tempLog);
                     }
 
@@ -115,6 +118,10 @@ namespace RDAT.Controllers
                     var count = _tempTestingLog.Count();
                     ViewBag.totalDrivers = count;
 
+                    foreach(TempTestingLog log in _tempTestingLog)
+                    {
+                        context.TempTestingLogs.Add(log);
+                    }
                     context.SaveChanges();
 
                 };
@@ -240,12 +247,128 @@ namespace RDAT.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public ActionResult saveTestingLog(int id, string propertyName, string value)
+        {
+            var status = false;
+            var message = "";
+
+            // Update data to database
+            using (RDATContext context = new RDATContext())
+            {
+                var _log = context.TestingLogs.Find(id);
+
+                object updateValue = value;
+                bool isValid = true;
+
+                if (propertyName == "Reported_Results")
+                {
+                    int newResultID = 0;
+                    if (int.TryParse(value, out newResultID))
+                    {
+                        updateValue = newResultID;
+                        //Update value field
+                        value = context.Results.Where(a => a.Id == newResultID).First().DisplayName;
+                    }
+                    else
+                    {
+                        isValid = false;
+                    }
+
+                    }
+                    //else if (propertyName == "DOB")
+                    //{
+                    //    DateTime dob;
+                    //    if (DateTime.TryParseExact(value, "dd-MM-yyyy", new CultureInfo("en-US"), DateTimeStyles.None, out dob))
+                    //    {
+                    //        updateValue = dob;
+                    //    }
+                    //    else
+                    //    {
+                    //        isValid = false;
+                    //    }
+                    //}
+
+                    if (_log != null && isValid)
+                {
+                    context.Entry(_log).Property(propertyName).CurrentValue = updateValue.ToString();
+                    context.SaveChanges();
+                    status = true;
+                }
+                else
+                {
+                    message = "Error!";
+                }
+            }
+
+            var response = new { value = value, status = status, message = message };
+            JObject o = JObject.FromObject(response);
+            return Content(o.ToString());
+        }
+
+
+        // Show All Batches
         public IActionResult ViewBatch()
         {
             ViewBatchViewModel _model = new ViewBatchViewModel();
             using (RDATContext context = new RDATContext())
             {
                 _model.Batches = context.Batches.ToList();
+            }
+
+            return View(_model);
+        }
+
+        public ActionResult GetResults(string currentResult)
+        {
+            //Allowed response content format
+            //{'E':'Letter E','F':'Letter F','G':'Letter G', 'selected':'F'}
+            //"{'3':'Excused','2':'Negative','1':'Positive','4':'Undefined','selected': '4'}"
+            int selectedResult = 0;
+            if(currentResult == null)
+            {
+                currentResult = "Undefined";
+            }
+            
+            StringBuilder sb = new StringBuilder();
+            using (RDATContext context = new RDATContext())
+            {
+                var results = context.Results.OrderBy(a => a.DisplayName).ToList();
+                foreach (var item in results)
+                {
+                    sb.Append(string.Format("'{0}':'{1}',", item.Id, item.DisplayName));
+                }
+
+                selectedResult = context.Results.Where(a => a.DisplayName == currentResult).First().Id;
+
+            }
+
+            sb.Append(string.Format("'selected':'{0}'", selectedResult));
+            //var _json = JsonConvert.SerializeObject("{" + sb.ToString() + "}");
+            //return Json(_json);
+            return Content("{" + sb.ToString() + "}");
+        }
+
+
+        public IActionResult SingleBatch(int BatchId)
+        {
+            SingleBatchViewModel _model = new SingleBatchViewModel();
+            using (RDATContext context = new RDATContext())
+            {
+
+                ViewBag.BatchId = BatchId;
+                ViewBag.Created = context.Batches.Where(b => b.Id == BatchId).FirstOrDefault().Created;
+                ViewBag.RunDate = context.Batches.Where(b => b.Id == BatchId).FirstOrDefault().RunDate;
+
+                List<TestingLog> _logs = context.TestingLogs.Where(tl => tl.Batch_Id == BatchId).ToList();
+
+                foreach(TestingLog l in _logs)
+                {
+                    l.Reported_Results = l.Reported_Results == "1" ? "Positive" : l.Reported_Results == "2" ? "Negative" : l.Reported_Results == "3" ? "Excused" : " ";
+                }
+
+                _model.TestingLogs = _logs;
             }
 
             return View(_model);

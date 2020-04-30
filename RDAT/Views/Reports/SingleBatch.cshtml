@@ -1,0 +1,214 @@
+﻿@model RDAT.ViewModels.SingleBatchViewModel
+
+@{
+    ViewData["Title"] = "Grid"; Layout = "~/Views/Shared/_Layout.cshtml";
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.TestingLogs, defaultSort: "Driver_Id", rowsPerPage: 10000);
+}
+    <style>
+        .table td {
+            width: 25%;
+        }
+
+        .w100 {
+            width: 100px;
+        }
+
+        .margin10 {
+            margin-left: 10px;
+        }
+    </style>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+
+                    <h1><i class="nav-icon fas fa-th mr-2"></i>View Batch</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Create Batch</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h1>Batch #@ViewBag.BatchId</h1>
+                        <h3>Created : @ViewBag.Created</h3>
+                        <h3>RunDate: @ViewBag.RunDate</h3>
+                    </div>
+                </div>
+                <!-- Small boxes (Stat box) -->
+                <div class="row">
+
+                    @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
+
+                    grid.Column("Driver_Id"),
+                    grid.Column("Reported_Results", format: @<text><div class="editable-select btn btn-outline-primary" data-id="@item.Id" data-propertyname="Reported_Results">@item.Reported_Results</div></text>),
+                    grid.Column("Test_Type", format: @<text><div class="edit" data-id="@item.Id" data-propertyname="Test_Type">@item.Test_Type</div></text>),
+                    grid.Column("Created", "Created Date",
+                        format: (item) => (item.Created == null) ? "" : string.Format("{0:dd-MMM-yyyy}", item.Created)),
+                    grid.Column("Modified", format: @<text><div class="editDate" data-id="@item.Modified" data-propertyname="Modified">@string.Format("{0:dd-MMM-y}", item.Modified)</div></text>),
+                    grid.Column(
+                    "",
+                    header: "Actions",
+                    format: @<text>
+                                                        @Html.ActionLink("View Logs", "SingleBatch", "Reports", new { BatchId = item.Id }, new { @class = "btn btn-info" })
+                                    </text>
+                    )
+))
+
+                </div>
+                <div class="row">Other row</div>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+            <div class="card-tools">
+
+                FOOTER
+            </div>
+
+        </div>
+        <!-- /.card-footer-->
+
+<!-- /.card -->
+    </section>
+<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<script>
+    $(document).ready(function () {
+        $('.edit').editable('/reports/saveTestingLog', {
+            cssclass: 'jeditForm',
+            tooltip: 'click to edit me...',
+            width: 'none',
+            height: 'none',
+            onsubmit: function (settings, original) {
+                oldValue = original.revert;
+            },
+            submitdata: function () {
+                return {
+                    id: $(this).data('id'),
+                    PropertyName: $(this).data('propertyname')
+                }
+            },
+            callback: function (value, settings) {
+                var jsonData = $.parseJSON(value);
+                if (jsonData.status) {
+                    $(this).text(jsonData.value);
+                }
+                else {
+                    $(this).text(oldValue);
+                }
+            }
+        })
+
+        $(".editable-select").editable("/reports/saveTestingLog", {
+            type: "select",
+            // this data will be sorted by value
+            data: '{"0":"Select One","1":"Positive","2":"Negative","3":"Excused", "4":" ", "selected":" "}',
+            onsubmit: function (settings, original) {
+                oldValue = original.revert;
+            },
+            submitdata: function () {
+                return {
+                    id: $(this).data('id'),
+                    PropertyName: $(this).data('propertyname')
+                }
+            },
+            callback: function (value, settings) {
+                var jsonData = $.parseJSON(value);
+                if (jsonData.status) {
+                    $(this).text(jsonData.value);
+                }
+                else {
+                    $(this).text(oldValue);
+                }
+            },
+            style: "inherit",
+        });
+
+        $('.editSelect').editable('/reports/saveTestingLog', {
+            cssclass: 'jeditForm',
+            tooltip: 'click to edit me...',
+            width: 'none',
+            height: 'none',
+            type: 'select',
+            submit: 'Ok',
+            loadurl: '/reports/GetResults',
+            loaddata: function () {
+                console.log("loaddata", $(this).data('id'));
+                // return { id: $(this).data('id') }
+                return { id: '4' };
+            },
+            onsubmit: function (settings, original) {
+                console.log("onsubmit", original);
+                oldValue = original.revert;
+            },
+            submitdata: function () {
+                console.log("submitdata");
+                return {
+                    id: $(this).data('id'),
+                    PropertyName: $(this).data('propertyname')
+                }
+            },
+            callback: function (value, settings) {
+                console.log("callback - value =", value);
+                // var jsonData = $.parseJSON(value);
+                jsonData = value;
+                if (jsonData.status) {
+                    $(this).text(jsonData.value);
+                }
+                else {
+                    $(this).text(oldValue);
+                }
+            }
+        })
+
+        $('.editSelect').click(function () {
+            $('select', this).addClass('form-control pull-left w100');
+            $('button', this).addClass('btn btn-sm btn-success margin10')
+        })
+    
+
+        $('.editDate').editable('/reports/saveTestingLog', {
+            cssClass: 'jeditForm',
+            tooltip: 'click to edit me',
+            width: 'none',
+            height: 'none',
+            onsubmit: function (value, settings) {
+                oldValue: original.revert;
+            },
+            submitdata: function () {
+                return {
+                    id: $(this).data('id'),
+                    PropertyName: $(this).data('propertyname')
+                }
+            },
+            callback: function (value, settings) {
+                var jsonData = $.parseJSON(value);
+                if (jsonData.status) {
+                    $(this).text(jsonData.value);
+                }
+                else {
+                    $(this).text(oldValue);
+                }
+            }
+
+        });
+
+    });
+</script>
