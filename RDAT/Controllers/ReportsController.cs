@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -207,6 +208,7 @@ namespace RDAT.Controllers
                     TestingLog _testingLog = new TestingLog();
                     _testingLog.Test_Type = log.Test_Type;
                     _testingLog.Driver_Id = log.Driver_Id;
+                    _testingLog.Driver_Name = log.Driver_Name;
                     _testingLog.Created = log.CreatedDate;
                     _testingLog.Modified = log.ModifiedDate;
                     _testingLog.Batch_Id = id;
@@ -277,22 +279,32 @@ namespace RDAT.Controllers
                     }
 
                     }
-                    //else if (propertyName == "DOB")
-                    //{
-                    //    DateTime dob;
-                    //    if (DateTime.TryParseExact(value, "dd-MM-yyyy", new CultureInfo("en-US"), DateTimeStyles.None, out dob))
-                    //    {
-                    //        updateValue = dob;
-                    //    }
-                    //    else
-                    //    {
-                    //        isValid = false;
-                    //    }
-                    //}
-
-                    if (_log != null && isValid)
+                else if (propertyName == "ResultsDate" || propertyName == "TestDate" || propertyName == "ClosedDate")
                 {
-                    context.Entry(_log).Property(propertyName).CurrentValue = updateValue.ToString();
+                    DateTime mod;
+                    if (DateTime.TryParseExact(value, "dd-MM-yyyy", new CultureInfo("en-US"), DateTimeStyles.None, out mod))
+                    {
+                        updateValue = mod;
+                    }
+                    else
+                    {
+                        isValid = false;
+                    }
+                }
+
+                if (_log != null && isValid)
+                {
+                    if (propertyName == "ResultsDate" || propertyName == "TestDate" || propertyName == "ClosedDate")
+                    {
+                        context.Entry(_log).Property(propertyName).CurrentValue = (DateTime)updateValue;
+                    }
+                    else if (propertyName == "Specimen_Id")
+                    {
+                        context.Entry(_log).Property(propertyName).CurrentValue = Convert.ToInt32(updateValue);
+                    }
+                    else {
+                        context.Entry(_log).Property(propertyName).CurrentValue = updateValue.ToString();
+                    }
                     context.SaveChanges();
                     status = true;
                 }
@@ -314,7 +326,7 @@ namespace RDAT.Controllers
             ViewBatchViewModel _model = new ViewBatchViewModel();
             using (RDATContext context = new RDATContext())
             {
-                _model.Batches = context.Batches.ToList();
+                _model.Batches = context.Batches.OrderByDescending(o => o.Id).ToList();
             }
 
             return View(_model);

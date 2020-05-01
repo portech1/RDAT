@@ -41,8 +41,14 @@ namespace RDAT.Models
         [DisplayName("Driver Id")]
         public int Driver_Id { get; set; }
 
+        [DisplayName("Driver Name")]
+        public string Driver_Name { get; set; }
+
         [DisplayName("Test Type")]
         public string Test_Type { get; set; }
+
+        [DisplayName("Test Date")]
+        public DateTime? TestDate { get; set; }
 
         [DisplayName("Drug Percentage")]
         public double Drug_Percentage { get; set; }
