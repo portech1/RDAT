@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RDAT.ViewModels;
 
 namespace RDAT.Controllers
 {
@@ -20,16 +21,16 @@ namespace RDAT.Controllers
 
             var drivers = new List<Driver>();
             var listName = "All Drivers";
-            
 
-            if(id != 0)
+
+            if (id != 0)
             {
                 drivers = context.Drivers.Where(c => c.Company_id == id).ToList();
                 listName = context.Companys.Where(c => c.Id == id).FirstOrDefault().Name + " Drivers";
             }
             else
             {
-drivers = context.Drivers.ToList();
+                drivers = context.Drivers.ToList();
             }
 
             var count = drivers.Count();
@@ -96,6 +97,71 @@ drivers = context.Drivers.ToList();
             return RedirectToAction(nameof(Index));
         }
 
+        public UpdateDriverResults GetDriver(int id)
+        {
+            var thisID = id;
+
+            using RDATContext context = new RDATContext();
+            UpdateDriverResults _driverResults = new UpdateDriverResults();
+
+            Driver _driver = context.Drivers.Where(c => c.Id == id).FirstOrDefault();
+            int _batchId = context.Batches.OrderByDescending(b => b.Id).FirstOrDefault().Id;
+
+            // Get TestingLog
+            TestingLog _logDrug = context.TestingLogs.Where(l => l.Driver_Id == id && l.Test_Type == "Drug" && l.Batch_Id == _batchId).FirstOrDefault();
+
+            TestingLog _logAlcohol = context.TestingLogs.Where(l => l.Driver_Id == id && l.Test_Type == "Alcohol" && l.Batch_Id == _batchId).FirstOrDefault();
+
+            // Set Values
+            _driverResults.Driver_Id = _driver.Id;
+            _driverResults.Driver_Name = _driver.DriverName;
+            _driverResults.Company_Name = context.Companys.Where(c => c.Id == _driver.Company_id).FirstOrDefault().Name;
+            _driverResults.Driver_UniqueID = _driver.UniqueId.ToString();
+
+            // Alcohol Test
+            if (_logAlcohol != null)
+            {
+                _driverResults.Alcohol_Show = true;
+                _driverResults.Alcohol_TestingLogID = _logAlcohol.Id;
+                _driverResults.Alcohol_Test_Date = _logAlcohol.TestDate;
+                _driverResults.Alcohol_Specimen_Id = _logAlcohol.Specimen_Id.ToString();
+                _driverResults.Alcohol_Results_Date = _logAlcohol.ResultsDate;
+                _driverResults.Alcohol_Reported_Result = _logAlcohol.Reported_Results;
+            }
+            else
+            {
+                _driverResults.Alcohol_Show = false;
+            }
+
+            // Drug Test
+            if (_logDrug != null)
+            {
+                _driverResults.Drug_Show = true;
+                _driverResults.Drug_TestingLogID = _logDrug.Id;
+                _driverResults.Drug_Test_Date = _logDrug.TestDate;
+                _driverResults.Drug_Specimen_Id = _logDrug.Specimen_Id.ToString();
+                _driverResults.Drug_Results_Date = _logDrug.ResultsDate;
+                _driverResults.Drug_Reported_Result = _logDrug.Reported_Results;
+            }
+            else
+            {
+                _driverResults.Drug_Show = false;
+            }
+
+            return _driverResults;
+        }
+
+        public Driver UpdateDriver(int id, string dn)
+        {
+            var thisID = id;
+
+            using RDATContext context = new RDATContext();
+
+            Driver _driver = context.Drivers.Where(c => c.Id == id).FirstOrDefault();
+
+            return _driver;
+        }
+
         // POST: Company/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -118,11 +184,12 @@ drivers = context.Drivers.ToList();
                 _driver.Email = collection["Email"];
                 _driver.CDL = collection["CDL"];
                 _driver.Cell = collection["Cell"];
-                
-                if(Int32.TryParse(collection["Company_id"], out int result)) {
+
+                if (Int32.TryParse(collection["Company_id"], out int result))
+                {
                     _driver.Company_id = Int32.Parse(collection["Company_id"]);
                 };
-                
+
                 _driver.EnrollmentDate = DateTime.Parse(collection["EnrollmentDate"]);
                 _driver.TerminationDate = DateTime.Parse(collection["TerminationDate"]);
 

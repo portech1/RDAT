@@ -12,6 +12,6 @@ namespace RDAT.ViewModels
 
         public String SearchTerm { get; set; }
 
-        public List<Driver> Drivers { get; set; }
+        public List<DriverSearchResult> Drivers { get; set; }
     }
 }

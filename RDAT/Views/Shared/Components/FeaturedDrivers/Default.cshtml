@@ -8,22 +8,209 @@
 
 
 <div class="bg-white">
-    @if (grid.HasSelection)
-    {
-        var item = (RDAT.Models.Driver)grid.Rows[grid.SelectedIndex].Value;
-        <b>Name</b> @item.DriverName
-        <br />
-    }
-    @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
-    grid.Column("id", "#"),
-    grid.Column("DriverName"),
-    grid.Column(
-    "",
-    header: "Actions",
-    format: @<text>
-            @Html.ActionLink("Edit", "Edit", "Driver", new { id = item.id }, new { @class = "btn btn-info" })
-    </text>
+
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#list">List</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#details">Details</a>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div id="list" class="container tab-pane active mt-2">
+
+            @if (grid.HasSelection)
+            {
+                var item = (RDAT.Models.DriverSearchResult)grid.Rows[grid.SelectedIndex].Value;
+                <b>Name</b> @item.DriverName
+                <br />
+            }
+            @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
+            grid.Column("DriverName"),
+            grid.Column("CompanyName"),
+            grid.Column(
+            "",
+            header: "Actions",
+            format: @<text>
+                    @if (item.isLatestBatch)
+                    {<a href="#" class="btn btn-success m-1" onclick="javascript:ViewDetails(@item.id)"><i class="fas fa-prescription-bottle-alt"></i></a> }
+                    <a href="@Url.Action("Edit", "Driver", new { id = @item.id })" class="btn btn-primary m-1"><i class="fas fa-user-edit"></i></a>
+                    
+            </text>
 )
 )
 )
+        </div>
+        <div id="details" class="container tab-pane fade">
+            <div class="card mt-2">
+                <input id="id" type="hidden" />
+                <div class="card-body">
+                    <div class="row p-4">
+                        <div class="col-lg-4 col-sm-12">
+                            <span id="driver_Name" class="h3"></span>
+                        </div>
+                    
+                        <div class="col-lg-4 col-sm-12">
+                            Id# <span id="driver_Id" class="h3"></span>
+                        </div>
+                   
+                        <div class="col-lg-4 col-sm-12 text-right">
+                           <span id="company_Name" class="h3"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 p-4 mt-2 float-left">
+                            <div class="container border-info bg-gray-light p-2" id="alcoholSection">
+                                <div class="h5"><i class="fas fa-beer mr-2"></i>Alcohol Test (#<span id="Alcohol_TestingLogID"></span>)</div>
+                                <div class="form-group">
+                                    <label class="control-label">Test Date</label>
+                                    <input id="Alcohol_Test_Date" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Result</label>
+                                    <input id="Alcohol_Reported_Result" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Result Date</label>
+                                    <input id="Alcohol_Results_Date" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Specimen Id</label>
+                                    <input id="Alcohol_Specimen_Id" class="form-control" />
+                                </div>
+                            </div>
+                            </div>
+                        <div class="col-md-6 col-sm-12 p-4 mt-2 float-left">
+                            <div class="container border-info bg-light p-2" id="drugSection">
+                                <div class="h5"><i class="fas fa-prescription-bottle-alt"></i>Drug Test (#<span id="Drug_TestingLogID"></span>)</div>
+                                <div class="form-group">
+                                    <label class="control-label">Test Date</label>
+                                    <input id="Drug_Test_Date" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Result</label>
+                                    <input id="Drug_Reported_Result" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Result Date</label>
+                                    <input id="Drug_Results_Date" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">Specimen Id</label>
+                                    <input id="Drug_Specimen_Id" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    <button class="btn btn-secondary" onclick="javascript:UpdateDriver();">Update Driver</button>
+                </div>
+                <!-- /.card-footer-->
+            </div>
+        </div>
+
+    </div>
+
+
+
 </div>
+
+<script>
+    function ViewDetails(id) {
+        $('.nav-tabs a[href="#details"]').tab('show');
+        fetch("driver/getDriver?id=" + id)
+            .then(response => response.json())
+            .then(data => {
+                // alert(JSON.stringify(data, 2));
+                console.log("UpdateDriverResults", data);
+                var dn = document.getElementById('driver_Name');
+                dn.innerHTML = data.driver_Name;
+                var co = document.getElementById('company_Name');
+                co.innerHTML = data.company_Name;
+                var id = document.getElementById('driver_Id');
+                id.value = data.driver_Id;
+
+                // Alcohol
+                var showAlcohol = data.alcohol_Show;
+                var a2 = document.getElementById('Alcohol_TestingLogID');
+                a2.innerHTML = data.alcohol_TestingLogID;
+                var a3 = document.getElementById('Alcohol_Test_Date');
+                a3.value = data.alcohol_Test_Date;
+                var a4 = document.getElementById('Alcohol_Specimen_Id');
+                a4.value = data.alcohol_Specimen_Id;
+                var a5 = document.getElementById('Alcohol_Results_Date');
+                a5.value = data.alcohol_Results_Date;
+                var a6 = document.getElementById('Alcohol_Reported_Result'); 
+                a6.value = data.alcohol_Reported_Result;
+
+                if (showAlcohol) {
+                    a3.disabled = false;
+                    a4.disabled = false;
+                    a5.disabled = false;
+                    a6.disabled = false;
+                } else {
+                    a3.disabled = true;
+                    a4.disabled = true;
+                    a5.disabled = true;
+                    a6.disabled = true;
+                };
+
+                // Drug
+                var showDrug = data.drug_Show;
+                var d2 = document.getElementById('Drug_TestingLogID');
+                d2.innerHTML = data.drug_TestingLogID;
+                var d3 = document.getElementById('Drug_Test_Date');
+                d3.value = data.drug_Test_Date;
+                var d4 = document.getElementById('Drug_Specimen_Id');
+                d4.value = data.drug_Specimen_Id;
+                var d5 = document.getElementById('Drug_Results_Date');
+                d5.value = data.drug_Results_Date;
+                var d6 = document.getElementById('Drug_Reported_Result');
+                d6.value = data.drug_Reported_Result;
+
+                if (showDrug) {
+                    d3.disabled = false;
+                    d4.disabled = false;
+                    d5.disabled = false;
+                    d6.disabled = false;
+                } else {
+                    d3.disabled = true;
+                    d4.disabled = true;
+                    d5.disabled = true;
+                    d6.disabled = true;
+                };
+            })
+            .catch(error => console.error('Unable to get items.', error));
+    }
+
+    function UpdateDriver() {
+        var id = document.getElementById('id').value;
+        var dn = document.getElementById('driverName').value;
+        alert(id + " / " + dn);
+        fetch("driver/updateDriver?id=" + id + "&dn=" + dn)
+            .then(response => response.json())
+            .then(data => {
+                //alert(JSON.stringify(data, 2));
+                var dn = document.getElementById('driverName');
+                dn.value = data.driverName;
+                var ssn = document.getElementById('ssn');
+                ssn.value = data.ssn;
+    
+            })
+            .catch(error => console.error('Unable to get items.', error));
+    }
+
+    $(document).ready(function () {
+        $("#myTab a").click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+
+       
+    });
+</script>

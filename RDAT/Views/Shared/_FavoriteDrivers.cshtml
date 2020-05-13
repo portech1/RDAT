@@ -8,22 +8,47 @@
 
 
     <div class="bg-white">
-        @if (grid.HasSelection)
-        {
-            var item = (RDAT.Models.Driver)grid.Rows[grid.SelectedIndex].Value;
-            <b>Name</b> @item.DriverName
-            <br />
-        }
-        @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
-        grid.Column("id", "#"),
-        grid.Column("DriverName"),
-        grid.Column(
-        "",
-        header: "Actions",
-        format: @<text>
-            @Html.ActionLink("Edit", "Edit", "Driver", new { id = item.id }, new { @class = "btn btn-info" })
-        </text>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#home">Search</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#menu1">Details</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div id="home" class="container tab-pane active">
+                
+                @if (grid.HasSelection)
+                {
+                    var item = (RDAT.Models.Driver)grid.Rows[grid.SelectedIndex].Value;
+                    <b>Name</b> @item.DriverName
+                    <br />
+                }
+                @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
+                grid.Column("id", "#"),
+                grid.Column("DriverName"),
+                grid.Column(
+                "",
+                header: "Actions",
+                format: @<text>
+                        @Html.ActionLink("Edit", "Edit", "Driver", new { id = item.id }, new { @class = "btn btn-info" })
+                </text>
  )
  )
  )
+            </div>
+            <div id="menu1" class="container tab-pane fade">
+                <br>
+                <h3>Details</h3>
+                <p>Edit details here.</p>
+            </div>
+            
+        </div>
+
+
+        
     </div>
