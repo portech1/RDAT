@@ -219,7 +219,7 @@
         var d5 = document.getElementById('Drug_Results_Date') ? document.getElementById('Drug_Results_Date').value : null;
         var d6 = document.getElementById('Drug_Reported_Result') ? document.getElementById('Drug_Reported_Result').value : null;
 
-        var postdata = { Driver_Id:1 , Driver_Name:"Chris Porter" };
+        var postdata = { Driver_Id: parseInt(id), Driver_Name: dn, Alcohol_TestingLogID: parseInt(a2) };
         
         alert(JSON.stringify(postdata));
         //fetch("driver/updateDriver?id=" + id + "&dn=" + dn + "&obj=" + _obj)
