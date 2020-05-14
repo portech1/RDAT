@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RDAT.ViewModels;
+using Newtonsoft.Json.Linq;
 
 namespace RDAT.Controllers
 {
@@ -151,14 +152,16 @@ namespace RDAT.Controllers
             return _driverResults;
         }
 
-        public Driver UpdateDriver(int id, string dn)
+        [HttpPost]
+        public Driver UpdateDriver([FromBody] UpdateDriverResults postdata)
         {
-            var thisID = id;
+            // var thisID = id;
+            // JObject json = JObject.Parse(obj);
 
             using RDATContext context = new RDATContext();
 
-            Driver _driver = context.Drivers.Where(c => c.Id == id).FirstOrDefault();
-
+            Driver _driver = context.Drivers.Where(c => c.Id == 1).FirstOrDefault();
+            
             return _driver;
         }
 

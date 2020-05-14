@@ -53,59 +53,68 @@
                             <span id="driver_Name" class="h3"></span>
                         </div>
                     
-                        <div class="col-lg-4 col-sm-12">
-                            Id# <span id="driver_Id" class="h3"></span>
+                        <div class="col-lg-4 col-sm-12 text-center">
+                            <span id="driver_Id" class="h4"></span>
                         </div>
                    
                         <div class="col-lg-4 col-sm-12 text-right">
-                           <span id="company_Name" class="h3"></span>
+                           <span id="company_Name" class="h4"></span>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12 p-4 mt-2 float-left">
-                            <div class="container border-info bg-gray-light p-2" id="alcoholSection">
-                                <div class="h5"><i class="fas fa-beer mr-2"></i>Alcohol Test (#<span id="Alcohol_TestingLogID"></span>)</div>
-                                <div class="form-group">
-                                    <label class="control-label">Test Date</label>
-                                    <input id="Alcohol_Test_Date" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Result</label>
-                                    <input id="Alcohol_Reported_Result" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Result Date</label>
-                                    <input id="Alcohol_Results_Date" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Specimen Id</label>
-                                    <input id="Alcohol_Specimen_Id" class="form-control" />
-                                </div>
-                            </div>
-                            </div>
-                        <div class="col-md-6 col-sm-12 p-4 mt-2 float-left">
-                            <div class="container border-info bg-light p-2" id="drugSection">
-                                <div class="h5"><i class="fas fa-prescription-bottle-alt"></i>Drug Test (#<span id="Drug_TestingLogID"></span>)</div>
-                                <div class="form-group">
-                                    <label class="control-label">Test Date</label>
-                                    <input id="Drug_Test_Date" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Result</label>
-                                    <input id="Drug_Reported_Result" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Result Date</label>
-                                    <input id="Drug_Results_Date" class="form-control" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">Specimen Id</label>
-                                    <input id="Drug_Specimen_Id" class="form-control" />
-                                </div>
-                            </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-12 p-4 mt-2 float-left">
+            <div class="container border-info bg-gray-light p-2" id="alcoholSection">
+
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-beer mr-2"></i>Alcohol Test (#<span id="Alcohol_TestingLogID"></span>)</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="control-label">Test Date</label>
+                            <input id="Alcohol_Test_Date" class="form-control" />
                         </div>
+                        <div class="form-group">
+                            <label class="control-label">Result</label>
+                            <input id="Alcohol_Reported_Result" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Result Date</label>
+                            <input id="Alcohol_Results_Date" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Specimen Id</label>
+                            <input id="Alcohol_Specimen_Id" class="form-control" />
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12 p-4 mt-2 float-left">
+            <div class="container border-info bg-light p-2" id="drugSection">
+                <div class="card">
+                    <div class="card-header"><i class="fas fa-prescription-bottle-alt mr-2"></i>Drug Test (#<span id="Drug_TestingLogID"></span>)</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="control-label">Test Date</label>
+                            <input id="Drug_Test_Date" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Result</label>
+                            <input id="Drug_Reported_Result" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Result Date</label>
+                            <input id="Drug_Results_Date" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Specimen Id</label>
+                            <input id="Drug_Specimen_Id" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                 <!-- /.card-body -->
                 <div class="card-footer">
                     <button class="btn btn-secondary" onclick="javascript:UpdateDriver();">Update Driver</button>
@@ -133,7 +142,7 @@
                 var co = document.getElementById('company_Name');
                 co.innerHTML = data.company_Name;
                 var id = document.getElementById('driver_Id');
-                id.value = data.driver_Id;
+                id.innerHTML = data.driver_Id;
 
                 // Alcohol
                 var showAlcohol = data.alcohol_Show;
@@ -189,20 +198,55 @@
     }
 
     function UpdateDriver() {
-        var id = document.getElementById('id').value;
-        var dn = document.getElementById('driverName').value;
-        alert(id + " / " + dn);
-        fetch("driver/updateDriver?id=" + id + "&dn=" + dn)
-            .then(response => response.json())
-            .then(data => {
-                //alert(JSON.stringify(data, 2));
-                var dn = document.getElementById('driverName');
-                dn.value = data.driverName;
-                var ssn = document.getElementById('ssn');
-                ssn.value = data.ssn;
+
+        alert("got here " + document.getElementById('driver_Id').innerHTML);
+        var id = document.getElementById('driver_Id') ? document.getElementById('driver_Id').innerHTML : null;
+        var dn = document.getElementById('driver_Name') ? document.getElementById('driver_Name').innerHTML : null;
+
+        var co = document.getElementById('company_Name') ? document.getElementById('company_Name').value : null;
+        
+
+        // Alcohol
+        var a2 = document.getElementById('Alcohol_TestingLogID') ? document.getElementById('Alcohol_TestingLogID').innerHTML : null;
+        var a3 = document.getElementById('Alcohol_Test_Date') ? document.getElementById('Alcohol_Test_Date').value : null;
+        var a4 = document.getElementById('Alcohol_Specimen_Id') ? document.getElementById('Alcohol_Specimen_Id').value : null;
+        var a5 = document.getElementById('Alcohol_Results_Date') ? document.getElementById('Alcohol_Results_Date').value : null;
+        var a6 = document.getElementById('Alcohol_Reported_Result') ? document.getElementById('Alcohol_Reported_Result').value : null;
+
+        var d2 = document.getElementById('Drug_TestingLogID') ? document.getElementById('Drug_TestingLogID').innerHTML : null;
+        var d3 = document.getElementById('Drug_Test_Date') ? document.getElementById('Drug_Test_Date').value : null;
+        var d4 = document.getElementById('Drug_Specimen_Id') ? document.getElementById('Drug_Specimen_Id').value : null;
+        var d5 = document.getElementById('Drug_Results_Date') ? document.getElementById('Drug_Results_Date').value : null;
+        var d6 = document.getElementById('Drug_Reported_Result') ? document.getElementById('Drug_Reported_Result').value : null;
+
+        var postdata = { Driver_Id:1 , Driver_Name:"Chris Porter" };
+        
+        alert(JSON.stringify(postdata));
+        //fetch("driver/updateDriver?id=" + id + "&dn=" + dn + "&obj=" + _obj)
+        //    .then(response => response.json())
+        //    .then(data => {
+        //        //alert(JSON.stringify(data, 2));
+        //        // var dn = document.getElementById('driverName');
+        //        // dn.value = data.driverName;
+        //        // var ssn = document.getElementById('ssn');
+        //        // ssn.value = data.ssn;
     
-            })
-            .catch(error => console.error('Unable to get items.', error));
+        //    })
+        //    .catch(error => console.error('Unable to get items.', error));
+
+        $.ajax({
+            url: 'driver/updateDriver',
+            type: "POST",
+            data: JSON.stringify(postdata),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function () {
+                alert("success");
+            },
+            error: function (error) {
+                alert("error" + JSON.stringify(error));
+            }
+        })
     }
 
     $(document).ready(function () {
