@@ -125,7 +125,7 @@ namespace RDAT.Controllers
                 _driverResults.Alcohol_Show = true;
                 _driverResults.Alcohol_TestingLogID = _logAlcohol.Id;
                 _driverResults.Alcohol_Test_Date = _logAlcohol.TestDate;
-                _driverResults.Alcohol_Specimen_Id = _logAlcohol.Specimen_Id.ToString();
+                _driverResults.Alcohol_Specimen_Id = _logAlcohol.Specimen_Id;
                 _driverResults.Alcohol_Results_Date = _logAlcohol.ResultsDate;
                 _driverResults.Alcohol_Reported_Result = _logAlcohol.Reported_Results;
             }
@@ -140,7 +140,7 @@ namespace RDAT.Controllers
                 _driverResults.Drug_Show = true;
                 _driverResults.Drug_TestingLogID = _logDrug.Id;
                 _driverResults.Drug_Test_Date = _logDrug.TestDate;
-                _driverResults.Drug_Specimen_Id = _logDrug.Specimen_Id.ToString();
+                _driverResults.Drug_Specimen_Id = _logDrug.Specimen_Id;
                 _driverResults.Drug_Results_Date = _logDrug.ResultsDate;
                 _driverResults.Drug_Reported_Result = _logDrug.Reported_Results;
             }
@@ -153,16 +153,45 @@ namespace RDAT.Controllers
         }
 
         [HttpPost]
-        public Driver UpdateDriver([FromBody] UpdateDriverResults postdata)
+        public ActionResult UpdateDriver([FromBody] UpdateDriverResults results)
         {
-            // var thisID = id;
-            // JObject json = JObject.Parse(obj);
-
             using RDATContext context = new RDATContext();
 
-            Driver _driver = context.Drivers.Where(c => c.Id == 1).FirstOrDefault();
-            
-            return _driver;
+            // Check for Drug Update
+            if(results != null && results.Drug_TestingLogID != 0)
+            {
+                TestingLog _drugResults = context.TestingLogs.Where(tl => tl.Id == results.Drug_TestingLogID).FirstOrDefault();
+                context.Update(_drugResults);
+                _drugResults.ResultsDate = results.Drug_Results_Date;
+                _drugResults.TestDate = results.Drug_Test_Date;
+                _drugResults.Specimen_Id = results.Drug_Specimen_Id;
+                _drugResults.Reported_Results = results.Drug_Reported_Result;
+                context.SaveChanges();
+            }
+
+            // Check for Alcohol 
+            if (results != null && results.Alcohol_TestingLogID != 0)
+            {
+                TestingLog _alcoholResults = context.TestingLogs.Where(tl => tl.Id == results.Alcohol_TestingLogID).FirstOrDefault();
+                _alcoholResults.ResultsDate = results.Alcohol_Results_Date;
+                _alcoholResults.TestDate = results.Alcohol_Test_Date;
+                _alcoholResults.Specimen_Id = results.Alcohol_Specimen_Id;
+                _alcoholResults.Reported_Results = results.Alcohol_Reported_Result;
+                context.Update(_alcoholResults);
+                context.SaveChanges();
+            }
+
+            if (results == null)
+            {
+                //  Send "false"
+                return Json(new { success = false, responseText = "The attached file is not supported." });
+            }
+            else
+            {
+                //  Send "Success"
+                return Json(new { success = true, responseText = "Your message successfuly sent!" });
+            }
+
         }
 
         // POST: Company/Edit/5

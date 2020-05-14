@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using RDAT.Models;
@@ -16,21 +17,25 @@ namespace RDAT.ViewModels
 
         public string Driver_UniqueID { get; set; }
 
-        public string Drug_Specimen_Id { get; set; }
+        public int Drug_Specimen_Id { get; set; }
 
         public int Drug_TestingLogID { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime? Drug_Test_Date { get; set; }
-        
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime? Drug_Results_Date { get; set; }
 
         public string Drug_Reported_Result { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime? Alcohol_Test_Date { get; set; }
-        
+
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime? Alcohol_Results_Date { get; set; }
 
-        public string Alcohol_Specimen_Id { get; set; }
+        public int Alcohol_Specimen_Id { get; set; }
         
         public int Alcohol_TestingLogID { get; set; }
 
