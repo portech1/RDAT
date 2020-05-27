@@ -30,11 +30,14 @@ namespace RDAT.Controllers
             DashboardViewModel _model = new DashboardViewModel();
 
             using RDATContext context = new RDATContext();
+            List<TestingLog> activeLogs = context.TestingLogs.Where(tl => string.IsNullOrEmpty(tl.Reported_Results)).ToList();
+
+            char[] goodResults = { '1', '2', '3' };
 
             _model.BadgeTotalActiveDrivers = context.Drivers.Count();
-            _model.BadgeTotalActiveCompanies = 77; // context.Companys.Where(d => ??).Count();
-            _model.BadgeOutstandingDrugTest = 99;
-            _model.BadgeOutstandingAlcoholTest = 88;
+            _model.BadgeTotalActiveCompanies = context.Companys.Where(c => c.Status == "1").Count(); // context.Companys.Where(d => ??).Count();
+            _model.BadgeOutstandingDrugTest = activeLogs.Where(tl => tl.Test_Type == "Drug").Count();
+            _model.BadgeOutstandingAlcoholTest = activeLogs.Where(tl => tl.Test_Type == "Alcohol").Count();
 
             _model.FavoriteCompanies = context.Companys.Where(c => c.isFavorite).OrderByDescending(p => p.Id).ToList();
             

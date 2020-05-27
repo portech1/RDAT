@@ -1,0 +1,106 @@
+﻿@model IEnumerable<RDAT.Models.RandomPoolDetails>
+
+@{
+    ViewData["Title"] = "RandomDrugAlcoholPoolDetails";
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+
+                    <h1><i class="nav-icon fas fa-th mr-2"></i>@ViewBag.ListName</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Create Batch</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <h1>Random Drug Pool Details</h1>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Random_Test_Selection_Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Batch_Number)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Active_Enrolled_Drivers)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Company)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Selected_Driver)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Excused_Driver)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Positive_Tested_Driver)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Selection_Test_Ratio)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Annual_Ratio)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Random_Test_Selection_Date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Batch_Number)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Active_Enrolled_Drivers)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Company)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Selected_Driver)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Excused_Driver)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Positive_Tested_Driver)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Selection_Test_Ratio)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Annual_Ratio)
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

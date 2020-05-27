@@ -10,34 +10,128 @@ using System.Linq;
 using System.Threading.Tasks;
 using RDAT.ViewModels;
 using Newtonsoft.Json.Linq;
+using System.Web.WebPages;
 
 namespace RDAT.Controllers
 {
     [Authorize]
     public class DriverController : Controller
     {
+        
         public IActionResult Index(int id = 0)
         {
             using RDATContext context = new RDATContext();
+            DriverSearchModel _model = new DriverSearchModel();
 
             var drivers = new List<Driver>();
             var listName = "All Drivers";
-
+            List<Company> _co = context.Companys.ToList();
+            var driverList = new List<DriverCompanyModel>();
 
             if (id != 0)
             {
                 drivers = context.Drivers.Where(c => c.Company_id == id).ToList();
+                driverList = drivers.Join(_co,
+                                        d => d.Company_id,
+                                        co => co.Id,
+                                        (driver, company) => new DriverCompanyModel
+                                        {
+                                            Id = driver.Id,
+                                            DriverName = driver.DriverName,
+                                            CompanyName = company.Name,
+                                            Phone = driver.Phone,
+                                            Email = driver.Email,
+                                            EnrollmentDate = driver.EnrollmentDate,
+                                            TerminationDate = driver.TerminationDate
+                                        }).ToList();
                 listName = context.Companys.Where(c => c.Id == id).FirstOrDefault().Name + " Drivers";
             }
             else
             {
                 drivers = context.Drivers.ToList();
+                driverList = drivers.Join(_co,
+                                        d => d.Company_id,
+                                        co => co.Id,
+                                        (driver, company) => new DriverCompanyModel
+                                        {
+                                            Id = driver.Id,
+                                            DriverName = driver.DriverName,
+                                            CompanyName = company.Name,
+                                            Phone = driver.Phone,
+                                            Email = driver.Email,
+                                            EnrollmentDate = driver.EnrollmentDate,
+                                            TerminationDate = driver.TerminationDate
+                                        }).ToList();
+
+                // 
             }
+
+            
+            
 
             var count = drivers.Count();
             ViewBag.ListName = listName;
+            _model.Drivers = driverList;
 
-            return View(drivers);
+            return View(_model);
+        }
+
+        public IActionResult Search(string driverName, string company, string cdl)
+        {
+            
+            using RDATContext context = new RDATContext();
+            DriverSearchModel _model = new DriverSearchModel();
+            List<Driver> drivers = new List<Driver>();
+            
+            if (driverName != "")
+            {
+                drivers = context.Drivers.Where(c => c.DriverName.Contains(driverName)).ToList();                
+            }
+
+            if (!company.IsEmpty() && company != null)
+            {
+                List<Company> cos = context.Companys.Where(c => c.Name.Contains(company)).ToList();
+                                
+                foreach(Company co in cos){
+                    List<Driver> cosDrivers = context.Drivers.Where(d => d.Company_id == co.Id).ToList();
+                    if(cosDrivers != null)
+                    {
+                        drivers.AddRange(cosDrivers);
+                    }
+                }
+
+            }
+
+            if (!cdl.IsEmpty() && cdl != null)
+            {
+                List<Driver> cdlDrivers = drivers.Where(c => c.CDL.Contains(cdl)).ToList();
+                if (cdlDrivers != null)
+                {
+                    drivers.AddRange(cdlDrivers);
+                }
+            }
+
+            List<Company> _co = context.Companys.ToList();
+            var driverList = drivers.Join(_co,
+                                        d => d.Company_id,
+                                        co => co.Id,
+                                        (driver, company) => new DriverCompanyModel
+                                        {
+                                            Id = driver.Id,
+                                            DriverName = driver.DriverName,
+                                            CompanyName = company.Name,
+                                            Phone = driver.Phone,
+                                            Email = driver.Email,
+                                            EnrollmentDate = driver.EnrollmentDate,
+                                            TerminationDate = driver.TerminationDate
+                                        }).ToList();
+
+            var count = drivers.Count();
+            
+            _model.Drivers = driverList;
+            _model.DriverName = driverName;
+
+            return View("Index", _model);
         }
 
         public IActionResult Create()
@@ -161,11 +255,9 @@ namespace RDAT.Controllers
             if(results != null && results.Drug_TestingLogID != 0)
             {
                 TestingLog _drugResults = context.TestingLogs.Where(tl => tl.Id == results.Drug_TestingLogID).FirstOrDefault();
-                context.Update(_drugResults);
                 _drugResults.ResultsDate = results.Drug_Results_Date;
-                _drugResults.TestDate = results.Drug_Test_Date;
-                _drugResults.Specimen_Id = results.Drug_Specimen_Id;
                 _drugResults.Reported_Results = results.Drug_Reported_Result;
+                context.Update(_drugResults);
                 context.SaveChanges();
             }
 
@@ -174,8 +266,6 @@ namespace RDAT.Controllers
             {
                 TestingLog _alcoholResults = context.TestingLogs.Where(tl => tl.Id == results.Alcohol_TestingLogID).FirstOrDefault();
                 _alcoholResults.ResultsDate = results.Alcohol_Results_Date;
-                _alcoholResults.TestDate = results.Alcohol_Test_Date;
-                _alcoholResults.Specimen_Id = results.Alcohol_Specimen_Id;
                 _alcoholResults.Reported_Results = results.Alcohol_Reported_Result;
                 context.Update(_alcoholResults);
                 context.SaveChanges();

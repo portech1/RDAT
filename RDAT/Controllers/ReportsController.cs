@@ -35,6 +35,273 @@ namespace RDAT.Controllers
             return View();
         }
 
+        public IActionResult RandomAlcoholPoolSummary ()
+        {
+            List<RandomPool> _summary = new List<RandomPool>();
+
+            RandomPool entry = new RandomPool
+            {
+                Random_Test_Selection_Date = DateTime.Now,
+                Batch_Number = 12,
+                Active_Enrolled_Drivers = 545,
+                Selected_Drivers = 235,
+                Excused_Drivers = 15,
+                Positive_Tested_Drivers = 13,
+                Negative_Tested_Drivers = 200,
+                Selection_Test_Ratio = .10,
+                Annual_Ratio = .15
+            };
+
+            _summary.Add(entry);
+
+            RandomPool entry2 = new RandomPool
+            {
+                Random_Test_Selection_Date = DateTime.Now.AddDays(-365),
+                Batch_Number = 11,
+                Active_Enrolled_Drivers = 333,
+                Selected_Drivers = 111,
+                Excused_Drivers = 15,
+                Positive_Tested_Drivers = 13,
+                Negative_Tested_Drivers = 200,
+                Selection_Test_Ratio = .09,
+                Annual_Ratio = .22
+            };
+
+            _summary.Add(entry2);
+
+            RandomPool entry3 = new RandomPool
+            {
+                Random_Test_Selection_Date = DateTime.Now.AddDays(-800),
+                Batch_Number = 10,
+                Active_Enrolled_Drivers = 444,
+                Selected_Drivers = 222,
+                Excused_Drivers = 15,
+                Positive_Tested_Drivers = 13,
+                Negative_Tested_Drivers = 200,
+                Selection_Test_Ratio = .11,
+                Annual_Ratio = .13
+            };
+
+            _summary.Add(entry3);
+
+            return View(_summary);
+        }
+
+        public IActionResult RandomAlcoholPoolDetails(int id = 0)
+        {
+            List<RandomPoolDetails> _drivers = new List<RandomPoolDetails>();
+
+            // get batch details
+            DateTime _selectionDate = DateTime.Now;
+            int _batchNumber = 12;
+            int _activeEnrolledDrivers = 435;
+            double _selectionTestRatio = .23;
+            double _annualRatio = .18;
+
+            using (RDATContext context = new RDATContext())
+            {
+                var drivers = new List<Driver>();
+                var listName = "All Drivers";
+                List<Company> _co = context.Companys.ToList();
+                var driverList = new List<DriverCompanyModel>();
+
+                if (id != 0)
+                {
+                    drivers = context.Drivers.Where(c => c.Company_id == id).ToList();
+                    driverList = drivers.Join(_co,
+                                            d => d.Company_id,
+                                            co => co.Id,
+                                            (driver, company) => new DriverCompanyModel
+                                            {
+                                                Id = driver.Id,
+                                                DriverName = driver.DriverName,
+                                                CompanyName = company.Name,
+                                                Phone = driver.Phone,
+                                                Email = driver.Email,
+                                                EnrollmentDate = driver.EnrollmentDate,
+                                                TerminationDate = driver.TerminationDate
+                                            }).ToList();
+                    listName = context.Companys.Where(c => c.Id == id).FirstOrDefault().Name + " Drivers";
+                }
+                else
+                {
+                    drivers = context.Drivers.ToList();
+                    driverList = drivers.Join(_co,
+                                            d => d.Company_id,
+                                            co => co.Id,
+                                            (driver, company) => new DriverCompanyModel
+                                            {
+                                                Id = driver.Id,
+                                                DriverName = driver.DriverName,
+                                                CompanyName = company.Name,
+                                                Phone = driver.Phone,
+                                                Email = driver.Email,
+                                                EnrollmentDate = driver.EnrollmentDate,
+                                                TerminationDate = driver.TerminationDate
+                                            }).ToList();
+
+                    // 
+                }
+
+                // Create Pool List
+                foreach(DriverCompanyModel dm in driverList)
+                {
+                    _drivers.Add(new RandomPoolDetails
+                    {
+                        Random_Test_Selection_Date = _selectionDate,
+                        Batch_Number = _batchNumber,
+                        Active_Enrolled_Drivers = _activeEnrolledDrivers,
+                        Company = dm.CompanyName,
+                        Selected_Driver = dm.DriverName,
+                        Excused_Driver = "Excused",
+                        Positive_Tested_Driver = "Positive",
+                        Selection_Test_Ratio = _selectionTestRatio,
+                        Annual_Ratio = _annualRatio
+                    });
+                }
+            }
+            
+
+                return View(_drivers);
+        }
+
+        public IActionResult RandomDrugPoolSummary()
+        {
+            List<RandomPool> _summary = new List<RandomPool>();
+
+            RandomPool entry = new RandomPool
+            {
+                Random_Test_Selection_Date = DateTime.Now,
+                Batch_Number = 12,
+                Active_Enrolled_Drivers = 545,
+                Selected_Drivers = 235,
+                Excused_Drivers = 15,
+                Positive_Tested_Drivers = 13,
+                Negative_Tested_Drivers = 200,
+                Selection_Test_Ratio = .10,
+                Annual_Ratio = .15
+            };
+
+            _summary.Add(entry);
+
+            RandomPool entry2 = new RandomPool
+            {
+                Random_Test_Selection_Date = DateTime.Now.AddDays(-365),
+                Batch_Number = 11,
+                Active_Enrolled_Drivers = 333,
+                Selected_Drivers = 111,
+                Excused_Drivers = 15,
+                Positive_Tested_Drivers = 13,
+                Negative_Tested_Drivers = 200,
+                Selection_Test_Ratio = .09,
+                Annual_Ratio = .22
+            };
+
+            _summary.Add(entry2);
+
+            RandomPool entry3 = new RandomPool
+            {
+                Random_Test_Selection_Date = DateTime.Now.AddDays(-800),
+                Batch_Number = 10,
+                Active_Enrolled_Drivers = 444,
+                Selected_Drivers = 222,
+                Excused_Drivers = 15,
+                Positive_Tested_Drivers = 13,
+                Negative_Tested_Drivers = 200,
+                Selection_Test_Ratio = .11,
+                Annual_Ratio = .13
+            };
+
+            _summary.Add(entry3);
+
+            return View(_summary);
+        }
+
+        public IActionResult RandomDrugPoolDetails(int id = 0)
+        {
+            List<RandomPoolDetails> _drivers = new List<RandomPoolDetails>();
+
+            // get batch details
+            DateTime _selectionDate = DateTime.Now;
+            int _batchNumber = 12;
+            int _activeEnrolledDrivers = 435;
+            double _selectionTestRatio = .23;
+            double _annualRatio = .18;
+
+            using (RDATContext context = new RDATContext())
+            {
+                var drivers = new List<Driver>();
+                var listName = "All Drivers";
+                List<Company> _co = context.Companys.ToList();
+                var driverList = new List<DriverCompanyModel>();
+
+                List<TestingLog> _logs = context.TestingLogs.Where(tl => tl.Batch_Id == id).ToList();
+
+                foreach (TestingLog l in _logs)
+                {
+                    l.Reported_Results = l.Reported_Results == "1" ? "Positive" : l.Reported_Results == "2" ? "Negative" : l.Reported_Results == "3" ? "Excused" : " ";
+                }
+
+                if (id != 0)
+                {
+                    //drivers = context.Drivers.Where(c => c.Company_id == id).ToList();
+                    driverList = drivers.Join(_co,
+                                            d => d.Company_id,
+                                            co => co.Id,
+                                            (driver, company) => new DriverCompanyModel
+                                            {
+                                                Id = driver.Id,
+                                                DriverName = driver.DriverName,
+                                                CompanyName = company.Name,
+                                                Phone = driver.Phone,
+                                                Email = driver.Email,
+                                                EnrollmentDate = driver.EnrollmentDate,
+                                                TerminationDate = driver.TerminationDate
+                                            }).ToList();
+                    listName = context.Companys.Where(c => c.Id == id).FirstOrDefault().Name + " Drivers";
+                }
+                else
+                {
+                    drivers = context.Drivers.ToList();
+                    driverList = drivers.Join(_co,
+                                            d => d.Company_id,
+                                            co => co.Id,
+                                            (driver, company) => new DriverCompanyModel
+                                            {
+                                                Id = driver.Id,
+                                                DriverName = driver.DriverName,
+                                                CompanyName = company.Name,
+                                                Phone = driver.Phone,
+                                                Email = driver.Email,
+                                                EnrollmentDate = driver.EnrollmentDate,
+                                                TerminationDate = driver.TerminationDate
+                                            }).ToList();
+
+                    // 
+                }
+
+                // Create Pool List
+                foreach (DriverCompanyModel dm in driverList)
+                {
+                    _drivers.Add(new RandomPoolDetails
+                    {
+                        Random_Test_Selection_Date = _selectionDate,
+                        Batch_Number = _batchNumber,
+                        Active_Enrolled_Drivers = _activeEnrolledDrivers,
+                        Company = dm.CompanyName,
+                        Selected_Driver = dm.DriverName,
+                        Excused_Driver = "Excused",
+                        Positive_Tested_Driver = "Positive",
+                        Selection_Test_Ratio = _selectionTestRatio,
+                        Annual_Ratio = _annualRatio
+                    });
+                }
+            }
+
+
+            return View(_drivers);
+        }
+
         public IActionResult CreateBatch(CreateBatch batchRequest)
         {
             CreateBatchViewModel _model = new CreateBatchViewModel();
@@ -95,6 +362,7 @@ namespace RDAT.Controllers
                         _tempLog.Test_Type = "Drug";
                         _tempLog.Driver_Id = d.Id;
                         _tempLog.Driver_Name = d.DriverName;
+                        _tempLog.Company_Id = d.Company_id;
                         _tempLog.CreatedDate = DateTime.Now;
                         _tempLog.ModifiedDate = DateTime.Now;
                         // context.TempTestingLogs.Add(_tempLog);
@@ -107,6 +375,7 @@ namespace RDAT.Controllers
                         _tempLog.Test_Type = "Alcohol";
                         _tempLog.Driver_Id = d.Id;
                         _tempLog.Driver_Name = d.DriverName;
+                        _tempLog.Company_Id = d.Company_id;
                         _tempLog.CreatedDate = DateTime.Now;
                         _tempLog.ModifiedDate = DateTime.Now;
                         // context.TempTestingLogs.Add(_tempLog);
@@ -178,6 +447,7 @@ namespace RDAT.Controllers
 
                 // Create the Batch
                 _batch.Created = DateTime.Now;
+                _batch.RunDate = DateTime.Now;
                 _batch.Alcohol_Percentage = (int)_percentAlcohol;
                 _batch.Drug_Percentage = (int)_percentDrug;
                 _batch.Alcohol_Tests = numAlcohol;
@@ -210,7 +480,10 @@ namespace RDAT.Controllers
                     _testingLog.Driver_Id = log.Driver_Id;
                     _testingLog.Driver_Name = log.Driver_Name;
                     _testingLog.Created = log.CreatedDate;
+                    _testingLog.Selectiondatealcohol = log.CreatedDate;
+                    _testingLog.Selectiondatedrug = log.CreatedDate;
                     _testingLog.Modified = log.ModifiedDate;
+                    _testingLog.TestDate = log.CreatedDate;
                     _testingLog.Batch_Id = id;
 
                     context.TestingLogs.Add(_testingLog);

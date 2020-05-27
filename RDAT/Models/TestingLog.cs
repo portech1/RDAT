@@ -41,6 +41,9 @@ namespace RDAT.Models
         [DisplayName("Driver Id")]
         public int Driver_Id { get; set; }
 
+        [DisplayName("Company Id")]
+        public int Company_Id { get; set; }
+
         [DisplayName("Driver Name")]
         public string Driver_Name { get; set; }
 

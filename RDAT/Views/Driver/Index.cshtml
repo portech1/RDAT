@@ -1,9 +1,9 @@
-﻿@model IEnumerable<RDAT.Models.Driver>
+﻿@model RDAT.ViewModels.DriverSearchModel
 
 @{
     ViewData["Title"] = "Grid";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model,
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.Drivers,
          defaultSort: "DriverName",
          rowsPerPage: 30);
 }
@@ -32,7 +32,31 @@
 
     <!-- Main content -->
     <section class="content">
-
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label asp-for="DriverName" class="control-label"></label>
+                    <input asp-for="DriverName" id="DriverName" class="form-control" />
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label asp-for="Company" class="control-label"></label>
+                    <input asp-for="Company" id="Company" class="form-control" />
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label asp-for="CDL" class="control-label"></label>
+                    <input asp-for="CDL" id="CDL" class="form-control" />
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <button type="button" class="btn btn-success" onclick="SearchDriver();" title="Search">Search</button>
+                </div>
+            </div>
+        </div>
         <!-- Default box -->
         <div class="card">
             <div class="card-header">
@@ -60,9 +84,7 @@
 ),
  grid.Column("Id"),
  grid.Column("DriverName"),
- grid.Column("City"),
- grid.Column("State"),
- grid.Column("SSN"),
+ grid.Column("CompanyName"),
  grid.Column("Phone"),
  grid.Column("Email", header: "Email Address"),
  grid.Column("EnrollmentDate","Enrollment",
@@ -90,3 +112,18 @@
 <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+
+<script>
+    function SearchDriver() {
+        
+        var _driverName = document.getElementById('DriverName') ? document.getElementById('DriverName').value : "";
+        var _company = document.getElementById('Company') ? document.getElementById('Company').value : "";
+        var _cdl = document.getElementById('CDL') ? document.getElementById('CDL').value : "";
+
+        var postdata = { DriverName: _driverName, Company: _company, CDL: _cdl };
+        alert(JSON.stringify(postdata));
+
+        window.location.href = "../driver/search?driverName=" + _driverName + "&company=" + _company + "&cdl=" + _cdl;
+                
+    }
+</script>

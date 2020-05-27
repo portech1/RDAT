@@ -82,16 +82,16 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="../Company" class="nav-link">
+                                    <div class="nav-link">
                                         <i class="fa fa-list-ul nav-icon"></i>
-                                        <p>View Companies</p>
-                                    </a>
+                                        @Html.ActionLink("View Companies", "index", "Company")
+                                    </div>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../Company/Create" class="nav-link">
+                                    <div class="nav-link">
                                         <i class="fas fa-plus nav-icon"></i>
-                                        <p>Add Company</p>
-                                    </a>
+                                        @Html.ActionLink("Add Company", "create", "Company")
+                                    </div>
                                 </li>
                                 
 
@@ -107,16 +107,16 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="../Driver" class="nav-link">
+                                    <div class="nav-link">
                                         <i class="fa fa-list-ul nav-icon"></i>
-                                        <p>View Drivers</p>
-                                    </a>
+                                        @Html.ActionLink("View Drivers", "index", "Driver")
+                                    </div>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../Driver/Create" class="nav-link">
+                                    <div class="nav-link">
                                         <i class="fas fa-plus nav-icon"></i>
-                                        <p>Add Driver</p>
-                                    </a>
+                                        @Html.ActionLink("Add Driver", "create", "Driver")
+                                    </div>
                                 </li>
                                 
 
@@ -132,36 +132,48 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="../testing/" class="nav-link">
+                                    <div class="nav-link">
                                         <i class="fas fa-vial nav-icon"></i>
-                                        <p>Testing Logs</p>
-                                    </a>
+                                        @Html.ActionLink("Testing Logs", "testing", "Reports")
+                                    </div>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../reports/drivers_test" class="nav-link">
+                                    <div class="nav-link">
                                         <i class="fas fa-vial nav-icon"></i>
-                                        <p>Driver Renewal Report by Month</p>
-                                    </a>
+                                        @Html.ActionLink("Driver Renewal Report by Month", "drivers_test", "Reports")
+                                    </div>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../reports/createbatch" class="nav-link">
+                                    <div class="nav-link">
                                         <i class="fas fa-truck-moving nav-icon"></i>
-                                        <p>Create Batch</p>
-                                    </a>
+                                        @Html.ActionLink("Create Batch", "createbatch", "Reports")
+                                    </div>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../reports/viewbatch" class="nav-link">
+                                    <div class="nav-link">
                                         <i class="fas fa-mug-hot nav-icon"></i>
-                                        <p>View Batches</p>
-                                    </a>
+                                        @Html.ActionLink("View Batches", "viewbatch", "Reports")
+                                    </div>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="../reports/company" class="nav-link">
+                                    <div class="nav-link">
                                         <i class="far fa-building nav-icon"></i>
-                                        <p>Company Report</p>
-                                    </a>
+                                        @Html.ActionLink("Company Report", "company", "Reports")
+                                    </div>
                                 </li>
-
+                                <li class="nav-item">
+                                    <div class="nav-link">
+                                        <i class="far fa-building nav-icon"></i>
+                                        @Html.ActionLink("Alcohol Pool Summary", "RandomAlcoholPoolSummary", "Reports")
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <div class="nav-link">
+                                        <i class="far fa-building nav-icon"></i>
+                                        @Html.ActionLink("Drug Pool Summary", "RandomDrugPoolSummary", "Reports")
+                                    </div>
+                                </li>
+                                
                             </ul>
                         </li>
                         <li class="nav-item">

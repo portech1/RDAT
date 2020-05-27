@@ -32,8 +32,12 @@ namespace RDAT.Components
             foreach (Driver d in _drivers)
             {
                 string _companyName = context.Companys.Where(c => c.Id == d.Company_id).FirstOrDefault().Name;
-                int _latestBatchId = context.Batches.OrderByDescending(b => b.Id).FirstOrDefault().Id;
-                bool _isInLatestBatch = context.TestingLogs.Where(l => l.Batch_Id == _latestBatchId).Any(tl => tl.Driver_Id == d.Id && tl.Batch_Id == _latestBatchId);
+                
+                // Get latest batch - 0 is no batches exist
+                int _latestBatchId = context.Batches.OrderByDescending(b => b.Id).FirstOrDefault() != null ? context.Batches.OrderByDescending(b => b.Id).FirstOrDefault().Id  : 0;
+                
+                // Determine if the Driver was in the last batch - check for 0 first
+                bool _isInLatestBatch = _latestBatchId != 0 ? context.TestingLogs.Where(l => l.Batch_Id == _latestBatchId).Any(tl => tl.Driver_Id == d.Id && tl.Batch_Id == _latestBatchId) : false;
 
                 _results.Add(new DriverSearchResult
                 {
@@ -42,7 +46,9 @@ namespace RDAT.Components
                     Id = d.Id,
                     isLatestBatch = _isInLatestBatch,
                     isFavorite = d.isFavorite
-                });
+                }); 
+                
+               
             }
 
             _model.Drivers = _results;

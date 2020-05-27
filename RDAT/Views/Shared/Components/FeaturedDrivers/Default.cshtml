@@ -64,54 +64,58 @@
                         </div>
                     </div>
                     <div class="row p-2"><div class="col"><span id="message"></span></div></div>
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12 p-4 mt-2 float-left">
-                            <div class="container border-info bg-gray-light p-2" id="alcoholSection">
+                    <div class="d-flex flex-row">
+                        <div class="p-4 mt-2" id="alcoholSection">
+                            <div class="container border-info bg-gray-light p-2">
 
                                 <div class="card">
                                     <div class="card-header"><i class="fas fa-beer mr-2"></i>Alcohol Test (#<span id="Alcohol_TestingLogID"></span>)</div>
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label class="control-label">Test Date</label>
-                                            <input asp-for="Alcohol_Test_Date" id="Alcohol_Test_Date" type="date" class="form-control" />
+                                            <span id="Alcohol_Test_Date" />
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Result</label>
-                                            <input id="Alcohol_Reported_Result" class="form-control" />
+                                            <select id="Alcohol_Reported_Result" name="Alcohol_Reported_Result">
+                                                <option value="0">Select One</option>
+                                                <option value="1">Positive</option>
+                                                <option value="2">Negative</option>
+                                                <option value="3">Excused</option>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Result Date</label>
                                             <input asp-for="Alcohol_Results_Date" id="Alcohol_Results_Date" type="date" class="form-control" />
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label">Specimen Id</label>
-                                            <input id="Alcohol_Specimen_Id" class="form-control" />
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-12 p-4 mt-2 float-left">
-                            <div class="container border-info bg-light p-2" id="drugSection">
+                        <div class="p-4 mt-2" id="drugSection">
+                            <div class="container border-info bg-light p-2">
                                 <div class="card">
                                     <div class="card-header"><i class="fas fa-prescription-bottle-alt mr-2"></i>Drug Test (#<span id="Drug_TestingLogID"></span>)</div>
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label class="control-label">Test Date</label>
-                                            <input asp-for="Drug_Test_Date" id="Drug_Test_Date" type="date" class="form-control" />
+                                            <span id="Drug_Test_Date" />
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Result</label>
-                                            <input id="Drug_Reported_Result" class="form-control" />
+                                            <select id="Drug_Reported_Result" name="Drug_Reported_Result">
+                                                <option value="0">Select One</option>
+                                                <option value="1">Positive</option>
+                                                <option value="2">Negative</option>
+                                                <option value="3">Excused</option>
+                                            </select>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Result Date</label>
                                             <input asp-for="Drug_Results_Date" id="Drug_Results_Date" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label">Specimen Id</label>
-                                            <input id="Drug_Specimen_Id" class="form-control" />
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -156,24 +160,25 @@
                 var a2 = document.getElementById('Alcohol_TestingLogID');
                 a2.innerHTML = data.alcohol_TestingLogID;
                 var a3 = document.getElementById('Alcohol_Test_Date');
-                a3.value = new Date(data.alcohol_Test_Date).toISOString().substring(0, 10);
-                var a4 = document.getElementById('Alcohol_Specimen_Id');
-                a4.value = data.alcohol_Specimen_Id;
+                a3.innerHTML = new Date(data.alcohol_Test_Date).toISOString().substring(0, 10);
                 var a5 = document.getElementById('Alcohol_Results_Date');
                 a5.value = new Date(data.alcohol_Results_Date).toISOString().substring(0, 10);
-                var a6 = document.getElementById('Alcohol_Reported_Result'); 
-                a6.value = data.alcohol_Reported_Result;
+                // var a6 = document.getElementById('Alcohol_Reported_Result'); 
+                selectElement('Alcohol_Reported_Result', data.alcohol_Reported_Result)
+                // a6.value = data.alcohol_Reported_Result;
 
                 if (showAlcohol) {
+                    document.getElementById('alcoholSection').style.display = "block";;
                     a3.disabled = false;
-                    a4.disabled = false;
+                    //a4.disabled = false;
                     a5.disabled = false;
-                    a6.disabled = false;
+                    //a6.disabled = false;
                 } else {
+                    document.getElementById('alcoholSection').style.display = "none";;
                     a3.disabled = true;
-                    a4.disabled = true;
+                    //a4.disabled = true;
                     a5.disabled = true;
-                    a6.disabled = true;
+                    //a6.disabled = true;
                 };
 
                 // Drug
@@ -183,25 +188,31 @@
                 var d2 = document.getElementById('Drug_TestingLogID');
                 d2.innerHTML = data.drug_TestingLogID;
                 var d3 = document.getElementById('Drug_Test_Date');
-                d3.value = new Date(data.drug_Test_Date).toISOString().substring(0, 10);
-                var d4 = document.getElementById('Drug_Specimen_Id');
-                d4.value = data.drug_Specimen_Id;
+                d3.innerHTML = new Date(data.drug_Test_Date).toISOString().substring(0, 10);
                 var d5 = document.getElementById('Drug_Results_Date');
                 d5.value = new Date(data.drug_Results_Date).toISOString().substring(0, 10);
                 var d6 = document.getElementById('Drug_Reported_Result');
-                d6.value = data.drug_Reported_Result;
+                //d6.value = data.drug_Reported_Result;
+                selectElement('Drug_Reported_Result', data.drug_Reported_Result)
+                // a6.value = data.alcohol_Reported_Result;
 
                 if (showDrug) {
+                    document.getElementById('drugSection').style.display = "block";
                     d3.disabled = false;
-                    d4.disabled = false;
+                    //d4.disabled = false;
                     d5.disabled = false;
-                    d6.disabled = false;
+                    //d6.disabled = false;
                 } else {
+                    document.getElementById('drugSection').style.display = "none";
                     d3.disabled = true;
-                    d4.disabled = true;
+                    //d4.disabled = true;
                     d5.disabled = true;
-                    d6.disabled = true;
+                    //d6.disabled = true;
                 };
+
+                if (showDrug && shoeAlcohol == false) {
+                    document.getElementById('drugSection').style.float = "left";
+                }
             })
             .catch(error => console.error('Unable to get items.', error));
     }
@@ -216,15 +227,15 @@
         // Alcohol
         var a1 = document.getElementById('showAlcohol') ? document.getElementById('showAlcohol').value : null;
         var a2 = document.getElementById('Alcohol_TestingLogID') ? document.getElementById('Alcohol_TestingLogID').innerHTML : null;
-        var a3 = document.getElementById('Alcohol_Test_Date') ? document.getElementById('Alcohol_Test_Date').value : null;
-        var a4 = document.getElementById('Alcohol_Specimen_Id') ? document.getElementById('Alcohol_Specimen_Id').value : null;
+        // var a3 = document.getElementById('Alcohol_Test_Date') ? document.getElementById('Alcohol_Test_Date').value : null;
+        // var a4 = document.getElementById('Alcohol_Specimen_Id') ? document.getElementById('Alcohol_Specimen_Id').value : null;
         var a5 = document.getElementById('Alcohol_Results_Date') ? document.getElementById('Alcohol_Results_Date').value : null;
         var a6 = document.getElementById('Alcohol_Reported_Result') ? document.getElementById('Alcohol_Reported_Result').value : null;
 
         var d1 = document.getElementById('showDrug') ? document.getElementById('showDrug').value : null;
         var d2 = document.getElementById('Drug_TestingLogID') ? document.getElementById('Drug_TestingLogID').innerHTML : null;
-        var d3 = document.getElementById('Drug_Test_Date') ? document.getElementById('Drug_Test_Date').value : null;
-        var d4 = document.getElementById('Drug_Specimen_Id') ? document.getElementById('Drug_Specimen_Id').value : null;
+        // var d3 = document.getElementById('Drug_Test_Date') ? document.getElementById('Drug_Test_Date').value : null;
+        // var d4 = document.getElementById('Drug_Specimen_Id') ? document.getElementById('Drug_Specimen_Id').value : null;
         var d5 = document.getElementById('Drug_Results_Date') ? document.getElementById('Drug_Results_Date').value : null;
         var d6 = document.getElementById('Drug_Reported_Result') ? document.getElementById('Drug_Reported_Result').value : null;
 
@@ -232,16 +243,12 @@
 
         if (a1 == "true") {
             postdata["Alcohol_TestingLogID"] = parseInt(a2);
-            postdata["Alcohol_Test_Date"] = a3;
-            postdata["Alcohol_Specimen_Id"] = parseInt(a4);
             postdata["Alcohol_Results_Date"] = a5;
             postdata["Alcohol_Reported_Result"] = a6;
         }
 
         if (d1 == "true") {
             postdata["Drug_TestingLogID"] = parseInt(d2);
-            postdata["Drug_Test_Date"] = d3;
-            postdata["Drug_Specimen_Id"] = parseInt(d4);
             postdata["Drug_Results_Date"] = d5;
             postdata["Drug_Reported_Result"] = d6;
         }
@@ -261,12 +268,17 @@
                     document.getElementById('message').innerHTML = "Failed to update log.";
                     document.getElementById('message').setAttribute("class", "text-alert");
                 }
-            },
+            a},
             error: function (error) {
                 document.getElementById('message').innerHTML = "Log update failed.";
                 console.log("Log update error", error);
             }
         })
+    }
+
+    function selectElement(id, valueToSelect) {
+        let element = document.getElementById(id);
+        element.value = valueToSelect;
     }
 
     $(document).ready(function () {

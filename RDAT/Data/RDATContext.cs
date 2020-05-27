@@ -46,6 +46,8 @@ namespace RDAT.Data
 
         public DbSet<RDAT.Models.CreateBatch> CreateBatch { get; set; }
 
+        public DbSet<RDAT.Models.RandomPool> RandomPool { get; set; }
+
         
     }
 }
