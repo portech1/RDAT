@@ -17,20 +17,21 @@ namespace RDAT.Controllers
     [Authorize]
     public class DriverController : Controller
     {
-        
+
         public IActionResult Index(int id = 0)
         {
             using RDATContext context = new RDATContext();
             DriverSearchModel _model = new DriverSearchModel();
 
             var drivers = new List<Driver>();
-            var listName = "All Drivers";
+            var listName = "All Active Drivers";
             List<Company> _co = context.Companys.ToList();
             var driverList = new List<DriverCompanyModel>();
 
             if (id != 0)
             {
-                drivers = context.Drivers.Where(c => c.Company_id == id).ToList();
+                // drivers = context.Drivers.Where(c => c.Company_id == id).ToList();
+                drivers = context.Drivers.Where(d => d.Company_id == id && d.TerminationDate == null && !d.isDelete).ToList();
                 driverList = drivers.Join(_co,
                                         d => d.Company_id,
                                         co => co.Id,
@@ -42,13 +43,15 @@ namespace RDAT.Controllers
                                             Phone = driver.Phone,
                                             Email = driver.Email,
                                             EnrollmentDate = driver.EnrollmentDate,
-                                            TerminationDate = driver.TerminationDate
+                                            TerminationDate = driver.TerminationDate,
+                                            isFavorite = driver.isFavorite,
                                         }).ToList();
                 listName = context.Companys.Where(c => c.Id == id).FirstOrDefault().Name + " Drivers";
             }
             else
             {
-                drivers = context.Drivers.ToList();
+                // drivers = context.Drivers.ToList();
+                drivers = context.Drivers.Where(d => d.TerminationDate == null && !d.isDelete).ToList();
                 driverList = drivers.Join(_co,
                                         d => d.Company_id,
                                         co => co.Id,
@@ -60,14 +63,15 @@ namespace RDAT.Controllers
                                             Phone = driver.Phone,
                                             Email = driver.Email,
                                             EnrollmentDate = driver.EnrollmentDate,
-                                            TerminationDate = driver.TerminationDate
+                                            TerminationDate = driver.TerminationDate,
+                                            isFavorite = driver.isFavorite,
                                         }).ToList();
 
                 // 
             }
 
-            
-            
+
+
 
             var count = drivers.Count();
             ViewBag.ListName = listName;
@@ -78,23 +82,24 @@ namespace RDAT.Controllers
 
         public IActionResult Search(string driverName, string company, string cdl)
         {
-            
+
             using RDATContext context = new RDATContext();
             DriverSearchModel _model = new DriverSearchModel();
             List<Driver> drivers = new List<Driver>();
-            
+
             if (driverName != "")
             {
-                drivers = context.Drivers.Where(c => c.DriverName.Contains(driverName)).ToList();                
+                drivers = context.Drivers.Where(c => c.DriverName.Contains(driverName)).ToList();
             }
 
             if (!company.IsEmpty() && company != null)
             {
                 List<Company> cos = context.Companys.Where(c => c.Name.Contains(company)).ToList();
-                                
-                foreach(Company co in cos){
+
+                foreach (Company co in cos)
+                {
                     List<Driver> cosDrivers = context.Drivers.Where(d => d.Company_id == co.Id).ToList();
-                    if(cosDrivers != null)
+                    if (cosDrivers != null)
                     {
                         drivers.AddRange(cosDrivers);
                     }
@@ -123,11 +128,12 @@ namespace RDAT.Controllers
                                             Phone = driver.Phone,
                                             Email = driver.Email,
                                             EnrollmentDate = driver.EnrollmentDate,
-                                            TerminationDate = driver.TerminationDate
+                                            TerminationDate = driver.TerminationDate,
+                                            isFavorite = driver.isFavorite,
                                         }).ToList();
 
             var count = drivers.Count();
-            
+
             _model.Drivers = driverList;
             _model.DriverName = driverName;
 
@@ -182,12 +188,21 @@ namespace RDAT.Controllers
 
             using RDATContext context = new RDATContext();
 
-            Driver _driver = context.Drivers.Where(c => c.Id == id).FirstOrDefault();
+            try
+            {
+                Driver _driver = context.Drivers.Where(c => c.Id == id).FirstOrDefault();
 
-            _driver.isFavorite = !_driver.isFavorite;
+                _driver.isFavorite = !_driver.isFavorite;
 
-            context.Update(_driver);
-            context.SaveChanges();
+                context.Update(_driver);
+                context.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
 
             return RedirectToAction(nameof(Index));
         }
@@ -252,7 +267,7 @@ namespace RDAT.Controllers
             using RDATContext context = new RDATContext();
 
             // Check for Drug Update
-            if(results != null && results.Drug_TestingLogID != 0)
+            if (results != null && results.Drug_TestingLogID != 0)
             {
                 TestingLog _drugResults = context.TestingLogs.Where(tl => tl.Id == results.Drug_TestingLogID).FirstOrDefault();
                 _drugResults.ResultsDate = results.Drug_Results_Date;

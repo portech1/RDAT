@@ -62,14 +62,12 @@
 
                     @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
 
+                    grid.Column("Driver_Id", header: "ID"),
+
                     grid.Column("Driver_Name", header: "Driver Name"),
-                    
+
                     grid.Column("Test_Type", header: "Type", style: "thinColumn", format: @<text><div class="edit" data-id="@item.Id" data-propertyname="Test_Type">@item.Test_Type</div></text>),
-                    
-                    grid.Column("TestDate", header: "Test Date", format: @<text><div class="editDate btn btn-outline-secondary wideColumn" data-id="@item.Id" data-propertyname="TestDate">
-                            @(@item.TestDate==null?"enter date":string.Format("{0:dd MMM yyyy}", item.TestDate))
-                        </div>
-                    </text>),
+
                     
                     grid.Column("Reported_Results", header: "Reported Results", format: @<text><div class="editable-select" data-id="@item.Id" data-propertyname="Reported_Results">@item.Reported_Results</div></text>),
 
@@ -77,20 +75,19 @@
                     <div class="editDate btn btn-outline-secondary wideColumn" data-id="@item.Id" data-propertyname="ResultsDate">
                         @(@item.ResultsDate==null?" ":string.Format("{0:dd MMM yyyy}", item.ResultsDate))
                     </div>
-                    </text>),
-                    
-                    grid.Column("Specimen_Id",header: "SpecimenId", style: "thinColumn", format: @<text><div class="edit" data-id="@item.Id" data-propertyname="Specimen_Id">@item.Specimen_Id</div></text>),
-                    
-                    grid.Column("ClosedDate", header: "Closed Date", format: @<text>
-                        <div class="editDate btn btn-outline-secondary wideColumn" data-id="@item.Id" data-propertyname="ClosedDate">
-                            @(@item.ClosedDate==null?" ":string.Format("{0:dd MMM yyyy}", item.ClosedDate))
-                        </div>
-                    </text>)
-                    
-                    ))
+</text>),
+
+
+
+grid.Column("ClosedDate", header: "Closed Date", format: @<text>
+    <div class="editDate btn btn-outline-secondary wideColumn" data-id="@item.Id" data-propertyname="ClosedDate">
+        @(@item.ClosedDate==null?" ":string.Format("{0:dd MMM yyyy}", item.ClosedDate))
+    </div>
+</text>)
+
+))
 
                 </div>
-                <div class="row">Other row</div>
             </div>
 
         </div>

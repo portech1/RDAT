@@ -45,5 +45,7 @@ namespace RDAT.Models
 
         [DisplayName("Status")]
         public string Status { get; set; }
+
+        public int OldRDAT1_Id { get; set; }
     }
 }

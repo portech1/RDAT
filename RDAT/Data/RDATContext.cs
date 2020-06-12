@@ -16,6 +16,8 @@ namespace RDAT.Data
         public DbSet<Company> Companys { get; set; }
         public DbSet<Driver> Drivers { get; set; }
 
+        public DbSet<Invoice> Invoices { get; set; }
+
         public DbSet<Batch> Batches { get; set; }
 
         public DbSet<Result> Results { get; set; }

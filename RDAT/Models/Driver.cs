@@ -13,6 +13,8 @@ namespace RDAT.Models
         [Key]
         public int Id { get; set; }
 
+        public Guid UniqueDriverId { get; set; }
+
         [Required]
         public string DriverName { get; set; }
 
@@ -53,10 +55,10 @@ namespace RDAT.Models
         public string Email { get; set; }
 
         [DisplayName("Enrollment Date")]
-        public DateTime EnrollmentDate { get; set; }
+        public DateTime? EnrollmentDate { get; set; }
 
         [DisplayName("TerminationDate")]
-        public DateTime TerminationDate { get; set; }
+        public DateTime? TerminationDate { get; set; }
 
         [DisplayName("CDL")]
         public string CDL { get; set; }
@@ -65,8 +67,13 @@ namespace RDAT.Models
 
         public int OldCompanyId { get; set; }
 
+        public int OldRDAT1Id { get; set; }
+
+
         // User has selected this driver as a favorite
         public Boolean isFavorite { get; set; }
+
+        public Boolean isDelete { get; set; }
 
     }
 }

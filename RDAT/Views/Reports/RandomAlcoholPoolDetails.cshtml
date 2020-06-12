@@ -60,42 +60,45 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Annual_Ratio)
                     </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Random_Test_Selection_Date)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Batch_Number)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Active_Enrolled_Drivers)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Company)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Selected_Driver)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Excused_Driver)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Positive_Tested_Driver)
-                        </td>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Random_Test_Selection_Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Batch_Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Active_Enrolled_Drivers)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Company)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Selected_Driver)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Excused_Driver)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Positive_Tested_Driver)
+                    </td>
 
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Selection_Test_Ratio)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Annual_Ratio)
-                        </td>
-
-                    </tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Selection_Test_Ratio)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Annual_Ratio)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit", "Driver", new { id = @item.Selected_Driver })" class="btn btn-primary m-1"><i class="fas fa-newspaper"></i></a>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RDAT.Data;
 
 namespace RDAT.Migrations
 {
     [DbContext(typeof(RDATContext))]
-    partial class RDATContextModelSnapshot : ModelSnapshot
+    [Migration("20200609232752_NullsCompanyDates")]
+    partial class NullsCompanyDates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -249,9 +251,6 @@ namespace RDAT.Migrations
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("OldRDAT1_Id")
-                        .HasColumnType("int");
-
                     b.Property<int>("Replaced_By")
                         .HasColumnType("int");
 
@@ -430,9 +429,6 @@ namespace RDAT.Migrations
 
                     b.Property<string>("Zipcode")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("isDelete")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("isFavorite")
                         .HasColumnType("bit");

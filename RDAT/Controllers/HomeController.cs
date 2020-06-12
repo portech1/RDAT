@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using Microsoft.Extensions.Logging;
 using RDAT.Data;
 using RDAT.Models;
@@ -30,18 +31,20 @@ namespace RDAT.Controllers
             DashboardViewModel _model = new DashboardViewModel();
 
             using RDATContext context = new RDATContext();
-            List<TestingLog> activeLogs = context.TestingLogs.Where(tl => string.IsNullOrEmpty(tl.Reported_Results)).ToList();
+            List<TestingLog> activeLogs = context.TestingLogs.Where(tl => Convert.ToInt32(tl.Reported_Results) < 1).ToList();
 
             char[] goodResults = { '1', '2', '3' };
 
-            _model.BadgeTotalActiveDrivers = context.Drivers.Count();
-            _model.BadgeTotalActiveCompanies = context.Companys.Where(c => c.Status == "1").Count(); // context.Companys.Where(d => ??).Count();
+            _model.BadgeTotalActiveDrivers = context.Drivers.Where(d => d.TerminationDate == null && !d.isDelete).Count();
+            _model.BadgeTotalActiveCompanies = context.Companys.Where(c => c.Status == "1" && c.isDelete != true).Count(); // context.Companys.Where(d => ??).Count();
             _model.BadgeOutstandingDrugTest = activeLogs.Where(tl => tl.Test_Type == "Drug").Count();
             _model.BadgeOutstandingAlcoholTest = activeLogs.Where(tl => tl.Test_Type == "Alcohol").Count();
 
             _model.FavoriteCompanies = context.Companys.Where(c => c.isFavorite).OrderByDescending(p => p.Id).ToList();
             
             _model.FavoriteDrivers = context.Drivers.Where(d => d.isFavorite).OrderByDescending(p => p.Id).ToList();
+
+            
 
             return View(_model);
         }
@@ -122,6 +125,35 @@ namespace RDAT.Controllers
         {
             return View();
         }
+
+        //private async void ResetUserPassword(string userId, string password)
+        //{
+            //string userID = (string)u.Id.ToString();
+            //// Reset password
+            //var user = await UserManager<ApplicationUser>.FindByIdAsync(userId);
+
+            //var token = await UserManager<ApplicationUser>.GeneratePasswordResetTokenAsync(user);
+
+            //var result = await UserManager<ApplicationUser>.ResetPasswordAsync(user, token, password);
+
+            //ApplicationUser user = await AppUserManager.FindByIdAsync(userId);
+            //if (user == null)
+            //{
+            //    return NotFound();
+            //}
+            //user.PasswordHash = AppUserManager.PasswordHasher.HashPassword(password);
+            //var result = await AppUserManager.UpdateAsync(user);
+            //if (!result.Succeeded)
+            //{
+            //    //throw exception......
+            //}
+            //return Ok();
+
+            //string resetToken = await UserManager<ApplicationUser>.GeneratePasswordResetTokenAsync(userId);
+            //IdentityResult passwordChangeResult = await UserManager<ApplicationUser>.ResetPasswordAsync(userId, resetToken, password);
+
+        //    return true;
+        //}
 
 
         [HttpPost]

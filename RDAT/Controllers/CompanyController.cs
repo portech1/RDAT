@@ -53,6 +53,23 @@ namespace RDAT.Controllers
             return Json(json);
         }
 
+        public IActionResult GetActiveDriversByCompany(int companyId)
+        {
+            using RDATContext context = new RDATContext();
+
+            var activeDrivers = context.Drivers.Where(d => d.TerminationDate == null && d.Company_id == companyId);
+            string json = JsonConvert.SerializeObject(activeDrivers);
+
+            var count = activeDrivers.Count();
+
+            var w = new GridData() { data = json, itemsCount = count };
+
+            string data = JsonConvert.SerializeObject(w);
+
+            // return data;
+            return View(json);
+        }
+
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
@@ -125,6 +142,11 @@ namespace RDAT.Controllers
                 _company.Zip = collection["AddressLine1"];
                 _company.Email = collection["Email"];
 
+                _company.Created = DateTime.Now;
+                _company.Modified = DateTime.Now;
+                _company.isDelete = false;
+                _company.Status = "New";
+
                 using RDATContext context = new RDATContext();
 
                 context.Companys.Add(_company);
@@ -170,7 +192,9 @@ namespace RDAT.Controllers
                 _company.State = collection["State"];
                 _company.Zip = collection["Zip"];
                 _company.Email = collection["Email"];
-                                
+
+                _company.Modified = DateTime.Now;
+
                 context.Update(_company);
                 context.SaveChanges();
 

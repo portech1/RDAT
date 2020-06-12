@@ -40,14 +40,14 @@ namespace RDAT.Models
         [DisplayName("Representative Name")]
         public string RepresentativeName { get; set; }
 
-        [DisplayName("Email Id")]
+        [DisplayName("Email Address")]
         public string Email { get; set; }
 
         [DisplayName("Created")]
-        public DateTime Created { get; set; }
+        public DateTime? Created { get; set; }
 
         [DisplayName("Modified")]
-        public DateTime Modified { get; set; }
+        public DateTime? Modified { get; set; }
 
         public Boolean isDelete { get; set; }
 
@@ -59,7 +59,6 @@ namespace RDAT.Models
 
         // User has selected this company as a favorite
         public Boolean isFavorite { get; set; }
-
 
     }
 }

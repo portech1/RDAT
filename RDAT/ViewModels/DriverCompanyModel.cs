@@ -45,10 +45,10 @@ namespace RDAT.ViewModels
         public string Email { get; set; }
 
         [DisplayName("Enrollment Date")]
-        public DateTime EnrollmentDate { get; set; }
+        public DateTime? EnrollmentDate { get; set; }
 
         [DisplayName("TerminationDate")]
-        public DateTime TerminationDate { get; set; }
+        public DateTime? TerminationDate { get; set; }
 
         [DisplayName("CDL")]
         public string CDL { get; set; }

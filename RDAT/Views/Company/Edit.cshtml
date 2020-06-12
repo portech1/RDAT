@@ -2,107 +2,132 @@
 
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Edit Company</h1>
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+
+                        <h1><i class="nav-icon fas fa-th mr-2"></i>View Companies</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Blank Page</li>
+                        </ol>
+                    </div>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Blank Page</li>
-                    </ol>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content p-5">
+
+            <h1>Edit</h1>
+
+            <h4>Company</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AddressLine1" class="control-label"></label>
+                            <input asp-for="AddressLine1" class="form-control" />
+                            <span asp-validation-for="AddressLine1" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="AddressLine2" class="control-label"></label>
+                            <input asp-for="AddressLine2" class="form-control" />
+                            <span asp-validation-for="AddressLine2" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="City" class="control-label"></label>
+                            <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="State" class="control-label"></label>
+                            <input asp-for="State" class="form-control" />
+                            <span asp-validation-for="State" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Zip" class="control-label"></label>
+                            <input asp-for="Zip" class="form-control" />
+                            <span asp-validation-for="Zip" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Phone" class="control-label"></label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Fax" class="control-label"></label>
+                            <input asp-for="Fax" class="form-control" />
+                            <span asp-validation-for="Fax" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Dot" class="control-label"></label>
+                            <input asp-for="Dot" class="form-control" />
+                            <span asp-validation-for="Dot" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="RepresentativeName" class="control-label"></label>
+                            <input asp-for="RepresentativeName" class="form-control" />
+                            <span asp-validation-for="RepresentativeName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Modified" class="control-label"></label>
+                            <input asp-for="Modified" class="form-control" />
+                            <span asp-validation-for="Modified" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Status" class="control-label"></label>
+                            <input asp-for="Status" class="form-control" />
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="OldID" class="control-label"></label>
+                            <input asp-for="OldID" class="form-control" />
+                            <span asp-validation-for="OldID" class="text-danger"></span>
+                        </div>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="isFavorite" /> @Html.DisplayNameFor(model => model.isFavorite)
+                            </label>
+                        </div>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="isDelete" /> @Html.DisplayNameFor(model => model.isDelete)
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </form>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
-    </section>
 
-    <!-- Main content -->
-    <section class="content">
-
-        <!-- Default box -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">@ViewBag.CompanyName</h3>
-
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove" data-toggle="tooltip" title="Remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+            <div>
+                <a asp-action="Index">Back to List</a>
             </div>
-            <div class="card-body">
-                <form asp-action="Edit">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="Id" />
-                    <div class="form-group">
-                        <label asp-for="Name" class="control-label"></label>
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="City" class="control-label"></label>
-                        <input asp-for="City" class="form-control" />
-                        <span asp-validation-for="City" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="State" class="control-label"></label>
-                        <input asp-for="State" class="form-control" />
-                        <span asp-validation-for="State" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Phone" class="control-label"></label>
-                        <input asp-for="Phone" class="form-control" />
-                        <span asp-validation-for="Phone" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Fax" class="control-label"></label>
-                        <input asp-for="Fax" class="form-control" />
-                        <span asp-validation-for="Fax" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Dot" class="control-label"></label>
-                        <input asp-for="Dot" class="form-control" />
-                        <span asp-validation-for="Dot" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="RepresentativeName" class="control-label"></label>
-                        <input asp-for="RepresentativeName" class="form-control" />
-                        <span asp-validation-for="RepresentativeName" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Email" class="control-label"></label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
-                    </div>
-                </form>
 
-
-            </div>
-            <!-- /.card-body -->
-            <div class="card-footer">
-                <button class="btn btn-secondary" onclick="alert('clicked');">Back to List</button>
-            </div>
-            <!-- /.card-footer-->
-        </div>
-        <!-- /.card -->
-
-    </section>
-    <!-- /.content -->
-</div>
-<!-- /.content-wrapper -->
+        </section>
+        <!-- /.content -->
+    </div>
 

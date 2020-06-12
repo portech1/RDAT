@@ -77,7 +77,7 @@
                 }
                 @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
                 grid.Column("",header: " ",
-(item) =>
+format: (item) =>
         (bool)item.IsFavorite
             ? Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star'></i></a>")
             : Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star-outline'></i></a>")
@@ -90,7 +90,7 @@
  grid.Column("EnrollmentDate","Enrollment",
     format: (item) => string.Format("{0:dd-MMM-yyyy}", item.EnrollmentDate)),
  grid.Column("TerminationDate","Termination",
-    format: (item) => string.Format("{0:dd-MMM-yyyy}", item.TerminationDate)),
+    format: (item) => item.TerminationDate == null || string.IsNullOrEmpty(item.TerminationDate.ToString()) ? string.Empty : string.Format("{0:dd-MMM-yyyy}", item.TerminationDate)),
  grid.Column(
        "",
         header: "Actions",
@@ -121,8 +121,7 @@
         var _cdl = document.getElementById('CDL') ? document.getElementById('CDL').value : "";
 
         var postdata = { DriverName: _driverName, Company: _company, CDL: _cdl };
-        alert(JSON.stringify(postdata));
-
+        
         window.location.href = "../driver/search?driverName=" + _driverName + "&company=" + _company + "&cdl=" + _cdl;
                 
     }

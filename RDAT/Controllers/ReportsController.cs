@@ -42,7 +42,7 @@ namespace RDAT.Controllers
             RandomPool entry = new RandomPool
             {
                 Random_Test_Selection_Date = DateTime.Now,
-                Batch_Number = 12,
+                Batch_Number = 108,
                 Active_Enrolled_Drivers = 545,
                 Selected_Drivers = 235,
                 Excused_Drivers = 15,
