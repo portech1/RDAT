@@ -63,6 +63,7 @@ namespace RDAT.Models
         [DisplayName("CDL")]
         public string CDL { get; set; }
 
+        [DisplayName("Company")]
         public int Company_id { get; set; }
 
         public int OldCompanyId { get; set; }

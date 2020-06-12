@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using RDAT.ViewModels;
 using Newtonsoft.Json.Linq;
 using System.Web.WebPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace RDAT.Controllers
 {
@@ -140,15 +141,27 @@ namespace RDAT.Controllers
             return View("Index", _model);
         }
 
-        public IActionResult Create()
+        public ActionResult Create()
         {
-            return View();
+            CreateDriverViewModel _model = new CreateDriverViewModel();
+            Driver _driver = new Driver();
+            _model.Driver = _driver;
+            
+            using RDATContext context = new RDATContext();
+            List<SelectListItem> companies = context.Companys.OrderBy(c => c.Name).Select(a =>
+                                  new SelectListItem
+                                  {
+                                      Value = a.Id.ToString(),
+                                      Text = a.Name
+                                  }).ToList();
+            _model.Companies = companies;
+            return View(_model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-    [Bind("DriverName,SSN,AddressLine1,AddressLine2,City,State,Location,UniqueId,Phone,Fax,Cell,Email,EnrollmentDate,TerminationDate,CDL")] Driver driver)
+    [Bind("Company_id,DriverName,SSN,AddressLine1,AddressLine2,City,State,Location,Phone,Fax,Cell,Email,CDL")] Driver driver)
         {
             using RDATContext context = new RDATContext();
             var drivers = context.Drivers;
@@ -156,6 +169,8 @@ namespace RDAT.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    driver.UniqueId = Guid.NewGuid();
+                    driver.EnrollmentDate = DateTime.Now;
                     drivers.Add(driver);
                     await context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
