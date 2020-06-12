@@ -658,5 +658,26 @@ namespace RDAT.Controllers
 
             return View(_model);
         }
+
+        public IActionResult Outstanding(string type)
+        {
+            SingleBatchViewModel _model = new SingleBatchViewModel();
+            ViewBag.type = type;
+            using (RDATContext context = new RDATContext())
+            {
+
+                List<TestingLog> _logs = context.TestingLogs.Where(tl => tl.Test_Type == type && Convert.ToInt32(tl.Reported_Results) < 1).ToList();
+
+                foreach (TestingLog l in _logs)
+                {
+                    l.Reported_Results = l.Reported_Results == "1" ? "Positive" : l.Reported_Results == "2" ? "Negative" : l.Reported_Results == "3" ? "Excused" : " ";
+                }
+
+                _model.TestingLogs = _logs.OrderBy(o => o.Driver_Name).ToList();
+            }
+
+            return View(_model);
+        }
+
     }
 }

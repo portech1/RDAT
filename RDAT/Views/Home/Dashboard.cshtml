@@ -72,7 +72,7 @@
                             <div class="icon">
                                 <i class="fas fa-prescription-bottle-alt"></i>
                             </div>
-                            <a href="../reports/closed_drug_test" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            @Html.ActionLink("View List", "outstanding", "Reports", new { Type = "Drug" })
                         </div>
                     </div>
                     <!-- ./col -->
@@ -87,7 +87,7 @@
                             <div class="icon">
                                 <i class="fas fa-beer"></i>
                             </div>
-                            <a href="../reports/closed_alcohol_test" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            @Html.ActionLink("View List", "outstanding", "Reports", new { Type = "Alcohol" })
                         </div>
                     </div>
                     <!-- ./col -->
