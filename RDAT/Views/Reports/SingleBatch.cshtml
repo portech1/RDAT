@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Grid"; Layout = "~/Views/Shared/_Layout.cshtml";
-    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.TestingLogs, defaultSort: "Driver_Id", rowsPerPage: 10000);
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.TestingLogs, defaultSort: "Driver_Name", rowsPerPage: 10000);
 }
 <style>
     .table td {
@@ -66,9 +66,13 @@
 
                     grid.Column("Driver_Name", header: "Driver Name"),
 
+                    grid.Column("Company_Name", header: "Company Name"),
+
                     grid.Column("Test_Type", header: "Type", style: "thinColumn", format: @<text><div class="edit" data-id="@item.Id" data-propertyname="Test_Type">@item.Test_Type</div></text>),
 
-                    
+                    grid.Column("BatchDate", "Batch Date",
+    format: (item) => string.Format("{0:dd-MMM-yyyy}", item.BatchDate)),
+
                     grid.Column("Reported_Results", header: "Reported Results", format: @<text><div class="editable-select" data-id="@item.Id" data-propertyname="Reported_Results">@item.Reported_Results</div></text>),
 
                     grid.Column("ResultsDate", header: "Results Date", format: @<text>

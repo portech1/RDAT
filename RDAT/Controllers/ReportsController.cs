@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RDAT.Data;
+using RDAT.Migrations;
 using RDAT.Models;
 using RDAT.ViewModels;
 
@@ -646,9 +647,25 @@ namespace RDAT.Controllers
                 ViewBag.Created = context.Batches.Where(b => b.Id == BatchId).FirstOrDefault().Created;
                 ViewBag.RunDate = context.Batches.Where(b => b.Id == BatchId).FirstOrDefault().RunDate;
 
-                List<TestingLog> _logs = context.TestingLogs.Where(tl => tl.Batch_Id == BatchId).ToList();
+                // List<TestingLog> _logs = context.TestingLogs.Where(tl => tl.Batch_Id == BatchId).ToList();
+                List<BatchCompanyModel> _logs = (from tl in context.TestingLogs
+                         join c in context.Companys on tl.Company_Id equals c.Id
+                         join b in context.Batches on tl.Batch_Id equals b.Id
+                         select new BatchCompanyModel()
+                         {
+                             Driver_Id = tl.Driver_Id,
+                             Driver_Name = tl.Driver_Name,
+                             Company_Id = tl.Company_Id,
+                             Company_Name = c.Name,
+                             Reported_Results = tl.Reported_Results,
+                             ResultsDate = tl.ResultsDate,
+                             Batch_Id = tl.Batch_Id,
+                             BatchDate = b.RunDate,
+                             ClosedDate = tl.ClosedDate,
+                             Test_Type = tl.Test_Type
+                         }).Where(tl => tl.Batch_Id == BatchId).ToList();
 
-                foreach(TestingLog l in _logs)
+                foreach (BatchCompanyModel l in _logs)
                 {
                     l.Reported_Results = l.Reported_Results == "1" ? "Positive" : l.Reported_Results == "2" ? "Negative" : l.Reported_Results == "3" ? "Excused" : " ";
                 }
@@ -666,9 +683,50 @@ namespace RDAT.Controllers
             using (RDATContext context = new RDATContext())
             {
 
-                List<TestingLog> _logs = context.TestingLogs.Where(tl => tl.Test_Type == type && Convert.ToInt32(tl.Reported_Results) < 1).ToList();
+                List<BatchCompanyModel> _logs = new List<BatchCompanyModel>();
 
-                foreach (TestingLog l in _logs)
+                //List<Company> _co = context.Companys.ToList();
+                               
+                //List<TestingLog> testingLogs = context.TestingLogs.Where(tl => tl.Test_Type == type && Convert.ToInt32(tl.Reported_Results) < 1).ToList();
+
+                _logs = (from tl in context.TestingLogs
+                                    join c in context.Companys on tl.Company_Id equals c.Id
+                                    join b in context.Batches on tl.Batch_Id equals b.Id
+                                    select new BatchCompanyModel()
+                                    {
+                                        Driver_Id = tl.Driver_Id,
+                                        Driver_Name = tl.Driver_Name,
+                                        Company_Id = tl.Company_Id,
+                                        Company_Name = c.Name,
+                                        Reported_Results = tl.Reported_Results,
+                                        ResultsDate = tl.ResultsDate,
+                                        ClosedDate = tl.ClosedDate,
+                                        Batch_Id = tl.Batch_Id,
+                                        BatchDate = b.RunDate,
+                                        Test_Type = tl.Test_Type
+                                    }).Where(tl => tl.Test_Type == type && Convert.ToInt32(tl.Reported_Results) < 1).ToList();
+
+
+                //_logs = testingLogs.Join(_co,
+                //                            d => d.Company_Id,
+                //                            co => co.Id,
+                //                            (log, company) => new BatchCompanyModel
+                //                            {
+                //                                // Id = ,
+                //                                Driver_Id = log.Driver_Id,
+                //                                Driver_Name = log.Driver_Name,
+                //                                Company_Id = log.Company_Id,
+                //                                Company_Name = company.Name,
+                //                                Reported_Results = log.Reported_Results,
+                //                                ResultsDate = log.ResultsDate,
+                //                                Batch_Id = log.Batch_Id,
+                //                                // BatchDate = ,
+                //                                Test_Type = log.Test_Type
+                //                            }).ToList();
+                    
+                           
+
+                foreach (BatchCompanyModel l in _logs)
                 {
                     l.Reported_Results = l.Reported_Results == "1" ? "Positive" : l.Reported_Results == "2" ? "Negative" : l.Reported_Results == "3" ? "Excused" : " ";
                 }
@@ -681,3 +739,5 @@ namespace RDAT.Controllers
 
     }
 }
+
+

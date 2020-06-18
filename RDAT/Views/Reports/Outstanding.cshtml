@@ -59,26 +59,30 @@
 
                     grid.Column("Driver_Name", header: "Driver Name"),
 
+                    grid.Column("Company_Name", header: "Company Name"),
+
+                    grid.Column("BatchDate", "Batch Date",
+    format: (item) => string.Format("{0:dd-MMM-yyyy}", item.BatchDate)),
+
                     grid.Column("Test_Type", header: "Type", style: "thinColumn", format: @<text><div class="edit" data-id="@item.Id" data-propertyname="Test_Type">@item.Test_Type</div></text>),
 
+                    grid.Column("Reported_Results", header: "Reported Results", format: @<text><div class="editable-select" data-id="@item.Id" data-propertyname="Reported_Results">@item.Reported_Results</div></text>),
 
-grid.Column("Reported_Results", header: "Reported Results", format: @<text><div class="editable-select" data-id="@item.Id" data-propertyname="Reported_Results">@item.Reported_Results</div></text>),
-
-grid.Column("ResultsDate", header: "Results Date", format: @<text>
+                    grid.Column("ResultsDate", header: "Results Date", format: @<text>
                     <div class="editDate btn btn-outline-secondary wideColumn" data-id="@item.Id" data-propertyname="ResultsDate">
                         @(@item.ResultsDate==null?" ":string.Format("{0:dd MMM yyyy}", item.ResultsDate))
                     </div>
-</text>),
+                    </text>),
 
 
 
-grid.Column("ClosedDate", header: "Closed Date", format: @<text>
-    <div class="editDate btn btn-outline-secondary wideColumn" data-id="@item.Id" data-propertyname="ClosedDate">
-        @(@item.ClosedDate==null?" ":string.Format("{0:dd MMM yyyy}", item.ClosedDate))
-    </div>
-</text>)
+                    grid.Column("ClosedDate", header: "Closed Date", format: @<text>
+                        <div class="editDate btn btn-outline-secondary wideColumn" data-id="@item.Id" data-propertyname="ClosedDate">
+                            @(@item.ClosedDate==null?" ":string.Format("{0:dd MMM yyyy}", item.ClosedDate))
+                        </div>
+                    </text>)
 
-))
+                    ))
 
                 </div>
             </div>
