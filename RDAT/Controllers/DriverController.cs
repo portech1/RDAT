@@ -342,9 +342,14 @@ namespace RDAT.Controllers
                     _driver.Company_id = Int32.Parse(collection["Company_id"]);
                 };
 
-                _driver.EnrollmentDate = DateTime.Parse(collection["EnrollmentDate"]);
-                _driver.TerminationDate = DateTime.Parse(collection["TerminationDate"]);
 
+                _driver.EnrollmentDate = DateTime.Parse(collection["EnrollmentDate"]);
+
+                if(DateTime.TryParse(collection["TerminationDate"], out DateTime resultDate))
+                {
+                    _driver.TerminationDate = DateTime.Parse(collection["TerminationDate"]);
+                }
+                
                 context.Update(_driver);
                 context.SaveChanges();
 
