@@ -76,25 +76,27 @@
                 <b>Name</b>  @item.DriverName<br />
                 }
                 @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
-                grid.Column("",header: " ",
+     grid.Column("", header: " ",
 format: (item) =>
-        (bool)item.IsFavorite
-            ? Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star'></i></a>")
-            : Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star-outline'></i></a>")
+(bool)item.IsFavorite
+ ? Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star'></i></a>")
+ : Html.Raw("<a asp-action='Favorite' asp-controller='company'><i class='ion-ios-star-outline'></i></a>")
 ),
- grid.Column("Id"),
- grid.Column("DriverName"),
- grid.Column("CompanyName"),
- grid.Column("Phone"),
- grid.Column("Email", header: "Email Address"),
- grid.Column("EnrollmentDate","Enrollment",
-    format: (item) => string.Format("{0:dd-MMM-yyyy}", item.EnrollmentDate)),
- grid.Column("TerminationDate","Termination",
-    format: (item) => item.TerminationDate == null || string.IsNullOrEmpty(item.TerminationDate.ToString()) ? string.Empty : string.Format("{0:dd-MMM-yyyy}", item.TerminationDate)),
- grid.Column(
-       "",
-        header: "Actions",
-        format: @<text>@Html.ActionLink("Star", "Favorite", new { id = item.id }, new {@class = "btn btn-success m-1"})@Html.ActionLink("Edit", "Edit", new { id = item.id }, new {@class = "btn btn-info m-1"})</text>
+grid.Column("Id"),
+grid.Column("DriverName"),
+grid.Column("CompanyName"),
+grid.Column("Phone"),
+grid.Column("Email", header: "Email Address"),
+grid.Column("EnrollmentDate", "Enrollment",
+format: (item) => string.Format("{0:dd-MMM-yyyy}", item.EnrollmentDate)),
+grid.Column("TerminationDate", "Termination",
+format: (item) => item.TerminationDate == null || string.IsNullOrEmpty(item.TerminationDate.ToString()) ? string.Empty : string.Format("{0:dd-MMM-yyyy}", item.TerminationDate)),
+grid.Column("TerminationDate", header: "Status",
+format: (item) => item.TerminationDate == null || string.IsNullOrEmpty(item.TerminationDate.ToString()) ? Html.Raw("Active") : Html.Raw("Terminated")),
+grid.Column(
+"",
+header: "Actions",
+format: @<text>@Html.ActionLink("Star", "Favorite", new { id = item.id }, new { @class = "btn btn-success m-1" })@Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "btn btn-info m-1" })</text>
 )
 )
 )
