@@ -7,12 +7,10 @@ using RDAT.Models;
 
 namespace RDAT.ViewModels
 {
-    public class CreateDriverViewModel
+    public class CreateCompanyViewModel
     {
-        public List<SelectListItem> Companies { get; set; }
-
         public List<SelectListItem> States { get; set; }
 
-        public Driver Driver { get; set; }
+        public Company Company { get; set; }
     }
 }

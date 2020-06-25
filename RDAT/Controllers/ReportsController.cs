@@ -653,6 +653,7 @@ namespace RDAT.Controllers
                          join b in context.Batches on tl.Batch_Id equals b.Id
                          select new BatchCompanyModel()
                          {
+                             Id = tl.Id,
                              Driver_Id = tl.Driver_Id,
                              Driver_Name = tl.Driver_Name,
                              Company_Id = tl.Company_Id,
@@ -686,25 +687,26 @@ namespace RDAT.Controllers
                 List<BatchCompanyModel> _logs = new List<BatchCompanyModel>();
 
                 //List<Company> _co = context.Companys.ToList();
-                               
+
                 //List<TestingLog> testingLogs = context.TestingLogs.Where(tl => tl.Test_Type == type && Convert.ToInt32(tl.Reported_Results) < 1).ToList();
 
                 _logs = (from tl in context.TestingLogs
-                                    join c in context.Companys on tl.Company_Id equals c.Id
-                                    join b in context.Batches on tl.Batch_Id equals b.Id
-                                    select new BatchCompanyModel()
-                                    {
-                                        Driver_Id = tl.Driver_Id,
-                                        Driver_Name = tl.Driver_Name,
-                                        Company_Id = tl.Company_Id,
-                                        Company_Name = c.Name,
-                                        Reported_Results = tl.Reported_Results,
-                                        ResultsDate = tl.ResultsDate,
-                                        ClosedDate = tl.ClosedDate,
-                                        Batch_Id = tl.Batch_Id,
-                                        BatchDate = b.RunDate,
-                                        Test_Type = tl.Test_Type
-                                    }).Where(tl => tl.Test_Type == type && Convert.ToInt32(tl.Reported_Results) < 1).ToList();
+                         join c in context.Companys on tl.Company_Id equals c.Id
+                         join b in context.Batches on tl.Batch_Id equals b.Id
+                         select new BatchCompanyModel()
+                         {
+                             Id = tl.Id,
+                             Driver_Id = tl.Driver_Id,
+                             Driver_Name = tl.Driver_Name,
+                             Company_Id = tl.Company_Id,
+                             Company_Name = c.Name,
+                             Reported_Results = tl.Reported_Results,
+                             ResultsDate = tl.ResultsDate,
+                             ClosedDate = tl.ClosedDate,
+                             Batch_Id = tl.Batch_Id,
+                             BatchDate = b.RunDate,
+                             Test_Type = tl.Test_Type
+                         }).Where(tl => tl.Test_Type == type && Convert.ToInt32(tl.Reported_Results) < 1).ToList();
 
 
                 //_logs = testingLogs.Join(_co,

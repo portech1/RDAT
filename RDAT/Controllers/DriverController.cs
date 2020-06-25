@@ -155,14 +155,24 @@ namespace RDAT.Controllers
                                       Text = a.Name
                                   }).ToList();
             _model.Companies = companies;
+
+            List<SelectListItem> states = context.States.OrderBy(s => s.StateName).Select(a =>
+                                  new SelectListItem
+                                  {
+                                      Value = a.Id.ToString(),
+                                      Text = a.StateName
+                                  }).ToList();
+            _model.States = states;
+
             return View(_model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-    [Bind("Company_id,DriverName,SSN,AddressLine1,AddressLine2,City,State,Location,Phone,Fax,Cell,Email,CDL")] Driver driver)
+    [Bind("Company_id,DriverName,SSN,AddressLine1,AddressLine2,City,State,Zipcode,Location,Phone,Fax,Cell,Email,CDL")] Driver driver)
         {
+                      
             using RDATContext context = new RDATContext();
             var drivers = context.Drivers;
             try
@@ -183,18 +193,30 @@ namespace RDAT.Controllers
                     "Try again, and if the problem persists " +
                     "see your system administrator.");
             }
-            return View(driver);
+
+            return View();
         }
 
         public IActionResult Edit(int id)
         {
             using RDATContext context = new RDATContext();
 
+            CreateDriverViewModel _model = new CreateDriverViewModel();
+
             Driver _driver = context.Drivers.Where(d => d.Id == id).FirstOrDefault();
             ViewBag.CompanyName = _driver.DriverName;
 
-            // return data;
-            return View(_driver);
+            List<SelectListItem> states = context.States.OrderBy(s => s.StateName).Select(a =>
+                                  new SelectListItem
+                                  {
+                                      Value = a.Id.ToString(),
+                                      Text = a.StateName
+                                  }).ToList();
+            _model.States = states;
+
+            _model.Driver = _driver;
+
+            return View(_model);
         }
 
         public ActionResult Favorite(int id)
@@ -319,35 +341,38 @@ namespace RDAT.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
+            CreateDriverViewModel _model = new CreateDriverViewModel();
+            Driver _driver = new Driver();
+
             try
             {
                 using RDATContext context = new RDATContext();
 
-                Driver _driver = context.Drivers.Where(d => d.Id == id).FirstOrDefault();
+                _driver = context.Drivers.Where(d => d.Id == id).FirstOrDefault();
 
-                _driver.DriverName = collection["DriverName"];
-                _driver.Phone = collection["Phone"];
-                _driver.Fax = collection["Fax"];
-                _driver.AddressLine1 = collection["AddressLine1"];
-                _driver.AddressLine2 = collection["AddressLine2"];
-                _driver.City = collection["City"];
-                _driver.State = collection["State"];
-                _driver.Zipcode = collection["Zipcode"];
-                _driver.Email = collection["Email"];
-                _driver.CDL = collection["CDL"];
-                _driver.Cell = collection["Cell"];
+                _driver.DriverName = collection["Driver.DriverName"];
+                _driver.Phone = collection["Driver.Phone"];
+                _driver.Fax = collection["Driver.Fax"];
+                _driver.AddressLine1 = collection["Driver.AddressLine1"];
+                _driver.AddressLine2 = collection["Driver.AddressLine2"];
+                _driver.City = collection["Driver.City"];
+                _driver.State = collection["Driver.State"];
+                _driver.Zipcode = collection["Driver.Zipcode"];
+                _driver.Email = collection["Driver.Email"];
+                _driver.CDL = collection["Driver.CDL"];
+                _driver.Cell = collection["Driver.Cell"];
 
-                if (Int32.TryParse(collection["Company_id"], out int result))
+                if (Int32.TryParse(collection["Driver.Company_id"], out int result))
                 {
-                    _driver.Company_id = Int32.Parse(collection["Company_id"]);
+                    _driver.Company_id = Int32.Parse(collection["Driver.Company_id"]);
                 };
 
 
-                _driver.EnrollmentDate = DateTime.Parse(collection["EnrollmentDate"]);
+                _driver.EnrollmentDate = DateTime.Parse(collection["Driver.EnrollmentDate"]);
 
-                if(DateTime.TryParse(collection["TerminationDate"], out DateTime resultDate))
+                if(DateTime.TryParse(collection["Driver.TerminationDate"], out DateTime resultDate))
                 {
-                    _driver.TerminationDate = DateTime.Parse(collection["TerminationDate"]);
+                    _driver.TerminationDate = DateTime.Parse(collection["Driver.TerminationDate"]);
                 }
                 
                 context.Update(_driver);
@@ -359,7 +384,17 @@ namespace RDAT.Controllers
             }
             catch
             {
-                return View();
+                using RDATContext context = new RDATContext();
+                List<SelectListItem> states = context.States.OrderBy(s => s.StateName).Select(a =>
+                                  new SelectListItem
+                                  {
+                                      Value = a.Id.ToString(),
+                                      Text = a.StateName
+                                  }).ToList();
+                _model.States = states;
+
+                _model.Driver = _driver;
+                return View(_model);
             }
         }
     }

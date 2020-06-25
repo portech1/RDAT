@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using RDAT.Data;
 using RDAT.Models;
+using RDAT.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,7 +121,21 @@ namespace RDAT.Controllers
         // GET: Company/Create
         public ActionResult Create()
         {
-            return View();
+            CreateCompanyViewModel _model = new CreateCompanyViewModel();
+            Company _company = new Company();
+            _model.Company = _company;
+
+            using RDATContext context = new RDATContext();
+
+            List<SelectListItem> states = context.States.OrderBy(s => s.StateName).Select(a =>
+                                  new SelectListItem
+                                  {
+                                      Value = a.Id.ToString(),
+                                      Text = a.StateName
+                                  }).ToList();
+            _model.States = states;
+
+            return View(_model);
         }
 
         // POST: Company/Create
@@ -132,20 +148,20 @@ namespace RDAT.Controllers
                 Company _company = new Company();
 
                 // Add Company
-                _company.Name = collection["Name"];
-                _company.Phone = collection["Phone"];
-                _company.Fax = collection["Fax"];
-                _company.AddressLine1 = collection["AddressLine1"];
-                _company.AddressLine2 = collection["AddressLine2"];
-                _company.City = collection["City"];
-                _company.State = collection["Zip"];
-                _company.Zip = collection["AddressLine1"];
-                _company.Email = collection["Email"];
+                _company.Name = collection["Company.Name"];
+                _company.Phone = collection["Company.Phone"];
+                _company.Fax = collection["Company.Fax"];
+                _company.AddressLine1 = collection["Company.AddressLine1"];
+                _company.AddressLine2 = collection["Company.AddressLine2"];
+                _company.City = collection["Company.City"];
+                _company.State = collection["Company.Zip"];
+                _company.Zip = collection["Company.AddressLine1"];
+                _company.Email = collection["Company.Email"];
 
                 _company.Created = DateTime.Now;
                 _company.Modified = DateTime.Now;
                 _company.isDelete = false;
-                _company.Status = "New";
+                _company.Status = "1";
 
                 using RDATContext context = new RDATContext();
 
@@ -165,11 +181,22 @@ namespace RDAT.Controllers
         {
             using RDATContext context = new RDATContext();
 
+            CreateCompanyViewModel _model = new CreateCompanyViewModel();
+
             Company _company = context.Companys.Where(c => c.Id == id).FirstOrDefault();
             ViewBag.CompanyName = _company.Name;
 
+            List<SelectListItem> states = context.States.OrderBy(s => s.StateName).Select(a =>
+                                  new SelectListItem
+                                  {
+                                      Value = a.Id.ToString(),
+                                      Text = a.StateName
+                                  }).ToList();
+            _model.States = states;
+
+            _model.Company = _company;
             // return data;
-            return View(_company);
+            return View(_model);
         }
 
         // POST: Company/Edit/5
@@ -177,22 +204,25 @@ namespace RDAT.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
+                     
             try
             {
                 using RDATContext context = new RDATContext();
 
                 Company _company = context.Companys.Where(c => c.Id == id).FirstOrDefault();
 
-                _company.Name = collection["Name"];
-                _company.Phone = collection["Phone"];
-                _company.Fax = collection["Fax"];
-                _company.AddressLine1 = collection["AddressLine1"];
-                _company.AddressLine2 = collection["AddressLine2"];
-                _company.City = collection["City"];
-                _company.State = collection["State"];
-                _company.Zip = collection["Zip"];
-                _company.Email = collection["Email"];
-
+                _company.Name = collection["Company.Name"];
+                _company.Phone = collection["Company.Phone"];
+                _company.Fax = collection["Company.Fax"];
+                _company.AddressLine1 = collection["Company.AddressLine1"];
+                _company.AddressLine2 = collection["Company.AddressLine2"];
+                _company.City = collection["Company.City"];
+                _company.State = collection["Company.State"];
+                _company.Zip = collection["Company.Zip"];
+                _company.Email = collection["Company.Email"];
+                _company.RepresentativeName = collection["Company.RepresentativeName"];
+                _company.Status = collection["Company.Status"];
+                
                 _company.Modified = DateTime.Now;
 
                 context.Update(_company);
