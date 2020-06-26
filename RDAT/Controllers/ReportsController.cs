@@ -451,8 +451,8 @@ namespace RDAT.Controllers
                 // Create the Batch
                 _batch.Created = DateTime.Now;
                 _batch.RunDate = DateTime.Now;
-                _batch.Alcohol_Percentage = (int)_percentAlcohol;
-                _batch.Drug_Percentage = (int)_percentDrug;
+                _batch.Alcohol_Percentage = (int)Math.Round(_percentAlcohol);
+                _batch.Drug_Percentage = (int)Math.Round(_percentDrug);
                 _batch.Alcohol_Tests = numAlcohol;
                 _batch.Drug_Tests = numDrug;
                 _batch.Eligible_Drivers = activeDrivers;
@@ -489,6 +489,7 @@ namespace RDAT.Controllers
                     _testingLog.TestDate = log.CreatedDate;
                     _testingLog.Batch_Id = id;
                     _testingLog.Company_Id = log.Company_Id;
+                    _testingLog.Reported_Results = "0";
 
                     context.TestingLogs.Add(_testingLog);
                                                          
