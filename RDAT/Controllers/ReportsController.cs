@@ -488,6 +488,7 @@ namespace RDAT.Controllers
                     _testingLog.Modified = log.ModifiedDate;
                     _testingLog.TestDate = log.CreatedDate;
                     _testingLog.Batch_Id = id;
+                    _testingLog.Company_Id = log.Company_Id;
 
                     context.TestingLogs.Add(_testingLog);
                                                          

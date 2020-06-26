@@ -3,7 +3,7 @@
 
 @{
     ViewData["Title"] = "Grid"; Layout = "~/Views/Shared/_Layout.cshtml";
-    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.Batches, defaultSort: "Id", rowsPerPage: 10000);
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.Batches, rowsPerPage: 10000);
 }
 
 <!-- Content Wrapper. Contains page content -->
