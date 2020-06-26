@@ -319,7 +319,8 @@ namespace RDAT.Controllers
                     // get list of existing test logs
                     _tempTestingLog = context.TempTestingLogs.ToList();
                     // get active drivers
-                    var activeDrivers = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).Count();
+                    //var activeDrivers = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).Count();
+                    var activeDrivers = context.Drivers.Where(d => d.TerminationDate == null && !d.isDelete).Count();
                     int numDrug = context.TempTestingLogs.Where(t => t.Test_Type == "Drug").Count();
                     int numAlcohol = context.TempTestingLogs.Where(t => t.Test_Type == "Alcohol").Count();
                     float _percentDrug = ((float)numDrug / activeDrivers) * 100;
@@ -347,15 +348,16 @@ namespace RDAT.Controllers
                     // First get rid of old entries
                     context.TempTestingLogs.RemoveRange(existingEntries);
 
-                    activeDrivers = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).Count();
+                    activeDrivers = context.Drivers.Where(d => d.TerminationDate == null && !d.isDelete).Count();
+
                     int numDrug = (int)(_percentDrug * activeDrivers);
                     int numAlcohol = (int)(_percentAlcohol * activeDrivers);
                     // _percentage = (double)numDrug / activeDrivers;
                     // _percentage = _percentage * 100;
                     ViewBag.percentage = _percentage.ToString("##.##");
                     ViewBag.activeDrivers = activeDrivers;
-                    driversDrug = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).OrderBy(d => Guid.NewGuid()).Take(numDrug).ToList();
-                    driversAlcohol = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).OrderBy(d => Guid.NewGuid()).Take(numAlcohol).ToList();
+                    driversDrug = context.Drivers.Where(d => d.TerminationDate == null && !d.isDelete).OrderBy(d => Guid.NewGuid()).Take(numDrug).ToList();
+                    driversAlcohol = context.Drivers.Where(d => d.TerminationDate == null && !d.isDelete).OrderBy(d => Guid.NewGuid()).Take(numAlcohol).ToList();
 
                     foreach (Driver d in driversDrug)
                     {
@@ -436,7 +438,7 @@ namespace RDAT.Controllers
                 // get list of existing test logs
                 _tempTestingLog = context.TempTestingLogs.ToList();
                 // get active drivers
-                int activeDrivers = context.Drivers.Where(d => d.EnrollmentDate > d.TerminationDate).Count();
+                int activeDrivers = context.Drivers.Where(d => d.TerminationDate == null && !d.isDelete).Count();
                 int numDrug = context.TempTestingLogs.Where(t => t.Test_Type == "Drug").Count();
                 int numAlcohol = context.TempTestingLogs.Where(t => t.Test_Type == "Alcohol").Count();
                 float _percentDrug = ((float)numDrug / activeDrivers) * 100;
