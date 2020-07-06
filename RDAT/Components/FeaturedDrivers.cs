@@ -39,12 +39,16 @@ namespace RDAT.Components
                 // Determine if the Driver was in the last batch - check for 0 first
                 bool _isInLatestBatch = _latestBatchId != 0 ? context.TestingLogs.Where(l => l.Batch_Id == _latestBatchId).Any(tl => tl.Driver_Id == d.Id && tl.Batch_Id == _latestBatchId) : false;
 
+                // Look in any batch
+                bool _isInAnyBatch = context.TestingLogs.Where(tl => tl.Driver_Id == d.Id).Count() > 0 ? true : false;
+
+
                 _results.Add(new DriverSearchResult
                 {
                     CompanyName = _companyName,
                     DriverName = d.DriverName,
                     Id = d.Id,
-                    isLatestBatch = _isInLatestBatch,
+                    isLatestBatch =  _isInAnyBatch,// _isInLatestBatch,
                     isFavorite = d.isFavorite
                 }); 
                 

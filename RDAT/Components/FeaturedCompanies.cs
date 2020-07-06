@@ -16,14 +16,24 @@ namespace RDAT.Components
             using RDATContext context = new RDATContext();
 
             var my = searchTerm;
-            if(searchTerm != null)
+
+            try
             {
-                _model.Companies = context.Companys.Where(c => c.Name.Contains(searchTerm)).OrderByDescending(p => p.Id).ToList();
+                if(searchTerm != null)
+                {
+                    _model.Companies = context.Companys.Where(c => c.Name.Contains(searchTerm)).OrderByDescending(p => p.Id).ToList();
+                }
+                else
+                {
+                    _model.Companies = context.Companys.Where(c => c.isFavorite).OrderByDescending(p => p.Id).ToList();
+                }
             }
-            else
+            catch (Exception)
             {
-                _model.Companies = context.Companys.Where(c => c.isFavorite).OrderByDescending(p => p.Id).ToList();
+
+                throw;
             }
+            
            
             return View(_model);
         }
