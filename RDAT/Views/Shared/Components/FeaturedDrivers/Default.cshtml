@@ -36,9 +36,9 @@
             header: "Actions",
             format: @<text>
                     @if (item.isLatestBatch)
-                    {<a href="#" class="btn btn-success m-1" onclick="javascript:ViewDetails(@item.id)"><i class="fas fa-prescription-bottle-alt"></i></a> }
+                    {<a href="@Url.Action("GetDriverLogs", "Driver", new { id = @item.id })" class="btn btn-success m-1"><i class="fas fa-prescription-bottle-alt"></i></a>}
                     <a href="@Url.Action("Edit", "Driver", new { id = @item.id })" class="btn btn-primary m-1"><i class="fas fa-user-edit"></i></a>
-                    
+
             </text>
 )
 )
@@ -100,11 +100,11 @@
                                     <div class="card-body">
                                         <div class="form-group">
                                             <label class="control-label">Test Date</label>
-                                            <span id="Drug_Test_Date" />
+                                            <span id="DrugResults[0].Drug_Test_Date" />
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Result</label>
-                                            <select id="Drug_Reported_Result" name="Drug_Reported_Result">
+                                            <select id="DrugResults[0].Drug_Reported_Result" name="Drug_Reported_Result">
                                                 <option value="0">Select One</option>
                                                 <option value="1">Positive</option>
                                                 <option value="2">Negative</option>
@@ -113,7 +113,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Result Date</label>
-                                            <input asp-for="Drug_Results_Date" id="Drug_Results_Date" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                                            <input asp-for="Drug_Results_Date" id="DrugResults[0].Drug_Results_Date" type="date" asp-format="{0:yyyy-MM-dd}" class="form-control" />
                                         </div>
                                         
                                     </div>
@@ -157,15 +157,20 @@
                 var showAlcohol = data.alcohol_Show;
                 var a1 = document.getElementById('showAlcohol');
                 a1.value = showAlcohol;
+
                 var a2 = document.getElementById('Alcohol_TestingLogID');
-                a2.innerHTML = data.alcohol_TestingLogID;
                 var a3 = document.getElementById('Alcohol_Test_Date');
-                a3.innerHTML = new Date(data.alcohol_Test_Date).toISOString().substring(0, 10);
                 var a5 = document.getElementById('Alcohol_Results_Date');
-                a5.value = new Date(data.alcohol_Results_Date).toISOString().substring(0, 10);
-                // var a6 = document.getElementById('Alcohol_Reported_Result'); 
-                selectElement('Alcohol_Reported_Result', data.alcohol_Reported_Result)
+
+                if (showAlcohol) {
+                    a2.innerHTML = data.alcoholResults[0].alcohol_TestingLogID;
+                    a3.innerHTML = new Date(data.alcoholResults[0].alcohol_Test_Date).toISOString().substring(0, 10);
+                    a5.value = new Date(data.alcoholResults[0].alcohol_Results_Date).toISOString().substring(0, 10);
+                    // var a6 = document.getElementById('Alcohol_Reported_Result'); 
+                    selectElement('Alcohol_Reported_Result', data.alcoholResults[0].alcohol_Reported_Result)
                 // a6.value = data.alcohol_Reported_Result;
+                }
+                
 
                 if (showAlcohol) {
                     document.getElementById('alcoholSection').style.display = "block";;
@@ -185,16 +190,25 @@
                 var showDrug = data.drug_Show;
                 var d1 = document.getElementById('showDrug');
                 d1.value = showDrug;
-                var d2 = document.getElementById('Drug_TestingLogID');
-                d2.innerHTML = data.drug_TestingLogID;
-                var d3 = document.getElementById('Drug_Test_Date');
-                d3.innerHTML = new Date(data.drug_Test_Date).toISOString().substring(0, 10);
-                var d5 = document.getElementById('Drug_Results_Date');
-                d5.value = new Date(data.drug_Results_Date).toISOString().substring(0, 10);
-                var d6 = document.getElementById('Drug_Reported_Result');
-                //d6.value = data.drug_Reported_Result;
-                selectElement('Drug_Reported_Result', data.drug_Reported_Result)
+
+                var d2 = document.getElementById('DrugResults[0].Drug_TestingLogID');
+                var d3 = document.getElementById('DrugResults[0].Drug_Test_Date');
+                var d5 = document.getElementById('DrugResults[0].Drug_Results_Date');
+                var d6 = document.getElementById('DrugResults[0].Drug_Reported_Result');
+
+                if (showDrug) {
+                    
+                    d2.innerHTML = data.drugResults[0].drug_TestingLogID;
+                    
+                    d3.innerHTML = new Date(data.drugResults[0].drug_Test_Date).toISOString().substring(0, 10);
+                    
+                    d5.value = new Date(data.drugResults[0].drug_Results_Date).toISOString().substring(0, 10);
+                    
+                    //d6.value = data.drug_Reported_Result;
+                    selectElement('DrugResults[0].Drug_Reported_Result', data.drugResults[0].drug_Reported_Result)
                 // a6.value = data.alcohol_Reported_Result;
+                }
+               
 
                 if (showDrug) {
                     document.getElementById('drugSection').style.display = "block";

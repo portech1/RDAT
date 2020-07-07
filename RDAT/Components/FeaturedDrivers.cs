@@ -40,7 +40,7 @@ namespace RDAT.Components
                 bool _isInLatestBatch = _latestBatchId != 0 ? context.TestingLogs.Where(l => l.Batch_Id == _latestBatchId).Any(tl => tl.Driver_Id == d.Id && tl.Batch_Id == _latestBatchId) : false;
 
                 // Look in any batch
-                bool _isInAnyBatch = context.TestingLogs.Where(tl => tl.Driver_Id == d.Id).Count() > 0 ? true : false;
+                bool _isInAnyBatch = context.TestingLogs.Where(tl => tl.Driver_Id == d.Id && tl.ResultsDate == null).Count() > 0 ? true : false;
 
 
                 _results.Add(new DriverSearchResult

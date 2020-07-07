@@ -255,9 +255,11 @@ namespace RDAT.Controllers
             int _batchId = context.Batches.OrderByDescending(b => b.Id).FirstOrDefault().Id;
 
             // Get TestingLog
-            TestingLog _logDrug = context.TestingLogs.Where(l => l.Driver_Id == id && l.Test_Type == "Drug" && l.Batch_Id == _batchId).FirstOrDefault();
+            // TODO: Create List of Alcohol Dates - There can be multiples
+            List<TestingLog> _logDrug = context.TestingLogs.Where(l => l.Driver_Id == id && l.Test_Type == "Drug" && l.ResultsDate == null).ToList();
 
-            TestingLog _logAlcohol = context.TestingLogs.Where(l => l.Driver_Id == id && l.Test_Type == "Alcohol" && l.Batch_Id == _batchId).FirstOrDefault();
+            // TODO: Create List of Alcohol Dates - There can be multiples
+            List<TestingLog> _logAlcohol = context.TestingLogs.Where(l => l.Driver_Id == id && l.Test_Type == "Alcohol" && l.ResultsDate == null).ToList();
 
             // Set Values
             _driverResults.Driver_Id = _driver.Id;
@@ -265,34 +267,47 @@ namespace RDAT.Controllers
             _driverResults.Company_Name = context.Companys.Where(c => c.Id == _driver.Company_id).FirstOrDefault().Name;
             _driverResults.Driver_UniqueID = _driver.UniqueId.ToString();
 
+            // Do we have results
+            _driverResults.Alcohol_Show = _logAlcohol.Count > 0 ? true : false;
+            _driverResults.Drug_Show = _logDrug.Count > 0 ? true : false;
+
             // Alcohol Test
-            if (_logAlcohol != null)
+            if (_logAlcohol.Count > 0)
             {
-                _driverResults.Alcohol_Show = true;
-                _driverResults.Alcohol_TestingLogID = _logAlcohol.Id;
-                _driverResults.Alcohol_Test_Date = _logAlcohol.TestDate;
-                _driverResults.Alcohol_Specimen_Id = _logAlcohol.Specimen_Id;
-                _driverResults.Alcohol_Results_Date = _logAlcohol.ResultsDate;
-                _driverResults.Alcohol_Reported_Result = _logAlcohol.Reported_Results;
-            }
-            else
-            {
-                _driverResults.Alcohol_Show = false;
+                List<AlcoholResult> results = new List<AlcoholResult>();
+                foreach(TestingLog tl in _logAlcohol)
+                {
+                    AlcoholResult alcoholResult = new AlcoholResult();
+                    alcoholResult.Alcohol_TestingLogID = tl.Id;
+                    alcoholResult.Alcohol_Test_Date = tl.TestDate;
+                    alcoholResult.Alcohol_Specimen_Id = tl.Specimen_Id;
+                    alcoholResult.Alcohol_Results_Date = tl.ResultsDate;
+                    alcoholResult.Alcohol_Reported_Result = tl.Reported_Results;
+                    alcoholResult.BatchID = tl.Batch_Id;
+                    results.Add(alcoholResult);
+                }
+
+                _driverResults.AlcoholResults = results;
+                
             }
 
             // Drug Test
-            if (_logDrug != null)
+            if (_logDrug.Count > 0)
             {
-                _driverResults.Drug_Show = true;
-                _driverResults.Drug_TestingLogID = _logDrug.Id;
-                _driverResults.Drug_Test_Date = _logDrug.TestDate;
-                _driverResults.Drug_Specimen_Id = _logDrug.Specimen_Id;
-                _driverResults.Drug_Results_Date = _logDrug.ResultsDate;
-                _driverResults.Drug_Reported_Result = _logDrug.Reported_Results;
-            }
-            else
-            {
-                _driverResults.Drug_Show = false;
+                List<DrugResult> dresults = new List<DrugResult>();
+                foreach (TestingLog tl in _logDrug)
+                {
+                    DrugResult drugResult = new DrugResult();
+                    drugResult.Drug_TestingLogID = tl.Id;
+                    drugResult.Drug_Test_Date = tl.TestDate;
+                    drugResult.Drug_Specimen_Id = tl.Specimen_Id;
+                    drugResult.Drug_Results_Date = tl.ResultsDate;
+                    drugResult.Drug_Reported_Result = tl.Reported_Results;
+                    drugResult.BatchID = tl.Batch_Id;
+                    dresults.Add(drugResult);
+                }
+
+                _driverResults.DrugResults = dresults;
             }
 
             return _driverResults;
@@ -304,24 +319,24 @@ namespace RDAT.Controllers
             using RDATContext context = new RDATContext();
 
             // Check for Drug Update
-            if (results != null && results.Drug_TestingLogID != 0)
-            {
-                TestingLog _drugResults = context.TestingLogs.Where(tl => tl.Id == results.Drug_TestingLogID).FirstOrDefault();
-                _drugResults.ResultsDate = results.Drug_Results_Date;
-                _drugResults.Reported_Results = results.Drug_Reported_Result;
-                context.Update(_drugResults);
-                context.SaveChanges();
-            }
+            //if (results != null && results.Drug_TestingLogID != 0)
+            //{
+            //    TestingLog _drugResults = context.TestingLogs.Where(tl => tl.Id == results.Drug_TestingLogID).FirstOrDefault();
+            //    _drugResults.ResultsDate = results.Drug_Results_Date;
+            //    _drugResults.Reported_Results = results.Drug_Reported_Result;
+            //    context.Update(_drugResults);
+            //    context.SaveChanges();
+            //}
 
             // Check for Alcohol 
-            if (results != null && results.Alcohol_TestingLogID != 0)
-            {
-                TestingLog _alcoholResults = context.TestingLogs.Where(tl => tl.Id == results.Alcohol_TestingLogID).FirstOrDefault();
-                _alcoholResults.ResultsDate = results.Alcohol_Results_Date;
-                _alcoholResults.Reported_Results = results.Alcohol_Reported_Result;
-                context.Update(_alcoholResults);
-                context.SaveChanges();
-            }
+            //if (results != null && results.Alcohol_TestingLogID != 0)
+            //{
+            //    TestingLog _alcoholResults = context.TestingLogs.Where(tl => tl.Id == results.Alcohol_TestingLogID).FirstOrDefault();
+            //    _alcoholResults.ResultsDate = results.Alcohol_Results_Date;
+            //    _alcoholResults.Reported_Results = results.Alcohol_Reported_Result;
+            //    context.Update(_alcoholResults);
+            //    context.SaveChanges();
+            //}
 
             if (results == null)
             {
@@ -335,6 +350,43 @@ namespace RDAT.Controllers
             }
 
         }
+
+        public ActionResult GetDriverLogs(int id)
+        {
+            SingleBatchViewModel _model = new SingleBatchViewModel();
+            using (RDATContext context = new RDATContext())
+            {
+                // List<TestingLog> _logs = context.TestingLogs.Where(tl => tl.Batch_Id == BatchId).ToList();
+                List<BatchCompanyModel> _logs = (from tl in context.TestingLogs
+                                                 join c in context.Companys on tl.Company_Id equals c.Id
+                                                 join b in context.Batches on tl.Batch_Id equals b.Id
+                                                 select new BatchCompanyModel()
+                                                 {
+                                                     Id = tl.Id,
+                                                     Driver_Id = tl.Driver_Id,
+                                                     Driver_Name = tl.Driver_Name,
+                                                     Company_Id = tl.Company_Id,
+                                                     Company_Name = c.Name,
+                                                     Reported_Results = tl.Reported_Results,
+                                                     ResultsDate = tl.ResultsDate,
+                                                     Batch_Id = tl.Batch_Id,
+                                                     BatchDate = b.RunDate,
+                                                     ClosedDate = tl.ClosedDate,
+                                                     Test_Type = tl.Test_Type
+                                                 }).Where(tl => tl.Driver_Id == id).ToList();
+
+                foreach (BatchCompanyModel l in _logs)
+                {
+                    l.Reported_Results = l.Reported_Results == "1" ? "Positive" : l.Reported_Results == "2" ? "Negative" : l.Reported_Results == "3" ? "Excused" : " ";
+                }
+
+                _model.TestingLogs = _logs;
+
+            }
+
+            return View(_model);
+        }
+
 
         // POST: Company/Edit/5
         [HttpPost]
