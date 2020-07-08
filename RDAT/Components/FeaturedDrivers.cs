@@ -47,6 +47,8 @@ namespace RDAT.Components
                 {
                     CompanyName = _companyName,
                     DriverName = d.DriverName,
+                    TerminationDate = d.TerminationDate,
+                    EnrollmentDate = d.EnrollmentDate,
                     Id = d.Id,
                     isLatestBatch =  _isInAnyBatch,// _isInLatestBatch,
                     isFavorite = d.isFavorite

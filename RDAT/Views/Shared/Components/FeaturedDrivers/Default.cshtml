@@ -29,12 +29,14 @@
                 <br />
             }
             @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
-            grid.Column("DriverName"),
-            grid.Column("CompanyName"),
-            grid.Column(
-            "",
-            header: "Actions",
-            format: @<text>
+     grid.Column("DriverName"),
+     grid.Column("CompanyName"),
+     grid.Column("EnrollmentDate", header: "Enrollment", format: (item) => item.EnrollmentDate != null ? string.Format("{0:dd-MMM-yyyy}", item.EnrollmentDate) : ""),
+     grid.Column("TerminationDate", header: "Termination", format: (item) => item.TerminationDate != null ? string.Format("{0:dd-MMM-yyyy}", item.TerminationDate) : ""),
+     grid.Column(
+     "",
+     header: "Actions",
+     format: @<text>
                     @if (item.isLatestBatch)
                     {<a href="@Url.Action("GetDriverLogs", "Driver", new { id = @item.id })" class="btn btn-success m-1"><i class="fas fa-prescription-bottle-alt"></i></a>}
                     <a href="@Url.Action("Edit", "Driver", new { id = @item.id })" class="btn btn-primary m-1"><i class="fas fa-user-edit"></i></a>
@@ -42,7 +44,7 @@
             </text>
 )
 )
-)
+);
         </div>
         <div id="details" class="container tab-pane fade">
             <div class="card mt-2">

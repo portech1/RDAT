@@ -20,6 +20,10 @@ namespace RDAT.Models
 
         public string CompanyName { get; set; }
 
+        public DateTime? EnrollmentDate { get; set; }
+
+        public DateTime? TerminationDate { get; set; }
+
         // User has selected this driver as a favorite
         public Boolean isFavorite { get; set; }
 
