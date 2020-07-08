@@ -22,7 +22,9 @@ header: "Actions",
 format: @<text>
     @Html.ActionLink("Edit", "Edit", "Company", new { id = item.id }, new { @class = "btn btn-info" })
     @Html.ActionLink("Add Driver", "Create", "Driver", new { id = item.id }, new { @class = "btn btn-secondary ml-2" })
-    @Html.ActionLink("List Drivers", "Index", "Driver", new { id = item.id }, new { @class = "btn btn-primary ml-2" })
+    @Html.ActionLink("All Drivers", "Index", "Driver", new { id = item.id, type = "all" }, new { @class = "btn btn-primary ml-2" })
+    @Html.ActionLink("Active", "Index", "Driver", new { id = item.id, type = "active" }, new { @class = "btn btn-success ml-2" })
+    @Html.ActionLink("Terminated", "Index", "Driver", new { id = item.id, type = "terminated" }, new { @class = "btn btn-danger ml-2" })
 </text>
 )
 )

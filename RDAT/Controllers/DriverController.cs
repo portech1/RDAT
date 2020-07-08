@@ -19,7 +19,7 @@ namespace RDAT.Controllers
     public class DriverController : Controller
     {
 
-        public IActionResult Index(int id = 0)
+        public IActionResult Index(int id = 0, string type = "all")
         {
             using RDATContext context = new RDATContext();
             DriverSearchModel _model = new DriverSearchModel();
@@ -32,7 +32,7 @@ namespace RDAT.Controllers
             if (id != 0)
             {
                 // drivers = context.Drivers.Where(c => c.Company_id == id).ToList();
-                drivers = context.Drivers.Where(d => d.Company_id == id && d.TerminationDate == null && !d.isDelete).ToList();
+                drivers = context.Drivers.Where(d => d.Company_id == id && !d.isDelete).ToList();
                 driverList = drivers.Join(_co,
                                         d => d.Company_id,
                                         co => co.Id,
@@ -52,7 +52,7 @@ namespace RDAT.Controllers
             else
             {
                 // drivers = context.Drivers.ToList();
-                drivers = context.Drivers.Where(d => d.TerminationDate == null && !d.isDelete).ToList();
+                drivers = context.Drivers.Where(d => !d.isDelete).ToList();
                 driverList = drivers.Join(_co,
                                         d => d.Company_id,
                                         co => co.Id,
@@ -71,10 +71,19 @@ namespace RDAT.Controllers
                 // 
             }
 
+            // Filter List
+            if(type == "active")
+            {
+                driverList = driverList.Where(d => d.TerminationDate == null).ToList();
+            }
 
+            if (type == "terminated")
+            {
+                driverList = driverList.Where(d => d.TerminationDate != null).ToList();
+            }
 
-
-            var count = drivers.Count();
+            var count = driverList.Count();
+            ViewBag.Count = count;
             ViewBag.ListName = listName;
             _model.Drivers = driverList;
 

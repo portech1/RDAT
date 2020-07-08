@@ -19,6 +19,7 @@
                 <div class="col-sm-6">
 
                     <h1><i class="nav-icon fas fa-th mr-2"></i>@ViewBag.ListName</h1>
+                    <h2>Results = @ViewBag.count</h2>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -88,7 +89,7 @@ grid.Column("CompanyName"),
 grid.Column("Phone"),
 grid.Column("Email", header: "Email Address"),
 grid.Column("EnrollmentDate", "Enrollment",
-format: (item) => string.Format("{0:dd-MMM-yyyy}", item.EnrollmentDate)),
+format: (item) => item.EnrollmentDate == null || string.IsNullOrEmpty(item.EnrollmentDate.ToString()) ? string.Empty : string.Format("{0:dd-MMM-yyyy}", item.EnrollmentDate)),
 grid.Column("TerminationDate", "Termination",
 format: (item) => item.TerminationDate == null || string.IsNullOrEmpty(item.TerminationDate.ToString()) ? string.Empty : string.Format("{0:dd-MMM-yyyy}", item.TerminationDate)),
 grid.Column("TerminationDate", header: "Status",
