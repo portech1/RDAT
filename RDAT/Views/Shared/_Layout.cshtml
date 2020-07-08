@@ -32,11 +32,9 @@
                     <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="../home" class="nav-link">Home</a>
+                    <div class="nav-link">@Html.ActionLink("Home", "Index", "Home")</div>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="../home/contact" class="nav-link">Contact</a>
-                </li>
+               
                 <li>
                     <partial name="_LoginPartial" />
                 </li>
@@ -131,18 +129,19 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <div class="nav-link">
-                                        <i class="fas fa-vial nav-icon"></i>
-                                        @Html.ActionLink("Testing Logs", "testing", "Reports")
-                                    </div>
-                                </li>
-                                <li class="nav-item">
-                                    <div class="nav-link">
-                                        <i class="fas fa-vial nav-icon"></i>
-                                        @Html.ActionLink("Driver Renewal Report by Month", "drivers_test", "Reports")
-                                    </div>
-                                </li>
+                                <!--
+    <li class="nav-item">
+        <div class="nav-link">
+            <i class="fas fa-vial nav-icon"></i>
+            @Html.ActionLink("Testing Logs", "testing", "Reports")
+        </div>
+    </li>
+    <li class="nav-item">
+        <div class="nav-link">
+            <i class="fas fa-vial nav-icon"></i>
+            @Html.ActionLink("Driver Renewal Report by Month", "drivers_test", "Reports")
+        </div>
+    </li>-->
                                 <li class="nav-item">
                                     <div class="nav-link">
                                         <i class="fas fa-truck-moving nav-icon"></i>
@@ -155,12 +154,13 @@
                                         @Html.ActionLink("View Batches", "viewbatch", "Reports")
                                     </div>
                                 </li>
-                                <li class="nav-item">
-                                    <div class="nav-link">
-                                        <i class="far fa-building nav-icon"></i>
-                                        @Html.ActionLink("Company Report", "company", "Reports")
-                                    </div>
-                                </li>
+                                <!--
+    <li class="nav-item">
+        <div class="nav-link">
+            <i class="far fa-building nav-icon"></i>
+            @Html.ActionLink("Company Report", "company", "Reports")
+        </div>
+    </li>-->
                                 <li class="nav-item">
                                     <div class="nav-link">
                                         <i class="far fa-building nav-icon"></i>
@@ -173,7 +173,7 @@
                                         @Html.ActionLink("Drug Pool Summary", "RandomDrugPoolSummary", "Reports")
                                     </div>
                                 </li>
-                                
+
                             </ul>
                         </li>
                         <li class="nav-item">

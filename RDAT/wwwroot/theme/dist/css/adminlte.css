@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /*!
  *   AdminLTE v3.0.2
  *   Author: Colorlib
@@ -30011,3 +30011,9 @@ a.text-muted:hover {
   color: #ffffff;
 }
 /*# sourceMappingURL=adminlte.css.map */
+
+
+.btn:hover {
+    cursor: pointer;
+}
+
