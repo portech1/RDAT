@@ -48,8 +48,8 @@
                      grid.Column("Eligible_Drivers", "Eligible Drivers"),
                      grid.Column("Drug_Tests", "Drug Tests"),
                      grid.Column("Alcohol_Tests", "Alcohol Tests"),
-                     grid.Column("Drug_Percentage", "Drug Percentage"),
-                     grid.Column("Alcohol_Percentage", "Alcohol Percentage"),
+                     grid.Column("Drug_Percentage", "Drug Percentage", format: (item) => { return item.Drug_Tests != null ? (@Convert.ToDouble(item.Drug_Tests) / @Convert.ToDouble(item.Eligible_Drivers)).ToString("#.# %") : ""; }),
+                     grid.Column("Alcohol_Percentage", "Alcohol Percentage", format: (item) => { return item.Alcohol_Tests != null ? (@Convert.ToDouble(item.Alcohol_Tests) / @Convert.ToDouble(item.Eligible_Drivers)).ToString("#.# %") : ""; }),
                      grid.Column(
         "",
         header: "Actions",
