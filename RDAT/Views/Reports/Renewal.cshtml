@@ -1,0 +1,106 @@
+﻿@model RDAT.ViewModels.RenewalReportViewModel
+
+@{
+    ViewData["Title"] = "Renewal";
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.Drivers, defaultSort: "DriverName", rowsPerPage: 10000);
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+
+                    <h1><i class="nav-icon fas fa-th mr-2"></i>@ViewBag.ListName</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Create Batch</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-body">
+
+                <div class="alert alert-light border-dark" role="alert">
+                    <form asp-action="Renewal" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label asp-for="@Model.RenewalMonth" class="control-label"></label>
+                                    <select asp-for="@Model.RenewalMonth" class="custom-select">
+                                        <option value="">Choose a Company</option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                    <span asp-validation-for="@Model.RenewalMonth" class="text-danger"></span>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+
+                        <div class="row mt-3">
+                            <div class="col">
+                                <div class="form-group">
+                                    <input type="submit" value="Run Report" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="row">
+                    @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
+                   grid.Column("DriverName", "Driver Name"),
+                   grid.Column("CompanyName", "Company Name"),
+                   grid.Column("EnrollmentDate", "Enrollment Date",
+                        format: (item) => (item.EnrollmentDate == null) ? "" : string.Format("{0:dd-MMM-yyyy}", item.EnrollmentDate)),
+                   grid.Column(
+"",
+header: "Actions",
+format: @<text>@Html.ActionLink("Star", "Favorite", "Driver", new { id = item.id }, new { @class = "btn btn-success m-1" })@Html.ActionLink("Edit", "Edit", "Driver", new { id = item.id }, new { @class = "btn btn-info m-1" })</text>
+)
+)
+)
+
+                </div>
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+            <div class="card-tools">
+
+
+            </div>
+
+        </div>
+        <!-- /.card-footer-->
+</div>
+<!-- /.card -->
+    </section>
+<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

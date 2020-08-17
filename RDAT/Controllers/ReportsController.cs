@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RDAT.Data;
@@ -36,7 +40,7 @@ namespace RDAT.Controllers
             return View();
         }
 
-        public IActionResult RandomAlcoholPoolSummary ()
+        public IActionResult RandomAlcoholPoolSummary()
         {
             List<RandomPool> _summary = new List<RandomPool>();
 
@@ -145,7 +149,7 @@ namespace RDAT.Controllers
                 }
 
                 // Create Pool List
-                foreach(DriverCompanyModel dm in driverList)
+                foreach (DriverCompanyModel dm in driverList)
                 {
                     _drivers.Add(new RandomPoolDetails
                     {
@@ -161,9 +165,9 @@ namespace RDAT.Controllers
                     });
                 }
             }
-            
 
-                return View(_drivers);
+
+            return View(_drivers);
         }
 
         public IActionResult RandomDrugPoolSummary()
@@ -341,7 +345,7 @@ namespace RDAT.Controllers
                 ViewBag.percentAlcohol = batchRequest.AlcoholPercentage;
 
                 var activeDrivers = 0;
-                
+
                 using (RDATContext context = new RDATContext())
                 {
                     List<TempTestingLog> existingEntries = context.TempTestingLogs.ToList();
@@ -391,7 +395,7 @@ namespace RDAT.Controllers
                     var count = _tempTestingLog.Count();
                     ViewBag.totalDrivers = count;
 
-                    foreach(TempTestingLog log in _tempTestingLog)
+                    foreach (TempTestingLog log in _tempTestingLog)
                     {
                         context.TempTestingLogs.Add(log);
                     }
@@ -425,6 +429,8 @@ namespace RDAT.Controllers
         //    var me = model.batchRequest.ActivePool;
         //    return View(model);
         //}
+
+
 
         public IActionResult UpdateBatch(CreateBatchViewModel model)
         {
@@ -492,7 +498,7 @@ namespace RDAT.Controllers
                     _testingLog.Reported_Results = "0";
 
                     context.TestingLogs.Add(_testingLog);
-                                                         
+
                 }
 
                 context.SaveChanges();
@@ -556,7 +562,7 @@ namespace RDAT.Controllers
                         isValid = false;
                     }
 
-                    }
+                }
                 else if (propertyName == "ResultsDate" || propertyName == "TestDate" || propertyName == "ClosedDate")
                 {
                     DateTime mod;
@@ -580,7 +586,8 @@ namespace RDAT.Controllers
                     {
                         context.Entry(_log).Property(propertyName).CurrentValue = Convert.ToInt32(updateValue);
                     }
-                    else {
+                    else
+                    {
                         context.Entry(_log).Property(propertyName).CurrentValue = updateValue.ToString();
                     }
                     context.SaveChanges();
@@ -616,11 +623,11 @@ namespace RDAT.Controllers
             //{'E':'Letter E','F':'Letter F','G':'Letter G', 'selected':'F'}
             //"{'3':'Excused','2':'Negative','1':'Positive','4':'Undefined','selected': '4'}"
             int selectedResult = 0;
-            if(currentResult == null)
+            if (currentResult == null)
             {
                 currentResult = "Undefined";
             }
-            
+
             StringBuilder sb = new StringBuilder();
             using (RDATContext context = new RDATContext())
             {
@@ -653,22 +660,22 @@ namespace RDAT.Controllers
 
                 // List<TestingLog> _logs = context.TestingLogs.Where(tl => tl.Batch_Id == BatchId).ToList();
                 List<BatchCompanyModel> _logs = (from tl in context.TestingLogs
-                         join c in context.Companys on tl.Company_Id equals c.Id
-                         join b in context.Batches on tl.Batch_Id equals b.Id
-                         select new BatchCompanyModel()
-                         {
-                             Id = tl.Id,
-                             Driver_Id = tl.Driver_Id,
-                             Driver_Name = tl.Driver_Name,
-                             Company_Id = tl.Company_Id,
-                             Company_Name = c.Name,
-                             Reported_Results = tl.Reported_Results,
-                             ResultsDate = tl.ResultsDate,
-                             Batch_Id = tl.Batch_Id,
-                             BatchDate = b.RunDate,
-                             ClosedDate = tl.ClosedDate,
-                             Test_Type = tl.Test_Type
-                         }).Where(tl => tl.Batch_Id == BatchId).ToList();
+                                                 join c in context.Companys on tl.Company_Id equals c.Id
+                                                 join b in context.Batches on tl.Batch_Id equals b.Id
+                                                 select new BatchCompanyModel()
+                                                 {
+                                                     Id = tl.Id,
+                                                     Driver_Id = tl.Driver_Id,
+                                                     Driver_Name = tl.Driver_Name,
+                                                     Company_Id = tl.Company_Id,
+                                                     Company_Name = c.Name,
+                                                     Reported_Results = tl.Reported_Results,
+                                                     ResultsDate = tl.ResultsDate,
+                                                     Batch_Id = tl.Batch_Id,
+                                                     BatchDate = b.RunDate,
+                                                     ClosedDate = tl.ClosedDate,
+                                                     Test_Type = tl.Test_Type
+                                                 }).Where(tl => tl.Batch_Id == BatchId).ToList();
 
                 foreach (BatchCompanyModel l in _logs)
                 {
@@ -729,8 +736,8 @@ namespace RDAT.Controllers
                 //                                // BatchDate = ,
                 //                                Test_Type = log.Test_Type
                 //                            }).ToList();
-                    
-                           
+
+
 
                 foreach (BatchCompanyModel l in _logs)
                 {
@@ -743,7 +750,231 @@ namespace RDAT.Controllers
             return View(_model);
         }
 
-    }
+        public IActionResult MIS(string type)
+        {
+            MISReportViewModel _model = new MISReportViewModel();
+            List<SummaryTestType> _SummaryTestTypes = new List<SummaryTestType>();
+
+
+
+            using RDATContext context = new RDATContext();
+            List<SelectListItem> companies = context.Companys.OrderBy(c => c.Name).Select(a =>
+                                  new SelectListItem
+                                  {
+                                      Value = a.Id.ToString(),
+                                      Text = a.Name
+                                  }).ToList();
+            _model.Companies = companies;
+
+            _model.SummaryTestTypes = _SummaryTestTypes;
+            _model.Totals = new List<SummaryTestType>();
+
+            return View(_model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult MIS(MISReportViewModel model)
+        {
+            // Call Stored Procedure
+            // exec [dbo].[MISREPORT] 1,'Drug','20000101','20211231'
+            List<SummaryTestType> _list = new List<SummaryTestType>();
+            List<SummaryTestType> _totalsList = new List<SummaryTestType>();
+
+            DateTime startDate = model.ReportRequest.StartDate;
+            DateTime endDate = model.ReportRequest.EndDate;
+
+            // Get Totals
+            int total_Active_Enrolled_Drivers = 0;
+            int total_Selected_Drivers = 0;
+            int total_Excused_Drivers = 0;
+            int total_Positive_Tested_Drivers = 0;
+            int total_Negative_Tested_Drivers = 0;
+            int row_count = 0;
+
+
+            // string _query = "Select b.RunDate as 'Random Test Selection',b.Id as 'Batch Number',b.Eligible_Drivers as 'Active Enrolled Drivers',(b.Drug_Tests + b.Alcohol_Tests) as 'Selected Drivers',(Select count([Batch_Id]) from[dbo].[TestingLogs] WHERE Batch_Id = b.Id AND Reported_Results = 3) as 'Excused Drivers',(Select count([Batch_Id]) from[dbo].[TestingLogs] WHERE Batch_Id = b.Id AND Reported_Results = 1) as 'Positive Drivers',(Select count([Batch_Id]) from[dbo].[TestingLogs] WHERE Batch_Id = b.Id AND Reported_Results = 2) as 'Negative Drivers',(Select count([Batch_Id]) from[dbo].[TestingLogs] WHERE Batch_Id = b.Id AND Reported_Results in (1, 2, 3)) as 'Total',CAST((CAST((Select count([Batch_Id]) from[dbo].[TestingLogs] WHERE Batch_Id = b.Id AND Reported_Results in (1, 2, 3)) AS float) / CAST((b.Drug_Tests + b.Alcohol_Tests) AS float)) AS float) as 'Selection Test Ratio', * from Batches b";
+
+            using (SqlConnection conn = new SqlConnection("Server=tcp:nfssql01.database.windows.net,1433;Initial Catalog=NFS_SQL_01;Persist Security Info=False;User ID=nfsadmin;Password=IFTAtaxes2017;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("[dbo].[MISREPORT]", conn);
+
+                // 2. set the command object so it knows to execute a stored procedure
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                // 3. add parameter to command, which will be passed to the stored procedure
+                // cmd.Parameters.Add(new SqlParameter("@CompanyID", 1));
+                cmd.Parameters.Add(new SqlParameter("@TestType", model.ReportRequest.TestType));
+                cmd.Parameters.Add(new SqlParameter("@StartDate", startDate.ToString("yyyyMMdd")));
+                cmd.Parameters.Add(new SqlParameter("@EndDate", endDate.ToString("yyyyMMdd")));
+
+                // execute the command
+                using (SqlDataReader rdr = cmd.ExecuteReader())
+                {
+                    // iterate through results, printing each to console
+                    while (rdr.Read())
+                    {
+                        var test = rdr.GetValue(0);
+                        var test2 = rdr.GetValue("Selected Drivers");
+
+
+                        if (rdr != null)
+                        {
+                            int temp_Active_Enrolled_Drivers = Convert.ToInt32(rdr.GetValue("Active Enrolled Drivers"));
+                            int temp_Selected_Drivers = Convert.ToInt32(rdr.GetValue("Selected Drivers"));
+                            int temp_Excused_Drivers = Convert.ToInt32(rdr.GetValue("Excused Drivers"));
+                            int temp_Positive_Tested_Drivers = Convert.ToInt32(rdr.GetValue("Positive Drivers"));
+                            int temp_Negative_Tested_Drivers = Convert.ToInt32(rdr.GetValue("Negative Drivers"));
+
+                            total_Active_Enrolled_Drivers += temp_Active_Enrolled_Drivers;
+                            total_Selected_Drivers += temp_Selected_Drivers;
+                            total_Excused_Drivers += temp_Excused_Drivers;
+                            total_Positive_Tested_Drivers += temp_Positive_Tested_Drivers;
+                            total_Negative_Tested_Drivers += temp_Negative_Tested_Drivers;
+                            row_count += 1;
+
+                            SummaryTestType row = new SummaryTestType
+                            {
+                                Description = GetValue<string>(rdr.GetValue("Random Test Selection")),
+                                Random_Test_Selection = GetValue<DateTime>(rdr.GetValue("Random Test Selection")),
+                                Batch_Number = GetValue<int>(rdr.GetValue("Batch Number")),
+                                Active_Enrolled_Drivers = temp_Active_Enrolled_Drivers,
+                                Selected_Drivers = temp_Selected_Drivers,
+                                Excused_Drivers = temp_Excused_Drivers,
+                                Positive_Tested_Drivers = temp_Positive_Tested_Drivers,
+                                Negative_Tested_Drivers = temp_Negative_Tested_Drivers,
+                                Selection_Test_Ratio = Convert.ToDouble(rdr.GetValue("Selection Test Ratio").ToString()),
+                                Annual_Ratio = Convert.ToDouble(rdr.GetValue("Annual Ratio").ToString())
+                            };
+
+                            _list.Add(row);
+                        }
+                    }
+
+                    // Add Totals Row
+                    SummaryTestType _totals = new SummaryTestType
+                    {
+                        Description = "Totals",
+                        Active_Enrolled_Drivers = total_Active_Enrolled_Drivers,
+                        Selected_Drivers = total_Selected_Drivers,
+                        Excused_Drivers = total_Excused_Drivers,
+                        Positive_Tested_Drivers = total_Positive_Tested_Drivers,
+                        Negative_Tested_Drivers = total_Negative_Tested_Drivers,
+                        Annual_Ratio = Convert.ToDouble(((Double)(total_Selected_Drivers - total_Excused_Drivers) / (Double)total_Active_Enrolled_Drivers)*100)
+                    };
+
+                    
+                    _totalsList.Add(_totals);
+
+                    _list.Add(_totals);
+
+                    model.Totals = _totalsList;
+
+                    model.SummaryTestTypes = _list;
+                }
+
+            }
+
+            if (ModelState.IsValid)
+            {
+                //_context.Add(createBatch);
+                //await _context.SaveChangesAsync();
+                //return RedirectToAction(nameof(Index));
+            }
+
+            return View(model);
+        }
+
+        // Base methods
+        protected T GetValue<T>(object obj)
+        {
+            if (typeof(DBNull) != obj.GetType())
+            {
+                return (T)Convert.ChangeType(obj, typeof(T));
+            }
+            return default(T);
+        }
+
+        protected T GetValue<T>(object obj, object defaultValue)
+        {
+            if (typeof(DBNull) != obj.GetType())
+            {
+                return (T)Convert.ChangeType(obj, typeof(T));
+            }
+            return (T)defaultValue;
+        }
+
+        public IActionResult Renewal()
+        {
+            RenewalReportViewModel _model = new RenewalReportViewModel();            
+            
+            using RDATContext context = new RDATContext();
+            List<Company> _co = context.Companys.ToList();
+            List<Driver> drivers = new List<Driver>();
+
+            int thisMonth = DateTime.Now.Month;
+            _model.RenewalMonth = thisMonth;
+
+            drivers = context.Drivers.Where(c => c.TerminationDate == null && c.EnrollmentDate.Value.Month == thisMonth).ToList();
+            
+            var driverList = drivers.Join(_co,
+                                        d => d.Company_id,
+                                        co => co.Id,
+                                        (driver, company) => new DriverCompanyModel
+                                        {
+                                            Id = driver.Id,
+                                            DriverName = driver.DriverName,
+                                            CompanyName = company.Name,
+                                            Phone = driver.Phone,
+                                            Email = driver.Email,
+                                            EnrollmentDate = driver.EnrollmentDate,
+                                            TerminationDate = driver.TerminationDate,
+                                            isFavorite = driver.isFavorite,
+                                        }).OrderBy(d => d.DriverName).ToList();
+
+            _model.Drivers = driverList;
+            
+            return View(_model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Renewal(RenewalReportViewModel model)
+        {
+            RenewalReportViewModel _model = new RenewalReportViewModel();
+
+
+            using RDATContext context = new RDATContext();
+            List<Company> _co = context.Companys.ToList();
+            List<Driver> drivers = new List<Driver>();
+
+            _model.RenewalMonth = model.RenewalMonth;
+
+            drivers = context.Drivers.Where(c => c.TerminationDate == null && c.EnrollmentDate.Value.Month == model.RenewalMonth).ToList();
+
+            var driverList = drivers.Join(_co,
+                                        d => d.Company_id,
+                                        co => co.Id,
+                                        (driver, company) => new DriverCompanyModel
+                                        {
+                                            Id = driver.Id,
+                                            DriverName = driver.DriverName,
+                                            CompanyName = company.Name,
+                                            Phone = driver.Phone,
+                                            Email = driver.Email,
+                                            EnrollmentDate = driver.EnrollmentDate,
+                                            TerminationDate = driver.TerminationDate,
+                                            isFavorite = driver.isFavorite,
+                                        }).OrderBy(d => d.DriverName).ToList();
+
+            _model.Drivers = driverList;
+
+            return View(_model);
+
+        }
+
+        }
 }
 
 

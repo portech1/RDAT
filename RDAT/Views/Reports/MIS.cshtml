@@ -1,0 +1,128 @@
+﻿@model RDAT.ViewModels.MISReportViewModel
+
+@{
+    ViewData["Title"] = "MIS";
+    WebGrid grid = new WebGrid(HttpContextAccessor, source: this.Model.SummaryTestTypes, defaultSort: "Driver_Id", rowsPerPage: 10000);
+}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+
+                    <h1><i class="nav-icon fas fa-th mr-2"></i>@ViewBag.ListName</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Create Batch</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-body">
+
+                <div class="alert alert-light border-dark" role="alert">
+                    <form asp-action="MIS" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="@Model.ReportRequest.CompanyID" class="control-label"></label>
+                                    <select asp-for="@Model.ReportRequest.CompanyID" asp-items="Model.Companies" class="custom-select">
+                                        <option value="">Choose a Company</option>
+
+                                    </select>
+                                    <span asp-validation-for="@Model.ReportRequest.CompanyID" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.ReportRequest.TestType" class="control-label"></label>
+                                    <select asp-for="@Model.ReportRequest.TestType" class="custom-select">
+                                        <option value="Alcohol" selected>Alcohol</option>
+                                        <option value="Drug">Drug</option>
+                                    </select>
+                                    <span asp-validation-for="@Model.ReportRequest.TestType" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="@Model.ReportRequest.StartDate" class="control-label"></label>
+                                    <input type="date" asp-for="@Model.ReportRequest.StartDate" class="form-control" />
+                                    <span asp-validation-for="@Model.ReportRequest.StartDate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="@Model.ReportRequest.EndDate" class="control-label"></label>
+                                    <input type="date" asp-for="@Model.ReportRequest.EndDate" class="form-control" />
+                                    <span asp-validation-for="@Model.ReportRequest.EndDate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ml-0">
+
+                            <div class="col-md-1 ml-0 p-0 mr-3">
+
+
+                                <label asp-for="@Model.ReportRequest.IncludeDriverDetails" class="control-label"></label>
+
+                            </div>
+                            <div class="col-md-1 p-2 align-text-right">
+                                <input asp-for="@Model.ReportRequest.IncludeDriverDetails" class="form-control float-right" /><span asp-validation-for="@Model.ReportRequest.IncludeDriverDetails" class="text-danger"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col">
+                                <div class="form-group">
+                                    <input type="submit" value="Run Report" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="row">
+                    @grid.GetHtml(tableStyle: "table table-bordered", columns: grid.Columns(
+                     grid.Column("Description", ""),
+                     grid.Column("Batch_Number", "Batch Number", format: (item) => (item.Batch_Number == 0) ? "" : item.Batch_Number),
+                     grid.Column("Active_Enrolled_Drivers", "Active Enrolled Drivers"),
+                     grid.Column("Selected_Drivers", "Selected Drivers"),
+                     grid.Column("Excused_Drivers", "Excused Drivers"),
+                     grid.Column("Positive_Tested_Drivers", "Positive Tested Drivers"),
+                     grid.Column("Negative_Tested_Drivers", "Negative Tested Drivers"),
+                     grid.Column("Selection_Test_Ratio", "Selection Test Ratio", format: (item) => (item.Selection_Test_Ratio == 0) ? "" : item.Selection_Test_Ratio),
+                     grid.Column("Annual_Ratio", "Annual Ratio", format: (item) => (item.Annual_Ratio == null) ? "" : string.Format("{0:#.##}", item.Annual_Ratio)))
+
+    
+)
+
+                </div>
+                
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+            <div class="card-tools">
+
+
+            </div>
+
+        </div>
+        <!-- /.card-footer-->
+</div>
+<!-- /.card -->
+    </section>
+<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
