@@ -5,10 +5,12 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RDAT.Data;
@@ -307,6 +309,7 @@ namespace RDAT.Controllers
             return View(_drivers);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateBatch(CreateBatch batchRequest)
         {
             CreateBatchViewModel _model = new CreateBatchViewModel();
@@ -431,7 +434,7 @@ namespace RDAT.Controllers
         //}
 
 
-
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateBatch(CreateBatchViewModel model)
         {
             // Create Batch
@@ -476,6 +479,7 @@ namespace RDAT.Controllers
             return RedirectToAction("ViewBatch", "Reports");
         }
 
+        [Authorize(Roles = "Admin")]
         private bool BuildBatch(int id)
         {
             using (RDATContext context = new RDATContext())
@@ -508,6 +512,7 @@ namespace RDAT.Controllers
             return false;
         }
 
+        [Authorize(Roles = "Admin")]
         private bool ClearTempBatch()
         {
 
@@ -535,6 +540,7 @@ namespace RDAT.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult saveTestingLog(int id, string propertyName, string value)
         {
             var status = false;
@@ -750,13 +756,8 @@ namespace RDAT.Controllers
             return View(_model);
         }
 
-        public IActionResult MIS(string type)
+        public List<SelectListItem> GetCompanies()
         {
-            MISReportViewModel _model = new MISReportViewModel();
-            List<SummaryTestType> _SummaryTestTypes = new List<SummaryTestType>();
-
-
-
             using RDATContext context = new RDATContext();
             List<SelectListItem> companies = context.Companys.OrderBy(c => c.Name).Select(a =>
                                   new SelectListItem
@@ -764,9 +765,19 @@ namespace RDAT.Controllers
                                       Value = a.Id.ToString(),
                                       Text = a.Name
                                   }).ToList();
-            _model.Companies = companies;
+
+            return companies;
+        }
+
+        public IActionResult MIS(string type)
+        {
+            MISReportViewModel _model = new MISReportViewModel();
+            List<SummaryTestType> _SummaryTestTypes = new List<SummaryTestType>();
+            
+            _model.Companies = GetCompanies();
 
             _model.SummaryTestTypes = _SummaryTestTypes;
+            _model.Details = new List<MISDetails>();
             _model.Totals = new List<SummaryTestType>();
 
             return View(_model);
@@ -780,9 +791,13 @@ namespace RDAT.Controllers
             // exec [dbo].[MISREPORT] 1,'Drug','20000101','20211231'
             List<SummaryTestType> _list = new List<SummaryTestType>();
             List<SummaryTestType> _totalsList = new List<SummaryTestType>();
+            List<MISDetails> _details = new List<MISDetails>();
 
             DateTime startDate = model.ReportRequest.StartDate;
             DateTime endDate = model.ReportRequest.EndDate;
+
+            // Use Company in Details Search
+            bool useCompany = model.ReportRequest.CompanyID == 0 ? false : true;
 
             // Get Totals
             int total_Active_Enrolled_Drivers = 0;
@@ -792,6 +807,8 @@ namespace RDAT.Controllers
             int total_Negative_Tested_Drivers = 0;
             int row_count = 0;
 
+            // Get Companies
+            model.Companies = GetCompanies();
 
             // string _query = "Select b.RunDate as 'Random Test Selection',b.Id as 'Batch Number',b.Eligible_Drivers as 'Active Enrolled Drivers',(b.Drug_Tests + b.Alcohol_Tests) as 'Selected Drivers',(Select count([Batch_Id]) from[dbo].[TestingLogs] WHERE Batch_Id = b.Id AND Reported_Results = 3) as 'Excused Drivers',(Select count([Batch_Id]) from[dbo].[TestingLogs] WHERE Batch_Id = b.Id AND Reported_Results = 1) as 'Positive Drivers',(Select count([Batch_Id]) from[dbo].[TestingLogs] WHERE Batch_Id = b.Id AND Reported_Results = 2) as 'Negative Drivers',(Select count([Batch_Id]) from[dbo].[TestingLogs] WHERE Batch_Id = b.Id AND Reported_Results in (1, 2, 3)) as 'Total',CAST((CAST((Select count([Batch_Id]) from[dbo].[TestingLogs] WHERE Batch_Id = b.Id AND Reported_Results in (1, 2, 3)) AS float) / CAST((b.Drug_Tests + b.Alcohol_Tests) AS float)) AS float) as 'Selection Test Ratio', * from Batches b";
 
@@ -826,12 +843,21 @@ namespace RDAT.Controllers
                             int temp_Excused_Drivers = Convert.ToInt32(rdr.GetValue("Excused Drivers"));
                             int temp_Positive_Tested_Drivers = Convert.ToInt32(rdr.GetValue("Positive Drivers"));
                             int temp_Negative_Tested_Drivers = Convert.ToInt32(rdr.GetValue("Negative Drivers"));
+                            
+                            double _positive = Convert.ToDouble(temp_Positive_Tested_Drivers);
+                            double _negative = Convert.ToDouble(temp_Negative_Tested_Drivers);
+                            double _enrolled = Convert.ToDouble(temp_Active_Enrolled_Drivers);
+                            double _allResults = _positive + _negative;
+
+
+                            double temp_Annual_Ratio = Convert.ToDouble(_allResults / _enrolled)*100;
 
                             total_Active_Enrolled_Drivers += temp_Active_Enrolled_Drivers;
                             total_Selected_Drivers += temp_Selected_Drivers;
                             total_Excused_Drivers += temp_Excused_Drivers;
                             total_Positive_Tested_Drivers += temp_Positive_Tested_Drivers;
                             total_Negative_Tested_Drivers += temp_Negative_Tested_Drivers;
+                            
                             row_count += 1;
 
                             SummaryTestType row = new SummaryTestType
@@ -845,7 +871,8 @@ namespace RDAT.Controllers
                                 Positive_Tested_Drivers = temp_Positive_Tested_Drivers,
                                 Negative_Tested_Drivers = temp_Negative_Tested_Drivers,
                                 Selection_Test_Ratio = Convert.ToDouble(rdr.GetValue("Selection Test Ratio").ToString()),
-                                Annual_Ratio = Convert.ToDouble(rdr.GetValue("Annual Ratio").ToString())
+                                // Annual_Ratio = Convert.ToDouble(rdr.GetValue("Annual Ratio").ToString())
+                                Annual_Ratio = temp_Annual_Ratio
                             };
 
                             _list.Add(row);
@@ -853,15 +880,24 @@ namespace RDAT.Controllers
                     }
 
                     // Add Totals Row
+                    double _positiveTotal = Convert.ToDouble(total_Positive_Tested_Drivers);
+                    double _negativeTotal = Convert.ToDouble(total_Negative_Tested_Drivers);
+                    double _enrolledTotal = Convert.ToDouble(total_Active_Enrolled_Drivers / row_count);
+                    double _allResultsTotal = _positiveTotal + _negativeTotal;
+
+
+                    double temp_Annual_RatioTotal = Convert.ToDouble(_allResultsTotal / _enrolledTotal) * 100;
+
+
                     SummaryTestType _totals = new SummaryTestType
                     {
                         Description = "Totals",
-                        Active_Enrolled_Drivers = total_Active_Enrolled_Drivers,
+                        Active_Enrolled_Drivers = Convert.ToInt32(total_Active_Enrolled_Drivers/ row_count),
                         Selected_Drivers = total_Selected_Drivers,
                         Excused_Drivers = total_Excused_Drivers,
                         Positive_Tested_Drivers = total_Positive_Tested_Drivers,
                         Negative_Tested_Drivers = total_Negative_Tested_Drivers,
-                        Annual_Ratio = Convert.ToDouble(((Double)(total_Selected_Drivers - total_Excused_Drivers) / (Double)total_Active_Enrolled_Drivers)*100)
+                        Annual_Ratio = temp_Annual_RatioTotal
                     };
 
                     
@@ -874,7 +910,76 @@ namespace RDAT.Controllers
                     model.SummaryTestTypes = _list;
                 }
 
+
+                // Determine if you need details
+                if(model.ReportRequest.IncludeDriverDetails == true)
+                {
+                    if(useCompany == false)
+                    {
+                        // GET DETAILS
+                        cmd = new SqlCommand("[dbo].[MISREPORT_DETAILS]", conn);
+                    }
+                    else
+                    {
+                        // GET DETAILS WITH COMPANY
+                        cmd = new SqlCommand("[dbo].[MISREPORT_DETAILS_BY_COMPANY]", conn);
+                    }
+                                      
+
+                    // 2. set the command object so it knows to execute a stored procedure
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add(new SqlParameter("@TestType", model.ReportRequest.TestType));
+                    cmd.Parameters.Add(new SqlParameter("@StartDate", startDate.ToString("yyyyMMdd")));
+                    cmd.Parameters.Add(new SqlParameter("@EndDate", endDate.ToString("yyyyMMdd")));
+                    
+                    if (useCompany == true)
+                    {
+                        // GET DETAILS
+                        cmd.Parameters.Add(new SqlParameter("@Company", model.ReportRequest.CompanyID));
+                    }
+
+                    // execute the command
+                    using (SqlDataReader rdr = cmd.ExecuteReader())
+                    {
+                        // iterate through results, printing each to console
+                        while (rdr.Read())
+                        {
+
+                            if (rdr != null)
+                            {
+                                MISDetails row = new MISDetails
+                                {
+                                    Random_Test_Selection_Date = GetValue<DateTime>(rdr.GetValue("Random_Test_Selection_Date")),
+                                    Batch_Number = GetValue<int>(rdr.GetValue("Batch_Number")),
+                                    Driver_Name = GetValue<string>(rdr.GetValue("Driver_Name")),
+                                    Company_Name = GetValue<string>(rdr.GetValue("Name")),
+                                    Test_Type = GetValue<string>(rdr.GetValue("Test_Type")),
+                                    Result = GetValue<string>(rdr.GetValue("Result")),
+                                    ResultsDate = GetValue<DateTime>(rdr.GetValue("ResultsDate"))
+                                };
+
+                                _details.Add(row);
+                            }
+                        }
+
+                        model.Details = _details;
+
+                        if(!model.ReportRequest.IncludeAllDriverDetails)
+                        {
+                            model.Details = _details.Where(d => d.Result == "Positive").ToList();
+                        }
+                    }
+                    // END GET DETAILS
+                }
+                else
+                {
+                    // Add blank set of details
+                    model.Details = _details;
+                }
+
             }
+                        
 
             if (ModelState.IsValid)
             {
@@ -936,6 +1041,24 @@ namespace RDAT.Controllers
             _model.Drivers = driverList;
             
             return View(_model);
+        }
+
+        [HttpPost]
+        public FileResult Export(string GridHtml)
+        {
+            return File(Encoding.ASCII.GetBytes(GridHtml), "application/vnd.ms-excel", "MIS_REPORT.xls");
+        }
+
+        [HttpPost]
+        public FileResult ExportDetails(string DetailsGridHtml)
+        {
+            return File(Encoding.ASCII.GetBytes(DetailsGridHtml), "application/vnd.ms-excel", "MIS_REPORT_DETAILS.xls");
+        }
+
+        [HttpPost]
+        public FileResult ExportPDF(string GridHtml)
+        {
+            return File(Encoding.ASCII.GetBytes(GridHtml), "application/pdf", "document.pdf");
         }
 
         [HttpPost]

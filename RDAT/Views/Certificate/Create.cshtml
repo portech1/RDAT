@@ -1,0 +1,196 @@
+﻿@model RDAT.ViewModels.CertificateViewModel
+
+@{
+    ViewData["Title"] = "MIS";
+    
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
+
+<style>
+
+    br {
+        page-break-before: always;
+    }
+
+    p {
+        margin: 0;
+        font-family: BAHNSCHRIFT, sans-serif;
+    }
+
+    header {
+        color: #000;
+        text-align: center;
+        font-family: 'Marck Script', cursive;
+        font-size: 48px;
+    }
+
+    main {
+        color: #00B050;
+    }
+
+    footer {
+        color: #0070C0;
+        text-align: right;
+    }
+
+    #Certificate {
+        width: 760px;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+
+                    <h1><i class="nav-icon fas fa-th mr-2"></i>@ViewBag.ListName</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Create Batch</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <!-- Default box -->
+        <div class="card">
+            <div class="card-header bg-secondary">
+                <h4>Create a Certificate</h4>
+            </div>
+            <div class="card-body">
+
+                <div class="alert alert-light border-dark" role="alert">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row ml-0">
+                            <div class="form-group">
+                                <label asp-for="@Model.Name" class="control-label"></label>
+                                <select asp-for="@Model.Name" asp-items="Model.Companies" class="custom-select">
+                                    <option value="">Choose a Company</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+                        <div class="row ml-0">
+                            <div class="form-group">
+                                <label asp-for="@Model.Year" class="control-label"></label>
+                                <select asp-for="@Model.Year" class="custom-select">
+                                    <option value="">Choose a Year</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2020" selected>2020</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                    <option value="2029">2029</option>
+                                    <option value="2030">2030</option>
+                                </select>
+                            </div>
+
+
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <div class="form-group">
+                                    <input type="submit" value="Create Certificate" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div style="display: none;">
+                <div class="row mt-5"><h3>Certificate</h3></div>
+                <div class="row" id="Certificate" style="width: 720px">
+                    <header>
+                        <img src='https://rdat20200218122513.azurewebsites.net/theme/dist/img/slice_title.png' alt='Certificate Top' class='img-responsive'/>
+                    </header>
+                    <main>
+                        <div style='text-align: center;'>Chris Porter</div>
+                        <div style='text-align: center;'><img src='https://rdat20200218122513.azurewebsites.net/theme/dist/img/slice_mid.png' class='img-responsive' alt='TQS llc' />
+                    </main>
+                    <footer>
+                        <img src='https://rdat20200218122513.azurewebsites.net/theme/dist/img/slice_bottom.png' alt='Certificate Top' class='img-responsive' />
+                    </footer>
+                </div>
+                <div>
+                    @using (Html.BeginForm("CreatePDF", "Certificate", FormMethod.Post))
+                    {
+                        <input type="hidden" name="CertHtml" />
+                        <input type="hidden" name="Name" />
+                        <input type="hidden" name="StartDate" />
+                        <input type="hidden" name="EndDate" />
+                        <input type="submit" id="btnSubmit" value="Export Summary" />
+                    }
+
+                </div>
+                    </div>
+
+            </div>
+
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+            <div class="card-tools">
+
+
+            </div>
+
+        </div>
+        <!-- /.card-footer-->
+</div>
+<!-- /.card -->
+    </section>
+<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //Add CSS to the Table for formatting.
+        $("#Grid table").attr("cellpadding", "5");
+        $("#Grid table").css({ "border-collapse": "collapse", "border": "1px solid #ccc" });
+        $("#Grid th").css({ "background-color": "#e3e3e3", "border": "1px solid #ccc" });
+        $("#Grid td").css({ "width": "150px", "border": "1px solid #ccc" });
+
+        //Add CSS to the Table for formatting.
+        $("#DetailsGrid table").attr("cellpadding", "5");
+        $("#DetailsGrid table").css({ "border-collapse": "collapse", "border": "1px solid #ccc" });
+        $("#DetailsGrid th").css({ "background-color": "#e3e3e3", "border": "1px solid #ccc" });
+        $("#DetailsGrid td").css({ "width": "150px", "border": "1px solid #ccc" });
+
+        //Assign Click event to Button.
+        $("#btnSubmit").click(function () {
+            $("input[name='CertHtml']").val($("#Certificate").html());
+        });
+
+        //Assign Click event to Button.
+        $("#btnSubmitPDF").click(function () {
+            $("input[name='CertHtml']").val($("#Certificate").html());
+        });
+
+        //Assign Click event to Button.
+        $("#btnDetailsSubmit").click(function () {
+            $("input[name='DetailsGridHtml']").val($("#DetailsGrid").html());
+        });
+    });
+</script>
+

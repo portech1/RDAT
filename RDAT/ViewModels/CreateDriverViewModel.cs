@@ -13,6 +13,8 @@ namespace RDAT.ViewModels
 
         public List<SelectListItem> States { get; set; }
 
+        public bool IsReadOnly { get; set; }
+
         public Driver Driver { get; set; }
     }
 }

@@ -150,14 +150,16 @@ namespace RDAT.Controllers
             return View("Index", _model);
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             CreateDriverViewModel _model = new CreateDriverViewModel();
             Driver _driver = new Driver();
             _model.Driver = _driver;
-            
+                    
+
             using RDATContext context = new RDATContext();
-            List<SelectListItem> companies = context.Companys.OrderBy(c => c.Name).Select(a =>
+            List<SelectListItem> companies = context.Companys.Where(c => c.Status == "1").OrderBy(c => c.Name).Select(a =>
                                   new SelectListItem
                                   {
                                       Value = a.Id.ToString(),
@@ -178,6 +180,7 @@ namespace RDAT.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(
     [Bind("Company_id,DriverName,SSN,AddressLine1,AddressLine2,City,State,Zipcode,Location,Phone,Fax,Cell,Email,CDL")] Driver driver)
         {
@@ -211,6 +214,10 @@ namespace RDAT.Controllers
             using RDATContext context = new RDATContext();
 
             CreateDriverViewModel _model = new CreateDriverViewModel();
+
+            // Get User Roles
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            _model.IsReadOnly = currentUser.IsInRole("ReadOnly");
 
             Driver _driver = context.Drivers.Where(d => d.Id == id).FirstOrDefault();
             ViewBag.CompanyName = _driver.DriverName;
@@ -323,6 +330,7 @@ namespace RDAT.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult UpdateDriver([FromBody] UpdateDriverResults results)
         {
             using RDATContext context = new RDATContext();
@@ -399,6 +407,7 @@ namespace RDAT.Controllers
 
         // POST: Company/Edit/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {

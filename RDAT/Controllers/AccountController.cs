@@ -61,6 +61,10 @@ namespace RDAT.Controllers
             return RedirectToAction("Index");
         }
 
-        
+        public IActionResult ManageRoles()
+        {
+            return View();
+        }
+
     }
 }

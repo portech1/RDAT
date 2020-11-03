@@ -20,13 +20,15 @@ namespace RDAT.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             DashboardViewModel _model = new DashboardViewModel();
 
@@ -35,6 +37,11 @@ namespace RDAT.Controllers
 
             char[] goodResults = { '1', '2', '3' };
 
+            // Get User Roles
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            bool IsAdmin = currentUser.IsInRole("Admin");
+            bool IsReadOnly = currentUser.IsInRole("ReadOnly");
+            
             _model.BadgeTotalActiveDrivers = context.Drivers.Where(d => d.TerminationDate == null && !d.isDelete).Count();
             _model.BadgeTotalActiveCompanies = context.Companys.Where(c => c.Status == "1" && c.isDelete != true).Count(); // context.Companys.Where(d => ??).Count();
             _model.BadgeOutstandingDrugTest = activeLogs.Where(tl => tl.Test_Type == "Drug").Count();

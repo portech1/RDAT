@@ -113,9 +113,13 @@
                         <input asp-for="Driver.CDL" class="form-control" />
                         <span asp-validation-for="Driver.CDL" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
-                    </div>
+                    @if (!Model.IsReadOnly)
+                    {
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    }
+                    
                 </form>
 
             </div>

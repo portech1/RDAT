@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -119,6 +120,7 @@ namespace RDAT.Controllers
         }
 
         // GET: Company/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             CreateCompanyViewModel _model = new CreateCompanyViewModel();
@@ -140,6 +142,7 @@ namespace RDAT.Controllers
 
         // POST: Company/Create
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
         {
@@ -177,6 +180,7 @@ namespace RDAT.Controllers
         }
 
         // GET: Company/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
             using RDATContext context = new RDATContext();
@@ -201,6 +205,7 @@ namespace RDAT.Controllers
 
         // POST: Company/Edit/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
@@ -220,6 +225,7 @@ namespace RDAT.Controllers
                 _company.State = collection["Company.State"];
                 _company.Zip = collection["Company.Zip"];
                 _company.Email = collection["Company.Email"];
+                _company.Dot = collection["Company.Dot"];
                 _company.RepresentativeName = collection["Company.RepresentativeName"];
                 _company.Status = collection["Company.Status"];
                 
@@ -239,6 +245,7 @@ namespace RDAT.Controllers
         }
 
         // GET: Company/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             return View();
@@ -246,6 +253,7 @@ namespace RDAT.Controllers
 
         // POST: Company/Delete/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,6 +16,8 @@ namespace RDAT.ViewModels
 
         public List<SummaryTestType> SummaryTestTypes { get; set; }
 
+        public List<MISDetails> Details { get; set; }
+
         public List<SummaryTestType> Totals { get; set; }
 
     }
@@ -29,6 +32,10 @@ namespace RDAT.ViewModels
 
         public DateTime EndDate { get; set; }
 
+        [Display(Name = "Include Driver Details")]
         public bool IncludeDriverDetails { get; set; }
+
+        [Display(Name = "Show All Driver Results")]
+        public bool IncludeAllDriverDetails { get; set; }
     }
 }
